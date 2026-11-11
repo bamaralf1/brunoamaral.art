@@ -3,236 +3,1207 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Área do Artista · Editar Site</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Área do Artista · Atelier Bruno Amaral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --gold: #C9A84C; --gold-dark: #8B6914; --ink: #1C1208; --ink-mid: #3D2B0E;
-    --bg: #FAF4E8; --card: #ffffff; --border: #E3D6B4; --danger: #A33; --ok: #3A7A3A;
+    --gold:#C9A84C; --gold-soft:#E8C97A; --gold-dark:#8B6914;
+    --ink:#1C1208; --ink-2:#3D2B0E; --ink-soft:#6B5B3A;
+    --cream:#FAF4E8; --cream-2:#F3EAD6; --card:#FFFDF8; --line:#E2D5B7;
+    --ok:#2F7A46; --ok-bg:#E8F4EC;
+    --warn:#9A6A12; --warn-bg:#FBF1DC;
+    --danger:#A23A2E; --danger-bg:#FBEAE7;
+    --blue:#2E5F86; --blue-bg:#E8F0F6;
+    --shadow:0 1px 2px rgba(28,18,8,.05), 0 8px 24px -12px rgba(28,18,8,.25);
+    --shadow-lg:0 24px 60px -20px rgba(28,18,8,.45);
+    --r:6px;
   }
-  * { box-sizing: border-box; }
-  body { margin:0; font-family:'EB Garamond', Georgia, serif; background:var(--bg); color:var(--ink); }
-  header { background:var(--ink); color:var(--bg); padding:1.2rem 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; position:sticky; top:0; z-index:50; }
-  header h1 { font-family:'Cinzel',serif; font-size:1.05rem; letter-spacing:0.08em; margin:0; }
-  header a.back { color:var(--gold); text-decoration:none; font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.1em; }
-  .toolbar { display:flex; gap:0.6rem; flex-wrap:wrap; }
-  button, .btn { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--gold); background:transparent; color:var(--gold); padding:0.55rem 1rem; cursor:pointer; border-radius:2px; transition:.2s; }
-  button:hover, .btn:hover { background:var(--gold); color:var(--ink); }
-  button.primary { background:var(--gold); color:var(--ink); }
-  button.danger { border-color:var(--danger); color:var(--danger); }
-  button.danger:hover { background:var(--danger); color:#fff; }
-  main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-  .tabs { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.5rem; border-bottom:1px solid var(--border); padding-bottom:1rem; }
-  .tab-btn { font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; padding:0.6rem 1rem; border:1px solid var(--border); background:#fff; color:var(--ink-mid); cursor:pointer; border-radius:2px; }
-  .tab-btn.active { background:var(--ink); color:var(--gold); border-color:var(--ink); }
-  .panel { display:none; }
-  .panel.active { display:block; }
-  .card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1.5rem; margin-bottom:1.2rem; }
-  .card h2 { font-family:'Cinzel',serif; font-size:0.95rem; letter-spacing:0.06em; margin:0 0 1rem; color:var(--ink); }
-  label { display:block; font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mid); margin-bottom:0.35rem; margin-top:0.9rem; }
-  label:first-child { margin-top:0; }
-  input[type=text], input[type=email], input[type=tel], input[type=number], input[type=url], textarea, select {
-    width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:3px; font-family:'EB Garamond',serif; font-size:1rem; background:#fffdf7;
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    margin:0; background:var(--cream); color:var(--ink);
+    font-family:'EB Garamond', Georgia, serif; font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
   }
-  textarea { min-height:80px; resize:vertical; }
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; }
-  @media (max-width:700px) { .grid2, .grid3 { grid-template-columns:1fr; } }
-  .obra-card { border:1px solid var(--border); border-radius:4px; padding:1.2rem; margin-bottom:1rem; background:#fffefb; position:relative; }
-  .obra-head { display:flex; gap:1rem; align-items:flex-start; }
-  .obra-thumb { width:90px; height:110px; object-fit:cover; border-radius:3px; border:1px solid var(--border); flex-shrink:0; background:#eee; }
-  .obra-fields { flex:1; }
-  .obra-actions { display:flex; gap:0.5rem; margin-top:1rem; }
-  .list-item { border:1px solid var(--border); border-radius:4px; padding:1rem; margin-bottom:0.8rem; background:#fffefb; }
-  .list-item-actions { display:flex; justify-content:flex-end; margin-top:0.6rem; }
-  .hint { font-size:0.85rem; color:#7a6a45; font-style:italic; margin:0.4rem 0 0; }
-  .status-msg { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.05em; padding:0.8rem 1rem; border-radius:3px; margin-bottom:1rem; display:none; }
-  .status-msg.show { display:block; }
-  .status-msg.ok { background:#EAF4EA; color:var(--ok); border:1px solid var(--ok); }
-  .file-input-wrap { display:flex; align-items:center; gap:0.8rem; margin-top:0.4rem; flex-wrap:wrap; }
-  .add-row { margin-top:1rem; }
-  .small { font-size:0.85rem; color:#6b5b3a; }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  a { color:inherit; }
+  ::selection { background:var(--gold-soft); color:var(--ink); }
+
+  /* ---------- layout ---------- */
+  .app { display:flex; min-height:100vh; }
+
+  aside#sidebar {
+    width:252px; flex:0 0 252px; background:#17110A; color:#EFE6D2;
+    display:flex; flex-direction:column; position:sticky; top:0; height:100vh;
+    border-right:1px solid #2A1F10; z-index:40;
+  }
+  .brand { padding:1.4rem 1.3rem 1.1rem; border-bottom:1px solid #2A1F10; }
+  .brand strong { font-family:'Cinzel',serif; font-weight:600; font-size:.82rem; letter-spacing:.14em; display:block; }
+  .brand span { display:block; margin-top:.3rem; font-family:'Cinzel',serif; font-size:.58rem; letter-spacing:.16em; color:#8C7B56; text-transform:uppercase; }
+  nav#nav { padding:.8rem .6rem; display:flex; flex-direction:column; gap:.15rem; overflow-y:auto; flex:1; }
+  nav#nav button {
+    display:flex; align-items:center; gap:.7rem; width:100%; padding:.62rem .7rem;
+    background:none; border:0; border-radius:var(--r); color:#C9BEA6; cursor:pointer;
+    font-family:'Cinzel',serif; font-size:.66rem; letter-spacing:.11em; text-transform:uppercase; text-align:left;
+    transition:background .15s, color .15s;
+  }
+  nav#nav button .ico { width:1.2rem; text-align:center; font-size:.95rem; opacity:.85; }
+  nav#nav button:hover { background:#241A0E; color:#F3E9D2; }
+  nav#nav button.active { background:#2E2313; color:var(--gold-soft); box-shadow:inset 2px 0 0 var(--gold); }
+  nav#nav .nav-count { margin-left:auto; font-family:'EB Garamond',serif; font-size:.72rem; letter-spacing:0; color:#8C7B56; }
+
+  .side-foot { padding:.9rem; border-top:1px solid #2A1F10; display:flex; flex-direction:column; gap:.5rem; }
+  .pub-state { font-size:.78rem; color:#9C8B66; display:flex; align-items:center; gap:.45rem; padding:0 .2rem .2rem; }
+  .dot { width:.5rem; height:.5rem; border-radius:50%; background:#6E7A5B; flex:0 0 auto; }
+  .dot.dirty { background:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,.18); }
+  .side-foot .link { font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:#9C8B66; text-decoration:none; text-align:center; padding:.35rem; }
+  .side-foot .link:hover { color:var(--gold-soft); }
+
+  main#main { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .topbar {
+    position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:1rem;
+    padding:.85rem 1.6rem; background:rgba(250,244,232,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar h1 { font-family:'Cinzel',serif; font-size:.95rem; letter-spacing:.1em; margin:0; text-transform:uppercase; }
+  .topbar .spacer { flex:1; }
+  .badge {
+    font-family:'Cinzel',serif; font-size:.58rem; letter-spacing:.1em; text-transform:uppercase;
+    padding:.35rem .6rem; border-radius:100px; border:1px solid var(--line); color:var(--ink-soft);
+    background:#fff; white-space:nowrap;
+  }
+  .badge.dirty { border-color:var(--gold); background:#FCF3DC; color:var(--gold-dark); }
+  #menuToggle { display:none; }
+
+  #view { padding:1.6rem; max-width:1180px; width:100%; margin:0 auto; }
+
+  /* ---------- controls ---------- */
+  .btn, button.btn {
+    display:inline-flex; align-items:center; justify-content:center; gap:.45rem;
+    font-family:'Cinzel',serif; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+    padding:.62rem 1rem; border-radius:4px; border:1px solid var(--line); background:#fff;
+    color:var(--ink-2); cursor:pointer; transition:.15s; text-decoration:none; white-space:nowrap;
+  }
+  .btn:hover { border-color:var(--gold); color:var(--gold-dark); background:#FFFCF3; }
+  .btn.primary { background:var(--ink); border-color:var(--ink); color:var(--gold-soft); }
+  .btn.primary:hover { background:#2A1D0D; color:#fff; }
+  .btn.gold { background:var(--gold); border-color:var(--gold); color:#241A0A; }
+  .btn.gold:hover { background:var(--gold-soft); }
+  .btn.ghost { background:transparent; border-color:transparent; color:var(--ink-soft); }
+  .btn.ghost:hover { background:#F0E6D0; color:var(--ink); }
+  .btn.danger { border-color:#E7C6C0; color:var(--danger); background:#fff; }
+  .btn.danger:hover { background:var(--danger); border-color:var(--danger); color:#fff; }
+  .btn.sm { padding:.4rem .65rem; font-size:.56rem; }
+  .btn[disabled] { opacity:.45; cursor:not-allowed; }
+  .btn.block { width:100%; }
+
+  .card {
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    padding:1.35rem 1.4rem; box-shadow:var(--shadow); margin-bottom:1.1rem;
+  }
+  .card > h2 {
+    font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    margin:0 0 1.1rem; color:var(--ink); display:flex; align-items:center; gap:.6rem;
+  }
+  .card > h2 .line { flex:1; height:1px; background:var(--line); }
+  .card .sub { margin:-.7rem 0 1.1rem; font-size:.9rem; color:var(--ink-soft); font-style:italic; }
+
+  label.f { display:block; font-family:'Cinzel',serif; font-size:.56rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-soft); margin:0 0 .3rem; }
+  .field { margin-bottom:1rem; }
+  .field:last-child { margin-bottom:0; }
+  input[type=text], input[type=email], input[type=tel], input[type=number], input[type=url], input[type=password], textarea, select {
+    width:100%; padding:.6rem .7rem; border:1px solid var(--line); border-radius:4px;
+    background:#FFFEFB; transition:border-color .15s, box-shadow .15s; font-size:.98rem;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,168,76,.18);
+  }
+  textarea { min-height:96px; resize:vertical; line-height:1.55; }
+  .grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; }
+  .counter { float:right; font-family:'EB Garamond',serif; font-size:.72rem; letter-spacing:0; color:#A3926A; text-transform:none; }
+  .field-foot { display:flex; justify-content:space-between; gap:.6rem; margin-top:.3rem; font-size:.78rem; color:#8B7B57; font-style:italic; }
+
+  .toolbar { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+  .search { position:relative; flex:1; min-width:200px; }
+  .search input { padding-left:2.1rem; }
+  .search::before { content:'⌕'; position:absolute; left:.75rem; top:50%; transform:translateY(-50%); color:#A3926A; font-size:1.05rem; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:4px; overflow:hidden; background:#fff; }
+  .seg button { border:0; background:none; padding:.55rem .8rem; font-family:'Cinzel',serif; font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); cursor:pointer; }
+  .seg button.active { background:var(--ink); color:var(--gold-soft); }
+  select.compact { width:auto; padding:.5rem .6rem; font-size:.85rem; }
+
+  /* ---------- stat cards ---------- */
+  .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1rem; margin-bottom:1.1rem; }
+  .stat { background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:1.05rem 1.1rem; box-shadow:var(--shadow); }
+  .stat .k { font-family:'Cinzel',serif; font-size:.54rem; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-soft); }
+  .stat .v { font-family:'Cormorant Garamond',serif; font-size:2rem; line-height:1.15; margin-top:.25rem; }
+  .stat .m { font-size:.78rem; color:#8B7B57; }
+  .stat.gold { background:linear-gradient(160deg,#FDF6E4,#FBF0D6); border-color:#E8D6A8; }
+
+  .bars { display:grid; gap:.55rem; }
+  .bar-row { display:grid; grid-template-columns:110px 1fr 2rem; gap:.7rem; align-items:center; font-size:.88rem; }
+  .bar { height:7px; background:#EFE4C9; border-radius:100px; overflow:hidden; }
+  .bar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-dark)); border-radius:100px; }
+  .bar-row .n { text-align:right; color:var(--ink-soft); font-size:.8rem; }
+
+  .empty { text-align:center; padding:2.2rem 1rem; border:1px dashed var(--line); border-radius:var(--r); color:var(--ink-soft); background:#FFFDF7; }
+  .empty strong { display:block; font-family:'Cinzel',serif; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.4rem; color:var(--ink-2); }
+
+  /* ---------- obras ---------- */
+  .obras-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; }
+  .obra {
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+    transition:transform .15s, box-shadow .15s, border-color .15s; position:relative;
+  }
+  .obra:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); border-color:#D6C395; }
+  .obra.dragging { opacity:.45; }
+  .obra.drop-target { outline:2px dashed var(--gold); outline-offset:2px; }
+  .obra .thumb { position:relative; aspect-ratio:4/3; background:#EFE6D2 center/cover no-repeat; cursor:pointer; }
+  .obra .thumb .pill { position:absolute; left:.55rem; top:.55rem; }
+  .obra .thumb .drag {
+    position:absolute; right:.5rem; top:.5rem; width:1.7rem; height:1.7rem; border-radius:4px;
+    background:rgba(23,17,10,.6); color:#F3E9D2; display:grid; place-items:center; cursor:grab;
+    font-size:.85rem; opacity:0; transition:opacity .15s; border:0;
+  }
+  .obra:hover .thumb .drag { opacity:1; }
+  .obra .body { padding:.8rem .9rem .9rem; display:flex; flex-direction:column; gap:.2rem; flex:1; }
+  .obra .title { font-family:'Cormorant Garamond',serif; font-size:1.12rem; line-height:1.2; cursor:pointer; }
+  .obra .meta { font-size:.8rem; color:var(--ink-soft); }
+  .obra .price { font-size:.86rem; color:var(--ink-2); margin-top:.15rem; }
+  .obra .actions { display:flex; gap:.35rem; margin-top:.6rem; }
+  .obra .actions .btn { flex:1; padding:.4rem; font-size:.52rem; }
+  .obra.new { border:1px dashed #CDB98A; background:#FFFCF2; display:grid; place-items:center; min-height:230px; cursor:pointer; color:var(--ink-soft); text-align:center; }
+  .obra.new:hover { border-color:var(--gold); color:var(--gold-dark); background:#FDF7E7; }
+  .obra.new .plus { font-size:1.8rem; line-height:1; margin-bottom:.4rem; color:var(--gold-dark); }
+
+  .pill {
+    display:inline-flex; align-items:center; gap:.3rem; font-family:'Cinzel',serif; font-size:.5rem;
+    letter-spacing:.1em; text-transform:uppercase; padding:.28rem .5rem; border-radius:100px;
+    border:1px solid; background:#fff; white-space:nowrap;
+  }
+  .pill.exibicao { color:#6B5B3A; border-color:#D9CBA6; background:#FBF5E6; }
+  .pill.disponivel { color:var(--ok); border-color:#BFDCC8; background:var(--ok-bg); }
+  .pill.reservado { color:var(--warn); border-color:#E8D3A6; background:var(--warn-bg); }
+  .pill.vendido { color:var(--danger); border-color:#E7C6C0; background:var(--danger-bg); }
+
+  /* ---------- modal ---------- */
+  .overlay { position:fixed; inset:0; background:rgba(23,17,10,.55); backdrop-filter:blur(2px); z-index:80; display:flex; justify-content:flex-end; }
+  .overlay.center { align-items:center; justify-content:center; padding:1.2rem; }
+  .sheet {
+    width:min(720px,100%); height:100%; background:var(--cream); box-shadow:var(--shadow-lg);
+    display:flex; flex-direction:column; animation:slide .22s ease-out;
+  }
+  @keyframes slide { from { transform:translateX(28px); opacity:.6; } to { transform:none; opacity:1; } }
+  .sheet-head { padding:1rem 1.3rem; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:.8rem; background:var(--card); }
+  .sheet-head h3 { margin:0; font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.13em; text-transform:uppercase; }
+  .sheet-head .spacer { flex:1; }
+  .sheet-body { padding:1.3rem; overflow-y:auto; flex:1; }
+  .sheet-foot { padding:.9rem 1.3rem; border-top:1px solid var(--line); display:flex; gap:.6rem; align-items:center; background:var(--card); }
+  .dialog { background:var(--card); border-radius:8px; width:min(440px,100%); padding:1.5rem; box-shadow:var(--shadow-lg); animation:pop .18s ease-out; }
+  @keyframes pop { from { transform:scale(.97); opacity:0; } to { transform:none; opacity:1; } }
+  .dialog h3 { margin:0 0 .4rem; font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; }
+  .dialog p { margin:0 0 1.1rem; color:var(--ink-soft); font-size:.92rem; }
+  .dialog .row { display:flex; gap:.6rem; justify-content:flex-end; margin-top:1.2rem; }
+
+  /* ---------- upload ---------- */
+  .dropzone {
+    border:1px dashed #CDB98A; border-radius:var(--r); background:#FFFCF2; padding:1rem;
+    display:flex; gap:1rem; align-items:center; cursor:pointer; transition:.15s;
+  }
+  .dropzone:hover, .dropzone.over { border-color:var(--gold); background:#FDF6E6; }
+  .dropzone img { width:110px; height:132px; object-fit:cover; border-radius:4px; border:1px solid var(--line); background:#EDE3CE; flex:0 0 auto; }
+  .dropzone .dz-text strong { display:block; font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.25rem; }
+  .dropzone .dz-text span { font-size:.84rem; color:var(--ink-soft); }
+  .dropzone.busy { opacity:.6; pointer-events:none; }
+
+  /* ---------- lists ---------- */
+  .item { border:1px solid var(--line); border-radius:var(--r); background:#FFFEFB; padding:1rem; margin-bottom:.8rem; }
+  .item-head { display:flex; align-items:center; gap:.6rem; margin-bottom:.8rem; }
+  .item-head .n { font-family:'Cinzel',serif; font-size:.56rem; letter-spacing:.1em; color:var(--ink-soft); text-transform:uppercase; }
+  .item-head .spacer { flex:1; }
+  .item-actions { display:flex; justify-content:flex-end; gap:.4rem; margin-top:.7rem; }
+
+  /* ---------- toast ---------- */
+  #toasts { position:fixed; right:1rem; bottom:1rem; z-index:120; display:flex; flex-direction:column; gap:.5rem; max-width:min(360px,90vw); }
+  .toast {
+    background:var(--ink); color:#F6EDD8; border-radius:var(--r); padding:.7rem .9rem; font-size:.88rem;
+    box-shadow:var(--shadow-lg); display:flex; gap:.6rem; align-items:flex-start; animation:toastIn .18s ease-out;
+    border-left:3px solid var(--gold);
+  }
+  .toast.ok { border-left-color:#7BC08C; }
+  .toast.err { border-left-color:#E08575; }
+  .toast .close { margin-left:auto; background:none; border:0; color:#B9AC8E; cursor:pointer; font-size:1rem; line-height:1; padding:0 .1rem; }
+  @keyframes toastIn { from { transform:translateY(8px); opacity:0; } to { transform:none; opacity:1; } }
+
+  .hint { font-size:.84rem; color:#8B7B57; font-style:italic; margin:.35rem 0 0; }
+  .divider { height:1px; background:var(--line); margin:1.1rem 0; }
+  .row-between { display:flex; align-items:center; justify-content:space-between; gap:.8rem; flex-wrap:wrap; }
+  .kbd { font-family:'Cinzel',serif; font-size:.5rem; border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:.1rem .3rem; color:var(--ink-soft); letter-spacing:.06em; }
+
+  @media (max-width: 1024px) {
+    .stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+  @media (max-width: 860px) {
+    aside#sidebar { position:fixed; inset:0 auto 0 0; transform:translateX(-102%); transition:transform .2s ease; box-shadow:var(--shadow-lg); }
+    aside#sidebar.open { transform:none; }
+    #menuToggle { display:inline-flex; }
+    .topbar { padding:.7rem 1rem; }
+    #view { padding:1rem; }
+    .grid2, .grid3 { grid-template-columns:1fr; }
+    .sheet { width:100%; }
+    .topbar h1 { font-size:.8rem; }
+    .hide-sm { display:none !important; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>✎ ÁREA DO ARTISTA</h1>
-  <div class="toolbar">
-    <label style="margin:0;color:var(--gold);cursor:pointer;">
-      <input type="file" id="importFile" accept="application/javascript,.js,text/javascript" style="display:none;">
-      <span class="btn" onclick="document.getElementById('importFile').click()">Importar data.js</span>
-    </label>
-    <button class="primary" onclick="publishData()">☁ Publicar no site</button>
-    <button onclick="exportData()">⬇ Baixar cópia (data.js)</button>
-    <a class="back btn" href="index.html" target="_blank">Ver Site ↗</a>
-  </div>
-</header>
-
-<main>
-  <div class="status-msg ok" id="statusMsg"></div>
-  <p class="hint" style="margin-bottom:1.5rem;">Edite os campos abaixo e clique em <strong>"Publicar no site"</strong> (informe a senha do painel). O site passa a mostrar o conteúdo publicado em poucos segundos. As alterações também ficam salvas neste navegador enquanto você trabalha (rascunho). Use <strong>"Baixar cópia (data.js)"</strong> só como backup do arquivo.</p>
-
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="obras">Obras</button>
-    <button class="tab-btn" data-tab="sobre">Sobre / Início</button>
-    <button class="tab-btn" data-tab="contato">Contato & Redes</button>
-    <button class="tab-btn" data-tab="exposicoes">Exposições</button>
-    <button class="tab-btn" data-tab="depoimentos">Depoimentos</button>
-  </div>
-
-  <!-- OBRAS -->
-  <div class="panel active" id="panel-obras">
-    <div class="card">
-      <h2>Obras (Galeria e À Venda)</h2>
-      <p class="hint">Cada obra aparece na Galeria. Se o status for "Disponível", "Reservado" ou "Vendido", ela também aparece em "À Venda". Marque "Destaque" para uma obra maior na galeria.</p>
-      <div id="obrasList"></div>
-      <div class="add-row"><button onclick="addObra()">+ Adicionar Nova Obra</button></div>
+<div class="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <strong>ATELIER BRUNO AMARAL</strong>
+      <span>Área do artista</span>
     </div>
-  </div>
+    <nav id="nav">
+      <button data-view="dashboard" class="active"><span class="ico">◈</span> Painel</button>
+      <button data-view="obras"><span class="ico">▣</span> Obras <span class="nav-count" id="navObras"></span></button>
+      <button data-view="inicio"><span class="ico">✦</span> Início</button>
+      <button data-view="sobre"><span class="ico">✎</span> Sobre</button>
+      <button data-view="contato"><span class="ico">✉</span> Contato</button>
+      <button data-view="exposicoes"><span class="ico">◷</span> Exposições</button>
+      <button data-view="depoimentos"><span class="ico">❝</span> Depoimentos</button>
+      <button data-view="publicar"><span class="ico">☁</span> Publicar</button>
+    </nav>
+    <div class="side-foot">
+      <div class="pub-state"><span class="dot" id="pubDot"></span><span id="pubText">Carregando…</span></div>
+      <button class="btn gold block" data-action="publish">☁ Publicar no site</button>
+      <a class="link" href="index.html" target="_blank" rel="noopener">Ver site ↗</a>
+      <button class="link" data-action="logout" style="background:none;border:0;cursor:pointer;">Sair</button>
+    </div>
+  </aside>
 
-  <!-- SOBRE / INICIO -->
-  <div class="panel" id="panel-sobre">
-    <div class="card">
-      <h2>Início (Hero)</h2>
-      <div class="grid2">
-        <div><label>Nome do atelier (logo)</label><input type="text" id="f-logoNome"></div>
-        <div><label>Subtítulo do logo</label><input type="text" id="f-logoSub"></div>
-      </div>
-      <div class="grid3">
-        <div><label>Título linha 1</label><input type="text" id="f-heroL1"></div>
-        <div><label>Título em destaque</label><input type="text" id="f-heroForte"></div>
-        <div><label>Título linha 2</label><input type="text" id="f-heroL2"></div>
-      </div>
-      <label>Subtítulo</label><input type="text" id="f-heroSub">
-      <label>Descrição</label><textarea id="f-heroDesc"></textarea>
+  <main id="main">
+    <div class="topbar">
+      <button class="btn ghost sm" id="menuToggle" aria-label="Menu">☰</button>
+      <h1 id="viewTitle">Painel</h1>
+      <div class="spacer"></div>
+      <span class="badge" id="dirtyBadge"></span>
+      <button class="btn sm hide-sm" id="btnUndo" title="Desfazer (Ctrl+Z)">↺ Desfazer</button>
+      <button class="btn primary sm" data-action="publish">Publicar</button>
     </div>
-    <div class="card">
-      <h2>Sobre o Artista</h2>
-      <label>Chamada / título da seção</label><input type="text" id="f-sobreChamada">
-      <label>Parágrafo 1</label><textarea id="f-p1"></textarea>
-      <label>Parágrafo 2</label><textarea id="f-p2"></textarea>
-      <label>Parágrafo 3</label><textarea id="f-p3"></textarea>
-      <label>Citação (opcional)</label><input type="text" id="f-citacao">
-      <div class="grid3">
-        <div><label>Anos de ofício</label><input type="text" id="f-statAnos"></div>
-        <div><label>Obras criadas</label><input type="text" id="f-statObras"></div>
-        <div><label>Países colecionadores</label><input type="text" id="f-statPaises"></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Rodapé</h2>
-      <label>Descrição curta do rodapé</label><textarea id="f-footerDesc"></textarea>
-    </div>
-  </div>
+    <div id="view"></div>
+  </main>
+</div>
 
-  <!-- CONTATO -->
-  <div class="panel" id="panel-contato">
-    <div class="card">
-      <h2>Contato</h2>
-      <div class="grid2">
-        <div><label>E-mail</label><input type="email" id="f-email"></div>
-        <div><label>Telefone / WhatsApp</label><input type="text" id="f-telefone"></div>
-      </div>
-      <div class="grid2">
-        <div><label>Localização</label><input type="text" id="f-local"></div>
-        <div><label>Horário de atendimento</label><input type="text" id="f-horario"></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>Redes Sociais (deixe em branco para ocultar)</h2>
-      <div class="grid2">
-        <div><label>Instagram (link completo)</label><input type="url" id="f-instagram" placeholder="https://instagram.com/..."></div>
-        <div><label>Facebook (link completo)</label><input type="url" id="f-facebook" placeholder="https://facebook.com/..."></div>
-      </div>
-      <div class="grid2">
-        <div><label>YouTube (link completo)</label><input type="url" id="f-youtube" placeholder="https://youtube.com/..."></div>
-        <div><label>Pinterest (link completo)</label><input type="url" id="f-pinterest" placeholder="https://pinterest.com/..."></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EXPOSICOES -->
-  <div class="panel" id="panel-exposicoes">
-    <div class="card">
-      <h2>Exposições & Mostras</h2>
-      <div id="expoList"></div>
-      <div class="add-row"><button onclick="addExpo()">+ Adicionar Exposição</button></div>
-    </div>
-  </div>
-
-  <!-- DEPOIMENTOS -->
-  <div class="panel" id="panel-depoimentos">
-    <div class="card">
-      <h2>Depoimentos de Colecionadores</h2>
-      <div id="depoList"></div>
-      <div class="add-row"><button onclick="addDepo()">+ Adicionar Depoimento</button></div>
-    </div>
-  </div>
-
-</main>
+<div id="modalRoot"></div>
+<div id="toasts"></div>
 
 <script src="data.js"></script>
 <script>
-  // Trabalhamos numa cópia dos dados (rascunho), restaurando de localStorage se existir
-  let DATA = null;
-  const DRAFT_KEY = 'atelierBrunoAmaral_draft_v1';
+/* ==========================================================================
+   Área do Artista — Atelier Bruno Amaral
+   Edita o mesmo schema do data.js e publica em /api/save (Vercel Blob)
+   ========================================================================== */
+(function () {
+  'use strict';
 
-  function loadInitialData() {
-    const draft = localStorage.getItem(DRAFT_KEY);
-    if (draft) {
-      try { return JSON.parse(draft); } catch (e) { /* ignora rascunho corrompido */ }
-    }
-    return JSON.parse(JSON.stringify(window.SITE_DATA));
+  var DRAFT_KEY = 'atelierBrunoAmaral_draft_v2';
+  var LEGACY_DRAFT_KEY = 'atelierBrunoAmaral_draft_v1';
+  var PW_KEY = 'adminPw';
+
+  var CATEGORIAS = ['Retratos', 'Paisagens', 'Religiosas', 'Natureza-Morta', 'Mitol\u00f3gicas', 'Esculturas', 'Outra'];
+  var STATUS = {
+    exibicao:   { label: 'Só galeria', short: 'Galeria' },
+    disponivel: { label: 'Disponível', short: 'À venda' },
+    reservado:  { label: 'Reservado',  short: 'Reservado' },
+    vendido:    { label: 'Vendido',    short: 'Vendido' }
+  };
+  var VIEW_TITLES = {
+    dashboard: 'Painel', obras: 'Obras', inicio: 'Início', sobre: 'Sobre o artista',
+    contato: 'Contato & redes', exposicoes: 'Exposições', depoimentos: 'Depoimentos', publicar: 'Publicar'
+  };
+
+  // ------------------------------------------------------------------ estado
+  var S = {
+    data: null,
+    published: null,
+    view: 'dashboard',
+    q: '',
+    cat: '',
+    status: '',
+    sort: 'ordem',
+    restaurado: false,
+    uploading: {},
+    undo: [],
+    editing: null,
+    lastPublish: null
+  };
+
+  // ------------------------------------------------------------------ helpers
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function get(obj, path) {
+    return String(path).split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, obj);
+  }
+  function set(obj, path, val) {
+    var parts = String(path).split('.');
+    var last = parts.pop();
+    var t = parts.reduce(function (o, k) { return o[k] = (o[k] == null ? {} : o[k]); }, obj);
+    t[last] = val;
+  }
+  function money(v) {
+    var n = Number(v);
+    if (!v || isNaN(n) || n <= 0) return '';
+    return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  }
+  function slugify(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'obra';
+  }
+  function nowId() { return 'obra-' + Date.now().toString(36); }
+
+  // ------------------------------------------------------------------ toast
+  function toast(msg, kind) {
+    var wrap = $('#toasts');
+    var el = document.createElement('div');
+    el.className = 'toast' + (kind ? ' ' + kind : '');
+    el.innerHTML = '<div>' + esc(msg) + '</div><button class="close" aria-label="Fechar">×</button>';
+    var t = setTimeout(remove, kind === 'err' ? 6500 : 4200);
+    function remove() { clearTimeout(t); if (el.parentNode) el.parentNode.removeChild(el); }
+    el.querySelector('.close').addEventListener('click', remove);
+    wrap.appendChild(el);
+    return el;
   }
 
-  const DIRTY_KEY = 'atelierBrunoAmaral_dirty_v1';
-
-  function saveDraft() {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(DATA));
-    localStorage.setItem(DIRTY_KEY, '1');
+  // ------------------------------------------------------------------ senha / API
+  function getPassword(force) {
+    var pw = force ? null : sessionStorage.getItem(PW_KEY);
+    return pw;
   }
-
-  // ---------- SENHA / API ----------
-  function getSenha(forcar) {
-    let s = forcar ? null : sessionStorage.getItem('adminPw');
-    if (!s) {
-      s = prompt('Senha da Área do Artista:');
-      if (s) sessionStorage.setItem('adminPw', s);
-    }
-    return s;
+  function askPassword() {
+    return new Promise(function (resolve) {
+      var root = $('#modalRoot');
+      root.innerHTML =
+        '<div class="overlay center" data-overlay>' +
+          '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="pwTitle">' +
+            '<h3 id="pwTitle">Senha da Área do Artista</h3>' +
+            '<p>Informe a senha configurada em <code>ADMIN_PASSWORD</code> na Vercel.</p>' +
+            '<div class="field"><input type="password" id="pwInput" autocomplete="current-password" placeholder="••••••••"></div>' +
+            '<p class="hint" id="pwErr" style="color:#A23A2E"></p>' +
+            '<div class="row"><button class="btn ghost" data-cancel>Cancelar</button><button class="btn primary" id="pwOk">Entrar</button></div>' +
+          '</div>' +
+        '</div>';
+      var input = $('#pwInput');
+      setTimeout(function () { input.focus(); }, 30);
+      function close(v) { root.innerHTML = ''; resolve(v); }
+      $('#pwOk').addEventListener('click', submit);
+      $('[data-cancel]').addEventListener('click', function () { close(null); });
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+      function submit() {
+        var v = input.value;
+        if (!v) { $('#pwErr').textContent = 'Digite a senha.'; return; }
+        close(v);
+      }
+    });
   }
 
   async function api(path, body) {
-    const senha = getSenha(false);
-    if (!senha) throw new Error('Senha não informada');
-    const r = await fetch(path, {
+    var pw = getPassword(false);
+    if (!pw) throw new Error('Sem senha');
+    var r = await fetch(path, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-password': senha },
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': pw },
       body: JSON.stringify(body)
     });
-    const j = await r.json().catch(() => ({}));
-    if (r.status === 401) { sessionStorage.removeItem('adminPw'); throw new Error('Senha incorreta'); }
-    if (!r.ok) throw new Error(j.error || 'Erro ' + r.status);
+    var j = await r.json().catch(function () { return {}; });
+    if (r.status === 401) { sessionStorage.removeItem(PW_KEY); throw new Error('Senha incorreta'); }
+    if (!r.ok) throw new Error(j.error || ('Erro ' + r.status));
     return j;
   }
 
-  // Reduz a foto (máx. 1600px, JPEG) para caber no envio e carregar rápido no site
+  // ------------------------------------------------------------------ rascunho
+  function isDirty() {
+    if (!S.data || !S.published) return false;
+    return JSON.stringify(S.data) !== JSON.stringify(S.published);
+  }
+  var saveTimer = null;
+  function changed(opts) {
+    opts = opts || {};
+    if (!opts.noUndo && opts.undo !== false) { /* undo registrado por quem chama */ }
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(S.data)); } catch (e) {}
+      updateChrome();
+    }, 250);
+    updateChrome();
+  }
+  function pushUndo() {
+    S.undo.push(JSON.stringify(S.data));
+    if (S.undo.length > 40) S.undo.shift();
+    updateChrome();
+  }
+  function undo() {
+    if (!S.undo.length) { toast('Nada para desfazer.'); return; }
+    S.data = JSON.parse(S.undo.pop());
+    persistDraft();
+    render();
+    toast('Alteração desfeita.');
+  }
+  function persistDraft() {
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(S.data)); } catch (e) {}
+  }
+  function discardDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+    localStorage.removeItem(LEGACY_DRAFT_KEY);
+    S.data = clone(S.published);
+    S.undo = [];
+    render();
+    toast('Rascunho descartado. Conteúdo do site restaurado.', 'ok');
+  }
+
+  // ------------------------------------------------------------------ chrome
+  function updateChrome() {
+    var dirty = isDirty();
+    var badge = $('#dirtyBadge');
+    var dot = $('#pubDot');
+    var text = $('#pubText');
+    var nObras = S.data ? S.data.obras.length : 0;
+    $('#navObras').textContent = S.data ? nObras : '';
+    if (dirty) {
+      badge.textContent = 'Alterações não publicadas';
+      badge.classList.add('dirty');
+      dot.classList.add('dirty');
+      text.textContent = 'Rascunho local';
+    } else {
+      badge.textContent = S.lastPublish ? 'Publicado' : 'Tudo publicado';
+      badge.classList.remove('dirty');
+      dot.classList.remove('dirty');
+      text.textContent = S.lastPublish ? 'Publicado agora' : 'Sincronizado';
+    }
+    var btnUndo = $('#btnUndo');
+    if (btnUndo) btnUndo.disabled = !S.undo.length;
+  }
+
+  // ------------------------------------------------------------------ navegação
+  function go(view) {
+    S.view = view;
+    $$('#nav button').forEach(function (b) { b.classList.toggle('active', b.dataset.view === view); });
+    $('#viewTitle').textContent = VIEW_TITLES[view] || 'Painel';
+    $('#sidebar').classList.remove('open');
+    render();
+  }
+
+  // ------------------------------------------------------------------ render
+  function render() {
+    var v = S.view;
+    var html = v === 'dashboard' ? viewDashboard()
+      : v === 'obras' ? viewObras()
+      : v === 'inicio' ? viewInicio()
+      : v === 'sobre' ? viewSobre()
+      : v === 'contato' ? viewContato()
+      : v === 'exposicoes' ? viewExposicoes()
+      : v === 'depoimentos' ? viewDepoimentos()
+      : viewPublicar();
+    $('#view').innerHTML = html;
+    bindView();
+    updateChrome();
+  }
+
+  // ------------------------------------------------------------------ dashboard
+  function viewDashboard() {
+    var d = S.data;
+    var obras = d.obras;
+    var aVenda = obras.filter(function (o) { return o.status === 'disponivel' || o.status === 'reservado'; });
+    var vendidas = obras.filter(function (o) { return o.status === 'vendido'; });
+    var total = obras.reduce(function (s, o) { return s + (o.status === 'disponivel' || o.status === 'reservado' ? Number(o.preco) || 0 : 0); }, 0);
+    var cats = {};
+    obras.forEach(function (o) { cats[o.categoria] = (cats[o.categoria] || 0) + 1; });
+    var catList = Object.keys(cats).sort(function (a, b) { return cats[b] - cats[a]; });
+    var max = catList.length ? cats[catList[0]] : 1;
+    var recentes = obras.slice(0, 6);
+
+    return '' +
+      '<div class="stats">' +
+        stat('Obras no acervo', obras.length, icones(d) ) +
+        stat('À venda', aVenda.length, 'disponíveis ou reservadas') +
+        stat('Vendidas', vendidas.length, 'marcadas como vendidas') +
+        '<div class="stat gold"><div class="k">Valor à venda</div><div class="v">' + (total ? money(total) : '—') + '</div><div class="m">soma das obras disponíveis</div></div>' +
+      '</div>' +
+      '<div class="grid2" style="align-items:start">' +
+        '<div class="card">' +
+          '<h2>Acervo por categoria <span class="line"></span></h2>' +
+          (catList.length ? '<div class="bars">' + catList.map(function (c) {
+            return '<div class="bar-row"><span>' + esc(c) + '</span><div class="bar"><span style="width:' + Math.max(6, Math.round(cats[c] / max * 100)) + '%"></span></div><span class="n">' + cats[c] + '</span></div>';
+          }).join('') + '</div>' : '<div class="empty"><strong>Sem obras</strong>Cadastre a primeira obra.</div>') +
+        '</div>' +
+        '<div class="card">' +
+          '<h2>Ações rápidas <span class="line"></span></h2>' +
+          '<div class="toolbar" style="margin:0">' +
+            '<button class="btn gold" data-action="new-obra">+ Nova obra</button>' +
+            '<button class="btn" data-go="inicio">Editar início</button>' +
+            '<button class="btn" data-go="contato">Contato</button>' +
+            '<button class="btn" data-action="export">⬇ Backup data.js</button>' +
+          '</div>' +
+          '<div class="divider"></div>' +
+          '<div class="row-between" style="font-size:.9rem;color:var(--ink-soft)">' +
+            '<span>Estado</span><span>' + (isDirty() ? 'Há alterações não publicadas' : 'Tudo publicado') + '</span>' +
+          '</div>' +
+          '<div class="row-between" style="font-size:.9rem;color:var(--ink-soft);margin-top:.4rem">' +
+            '<span>Atalhos</span><span><span class="kbd">Ctrl</span>+<span class="kbd">S</span> publicar · <span class="kbd">Ctrl</span>+<span class="kbd">K</span> buscar</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<h2>Últimas obras <span class="line"></span><button class="btn sm ghost" data-go="obras">Ver todas</button></h2>' +
+        (recentes.length ? '<div class="obras-grid">' + recentes.map(function (o) { return cardObra(o, true); }).join('') + '</div>'
+          : '<div class="empty"><strong>Nenhuma obra</strong>Clique em “+ Nova obra”.</div>') +
+      '</div>';
+  }
+  function icones(d) { return d.obras.length + ' obra(s) · ' + d.obras.filter(function (o) { return o.destaque; }).length + ' em destaque'; }
+  function stat(k, v, m) {
+    return '<div class="stat"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) + '</div><div class="m">' + esc(m || '') + '</div></div>';
+  }
+
+  // ------------------------------------------------------------------ obras
+  function filteredObras() {
+    var q = S.q.trim().toLowerCase();
+    var list = S.data.obras.slice();
+    if (q) {
+      list = list.filter(function (o) {
+        return [o.titulo, o.categoria, o.tecnica, o.ano, o.descricao].join(' ').toLowerCase().indexOf(q) >= 0;
+      });
+    }
+    if (S.cat) list = list.filter(function (o) { return o.categoria === S.cat; });
+    if (S.status) list = list.filter(function (o) { return o.status === S.status; });
+    if (S.sort === 'titulo') list.sort(function (a, b) { return String(a.titulo).localeCompare(String(b.titulo), 'pt-BR'); });
+    else if (S.sort === 'ano') list.sort(function (a, b) { return String(b.ano || '').localeCompare(String(a.ano || '')); });
+    else if (S.sort === 'preco') list.sort(function (a, b) { return (Number(b.preco) || 0) - (Number(a.preco) || 0); });
+    else if (S.sort === 'status') {
+      var order = { disponivel: 0, reservado: 1, vendido: 2, exibicao: 3 };
+      list.sort(function (a, b) { return (order[a.status] || 9) - (order[b.status] || 9); });
+    }
+    return list;
+  }
+
+  function cardObra(o, compact) {
+    var st = STATUS[o.status] || STATUS.exibicao;
+    return '<article class="obra" draggable="' + (compact ? 'false' : 'true') + '" data-id="' + esc(o.id) + '">' +
+      '<div class="thumb" style="background-image:url(\'' + esc(o.img || '') + '\')" data-open="' + esc(o.id) + '">' +
+        '<span class="pill ' + esc(o.status) + '">' + esc(st.short) + '</span>' +
+        (compact ? '' : '<button class="drag" title="Arrastar para reordenar" aria-label="Arrastar">⠿</button>') +
+      '</div>' +
+      '<div class="body">' +
+        '<div class="title" data-open="' + esc(o.id) + '">' + esc(o.titulo || 'Sem título') + '</div>' +
+        '<div class="meta">' + esc([o.categoria, o.ano].filter(Boolean).join(' · ')) + '</div>' +
+        (o.preco && (o.status === 'disponivel' || o.status === 'reservado') ? '<div class="price">' + esc(money(o.preco)) + '</div>' : '') +
+        (compact ? '' :
+          '<div class="actions">' +
+            '<button class="btn sm" data-open="' + esc(o.id) + '">Editar</button>' +
+            '<button class="btn sm ghost" data-dup="' + esc(o.id) + '" title="Duplicar">⧉</button>' +
+            '<button class="btn sm danger" data-del="' + esc(o.id) + '" title="Remover">✕</button>' +
+          '</div>') +
+      '</div>' +
+    '</article>';
+  }
+
+  function viewObras() {
+    var list = filteredObras();
+    var total = S.data.obras.length;
+    return '' +
+      '<div class="toolbar">' +
+        '<div class="search"><input type="text" id="q" placeholder="Buscar por título, técnica, categoria… (' + total + ' obras)" value="' + esc(S.q) + '"></div>' +
+        '<select class="compact" id="filterCat"><option value="">Todas as categorias</option>' + CATEGORIAS.map(function (c) {
+          return '<option value="' + esc(c) + '"' + (S.cat === c ? ' selected' : '') + '>' + esc(c) + '</option>';
+        }).join('') + '</select>' +
+        '<select class="compact" id="filterStatus"><option value="">Todos os status</option>' + Object.keys(STATUS).map(function (k) {
+          return '<option value="' + k + '"' + (S.status === k ? ' selected' : '') + '>' + esc(STATUS[k].label) + '</option>';
+        }).join('') + '</select>' +
+        '<select class="compact" id="filterSort">' +
+          opt('ordem', 'Ordem do site', S.sort) + opt('titulo', 'Título (A-Z)', S.sort) +
+          opt('ano', 'Ano (novas primeiro)', S.sort) + opt('preco', 'Preço (maior)', S.sort) +
+          opt('status', 'Status', S.sort) +
+        '</select>' +
+        '<button class="btn gold" data-action="new-obra">+ Nova obra</button>' +
+      '</div>' +
+      '<p class="hint" style="margin:-.4rem 0 1rem">Arraste os cartões pela alça ⠿ para mudar a ordem na galeria do site.</p>' +
+      (list.length
+        ? '<div class="obras-grid" id="obrasGrid">' + list.map(function (o) { return cardObra(o, false); }).join('') +
+          '<button class="obra new" data-action="new-obra"><div><div class="plus">+</div>Adicionar obra</div></button></div>'
+        : '<div class="empty"><strong>Nada encontrado</strong>' + (total ? 'Ajuste a busca ou os filtros.' : 'Cadastre a primeira obra do acervo.') +
+          '<div style="margin-top:1rem"><button class="btn gold" data-action="new-obra">+ Nova obra</button></div></div>');
+  }
+  function opt(v, l, cur) { return '<option value="' + v + '"' + (cur === v ? ' selected' : '') + '>' + esc(l) + '</option>'; }
+
+  // ------------------------------------------------------------------ textos
+  function viewInicio() {
+    return '<div class="card">' +
+      '<h2>Início (hero) <span class="line"></span><button class="btn sm ghost" data-restore="site">Restaurar publicado</button></h2>' +
+      '<p class="sub">Primeira dobra do site: nome, título grande e apresentação.</p>' +
+      '<div class="grid2">' +
+        f('Nome do atelier (logo)', 'site.logoNome') +
+        f('Subtítulo do logo', 'site.logoSub') +
+      '</div>' +
+      '<div class="grid3">' +
+        f('Título — linha 1', 'site.heroTituloLinha1') +
+        f('Título — destaque (itálico)', 'site.heroTituloForte') +
+        f('Título — linha 2', 'site.heroTituloLinha2') +
+      '</div>' +
+      f('Eyebrow (acima do título)', 'site.heroEyebrow') +
+      f('Subtítulo', 'site.heroSubtitulo') +
+      f('Descrição', 'site.heroDescricao', { area: true, max: 260 }) +
+      '</div>';
+  }
+
+  function viewSobre() {
+    return '<div class="card">' +
+      '<h2>Sobre o artista <span class="line"></span><button class="btn sm ghost" data-restore="sobre">Restaurar publicado</button></h2>' +
+      f('Chamada da seção', 'sobre.chamada') +
+      f('Parágrafo 1', 'sobre.paragrafos.0', { area: true, max: 420 }) +
+      f('Parágrafo 2', 'sobre.paragrafos.1', { area: true, max: 420 }) +
+      f('Parágrafo 3', 'sobre.paragrafos.2', { area: true, max: 420 }) +
+      f('Citação (opcional)', 'sobre.citacao') +
+      '<div class="divider"></div>' +
+      '<div class="grid3">' + f('Anos de ofício', 'sobre.statAnos') + f('Obras criadas', 'sobre.statObras') + f('Países com colecionadores', 'sobre.statPaises') + '</div>' +
+      '<div class="divider"></div>' +
+      f('Descrição curta do rodapé', 'footerDescricao', { area: true, max: 200 }) +
+      '</div>';
+  }
+
+  function viewContato() {
+    return '<div class="card">' +
+      '<h2>Contato <span class="line"></span><button class="btn sm ghost" data-restore="contato">Restaurar publicado</button></h2>' +
+      '<div class="grid2">' + f('E-mail', 'contato.email', { type: 'email' }) + f('Telefone / WhatsApp', 'contato.telefone') + '</div>' +
+      '<div class="grid2">' + f('Localização', 'contato.localizacao') + f('Horário de atendimento', 'contato.horario') + '</div>' +
+      '</div>' +
+      '<div class="card">' +
+      '<h2>Redes sociais <span class="line"></span></h2>' +
+      '<p class="sub">Deixe em branco para ocultar o ícone no site.</p>' +
+      '<div class="grid2">' + f('Instagram', 'contato.instagram', { type: 'url', ph: 'https://instagram.com/…' }) + f('Facebook', 'contato.facebook', { type: 'url', ph: 'https://facebook.com/…' }) + '</div>' +
+      '<div class="grid2">' + f('YouTube', 'contato.youtube', { type: 'url', ph: 'https://youtube.com/…' }) + f('Pinterest', 'contato.pinterest', { type: 'url', ph: 'https://pinterest.com/…' }) + '</div>' +
+      '</div>';
+  }
+
+  function f(label, path, o) {
+    o = o || {};
+    var val = get(S.data, path);
+    val = val == null ? '' : val;
+    var input = o.area
+      ? '<textarea data-bind="' + esc(path) + '" data-max="' + (o.max || 600) + '" placeholder="' + esc(o.ph || '') + '">' + esc(val) + '</textarea>'
+      : '<input type="' + (o.type || 'text') + '" data-bind="' + esc(path) + '" value="' + esc(val) + '" placeholder="' + esc(o.ph || '') + '">';
+    return '<div class="field">' +
+      (o.area ? '<label class="f">' + esc(label) + '<span class="counter" data-counter="' + esc(path) + '"></span></label>' : '<label class="f">' + esc(label) + '</label>') +
+      input + '</div>';
+  }
+
+  // ------------------------------------------------------------------ exposições / depoimentos
+  function viewExposicoes() {
+    var list = S.data.exposicoes || [];
+    return '<div class="card">' +
+      '<h2>Exposições & mostras <span class="line"></span></h2>' +
+      '<p class="sub">Aparecem na seção “Exposições” do site. Deixe vazio para ocultar a seção.</p>' +
+      (list.length ? list.map(function (e, i) {
+        return '<div class="item">' +
+          '<div class="item-head"><span class="n">Exposição ' + (i + 1) + '</span><span class="spacer"></span>' +
+          '<button class="btn sm ghost" data-expo-up="' + i + '" title="Subir">↑</button>' +
+          '<button class="btn sm ghost" data-expo-down="' + i + '" title="Descer">↓</button>' +
+          '<button class="btn sm danger" data-expo-del="' + i + '">Remover</button></div>' +
+          '<div class="grid3">' +
+            '<div class="field"><label class="f">Ano</label><input type="text" data-bind="exposicoes.' + i + '.ano" value="' + esc(e.ano) + '"></div>' +
+            '<div class="field"><label class="f">Status</label><select data-bind="exposicoes.' + i + '.tag">' +
+              ['Em Cartaz', 'Encerrada', 'A confirmar'].map(function (t) { return '<option value="' + t + '"' + (e.tag === t ? ' selected' : '') + '>' + t + '</option>'; }).join('') +
+            '</select></div>' +
+            '<div class="field"><label class="f">Cidade / País</label><input type="text" data-bind="exposicoes.' + i + '.local" value="' + esc(e.local) + '"></div>' +
+          '</div>' +
+          '<div class="field"><label class="f">Título da exposição</label><input type="text" data-bind="exposicoes.' + i + '.titulo" value="' + esc(e.titulo) + '"></div>' +
+        '</div>';
+      }).join('') : '<div class="empty"><strong>Nenhuma exposição</strong>Cadastre mostras, coletivas e prêmios.</div>') +
+      '<button class="btn gold" data-expo-add>+ Adicionar exposição</button>' +
+      '</div>';
+  }
+
+  function viewDepoimentos() {
+    var list = S.data.depoimentos || [];
+    return '<div class="card">' +
+      '<h2>Depoimentos <span class="line"></span></h2>' +
+      '<p class="sub">Testemunhos de colecionadores exibidos no site.</p>' +
+      (list.length ? list.map(function (d, i) {
+        return '<div class="item">' +
+          '<div class="item-head"><span class="n">Depoimento ' + (i + 1) + '</span><span class="spacer"></span>' +
+          '<button class="btn sm ghost" data-depo-up="' + i + '" title="Subir">↑</button>' +
+          '<button class="btn sm ghost" data-depo-down="' + i + '" title="Descer">↓</button>' +
+          '<button class="btn sm danger" data-depo-del="' + i + '">Remover</button></div>' +
+          '<div class="field"><label class="f">Depoimento</label><textarea data-bind="depoimentos.' + i + '.texto" data-max="400">' + esc(d.texto) + '</textarea></div>' +
+          '<div class="grid2">' +
+            '<div class="field"><label class="f">Nome</label><input type="text" data-bind="depoimentos.' + i + '.nome" value="' + esc(d.nome) + '"></div>' +
+            '<div class="field"><label class="f">Cidade / relação</label><input type="text" data-bind="depoimentos.' + i + '.papel" value="' + esc(d.papel) + '"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('') : '<div class="empty"><strong>Nenhum depoimento</strong>Adicione a primeira opinião de colecionador.</div>') +
+      '<button class="btn gold" data-depo-add>+ Adicionar depoimento</button>' +
+      '</div>';
+  }
+
+  // ------------------------------------------------------------------ publicar
+  function viewPublicar() {
+    var d = S.data;
+    var dirty = isDirty();
+    return '<div class="grid2" style="align-items:start">' +
+      '<div class="card">' +
+        '<h2>Publicar no site <span class="line"></span></h2>' +
+        '<p class="sub">Grava os dados no Vercel Blob. O site passa a usar este conteúdo em segundos.</p>' +
+        '<div class="row-between" style="margin-bottom:.7rem"><span>Obras</span><strong>' + d.obras.length + '</strong></div>' +
+        '<div class="row-between" style="margin-bottom:.7rem"><span>Exposições</span><strong>' + (d.exposicoes || []).length + '</strong></div>' +
+        '<div class="row-between" style="margin-bottom:.7rem"><span>Depoimentos</span><strong>' + (d.depoimentos || []).length + '</strong></div>' +
+        '<div class="row-between" style="margin-bottom:1.2rem"><span>Estado</span><strong style="color:' + (dirty ? 'var(--gold-dark)' : 'var(--ok)') + '">' + (dirty ? 'Alterações pendentes' : 'Sincronizado') + '</strong></div>' +
+        '<button class="btn gold block" data-action="publish">☁ Publicar agora</button>' +
+      '</div>' +
+      '<div class="card">' +
+        '<h2>Backup e restauração <span class="line"></span></h2>' +
+        '<p class="sub">O backup gera o arquivo <code>data.js</code> que o site usa como reserva caso a publicação falhe.</p>' +
+        '<div class="toolbar" style="margin:0">' +
+          '<button class="btn" data-action="export">⬇ Baixar data.js</button>' +
+          '<button class="btn" data-action="import">⬆ Importar data.js</button>' +
+          '<button class="btn danger" data-action="discard">Descartar rascunho</button>' +
+        '</div>' +
+        '<div class="divider"></div>' +
+        '<p class="hint">“Descartar rascunho” apaga as alterações locais e recarrega o conteúdo publicado no site.</p>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // ------------------------------------------------------------------ bind
+  function bindView() {
+    $$('[data-bind]').forEach(function (el) {
+      var path = el.dataset.bind;
+      var max = Number(el.dataset.max || 0);
+      if (max) updateCounter(el, max);
+      el.addEventListener('input', function () {
+        var val = el.type === 'checkbox' ? el.checked : el.value;
+        set(S.data, path, val);
+        if (max) updateCounter(el, max);
+        changed();
+      });
+    });
+    function updateCounter(el, max) {
+      var c = document.querySelector('[data-counter="' + el.dataset.bind + '"]');
+      if (c) c.textContent = el.value.length + '/' + max;
+    }
+
+    var q = $('#q');
+    if (q) {
+      q.addEventListener('input', function () {
+        S.q = q.value;
+        var grid = $('#obrasGrid');
+        if (grid) {
+          grid.innerHTML = filteredObras().map(function (o) { return cardObra(o, false); }).join('') +
+            '<button class="obra new" data-action="new-obra"><div><div class="plus">+</div>Adicionar obra</div></button>';
+          enableDrag();
+        }
+      });
+      q.addEventListener('keydown', function (e) { if (e.key === 'Escape') { q.value = ''; S.q = ''; render(); } });
+    }
+    var fc = $('#filterCat'); if (fc) fc.addEventListener('change', function () { S.cat = fc.value; render(); });
+    var fs = $('#filterStatus'); if (fs) fs.addEventListener('change', function () { S.status = fs.value; render(); });
+    var fo = $('#filterSort'); if (fo) fo.addEventListener('change', function () { S.sort = fo.value; render(); });
+
+    enableDrag();
+  }
+
+  // ------------------------------------------------------------------ ações (delegação)
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    var navBtn = t.closest('#nav button');
+    if (navBtn) { go(navBtn.dataset.view); return; }
+
+    var el;
+    if ((el = t.closest('[data-open]'))) { openObra(el.dataset.open); return; }
+    if ((el = t.closest('[data-dup]'))) { duplicateObra(el.dataset.dup); return; }
+    if ((el = t.closest('[data-del]'))) { removeObra(el.dataset.del); return; }
+    if ((el = t.closest('[data-go]'))) { go(el.dataset.go); return; }
+    if ((el = t.closest('[data-restore]'))) { restoreSection(el.dataset.restore); return; }
+    if ((el = t.closest('[data-expo-add]'))) { addExpo(); return; }
+    if ((el = t.closest('[data-expo-del]'))) { removeAt(S.data.exposicoes, Number(el.dataset.expoDel)); return; }
+    if ((el = t.closest('[data-expo-up]'))) { move(S.data.exposicoes, Number(el.dataset.expoUp), -1); return; }
+    if ((el = t.closest('[data-expo-down]'))) { move(S.data.exposicoes, Number(el.dataset.expoDown), 1); return; }
+    if ((el = t.closest('[data-depo-add]'))) { addDepo(); return; }
+    if ((el = t.closest('[data-depo-del]'))) { removeAt(S.data.depoimentos, Number(el.dataset.depoDel)); return; }
+    if ((el = t.closest('[data-depo-up]'))) { move(S.data.depoimentos, Number(el.dataset.depoUp), -1); return; }
+    if ((el = t.closest('[data-depo-down]'))) { move(S.data.depoimentos, Number(el.dataset.depoDown), 1); return; }
+
+    var act = t.closest('[data-action]');
+    if (act) {
+      var a = act.dataset.action;
+      if (a === 'publish') publish();
+      else if (a === 'new-obra') newObra();
+      else if (a === 'export') exportData();
+      else if (a === 'import') $('#importFile').click();
+      else if (a === 'discard') discard();
+      else if (a === 'logout') logout();
+      return;
+    }
+    if (t.closest('#menuToggle')) { $('#sidebar').classList.toggle('open'); return; }
+    if (t.closest('#btnUndo')) { undo(); return; }
+  });
+
+  function move(arr, i, dir) {
+    var j = i + dir;
+    if (j < 0 || j >= arr.length) return;
+    pushUndo();
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    changed(); persistDraft(); render();
+  }
+  function removeAt(arr, i) {
+    pushUndo(); arr.splice(i, 1); changed(); persistDraft(); render();
+  }
+
+  // ------------------------------------------------------------------ drag & drop
+  function enableDrag() {
+    var grid = $('#obrasGrid');
+    if (!grid) return;
+    var dragged = null;
+    $$('.obra[data-id]', grid).forEach(function (card) {
+      var handle = $('.drag', card);
+      card.addEventListener('dragstart', function (e) {
+        if (!handle) return;
+        dragged = card;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', card.dataset.id); } catch (err) {}
+      });
+      card.addEventListener('dragend', function () {
+        card.classList.remove('dragging');
+        $$('.obra', grid).forEach(function (c) { c.classList.remove('drop-target'); });
+        dragged = null;
+      });
+      card.addEventListener('dragover', function (e) {
+        if (!dragged || card === dragged) return;
+        e.preventDefault();
+        card.classList.add('drop-target');
+      });
+      card.addEventListener('dragleave', function () { card.classList.remove('drop-target'); });
+      card.addEventListener('drop', function (e) {
+        if (!dragged || card === dragged) return;
+        e.preventDefault();
+        var from = S.data.obras.findIndex(function (o) { return o.id === dragged.dataset.id; });
+        var to = S.data.obras.findIndex(function (o) { return o.id === card.dataset.id; });
+        if (from < 0 || to < 0) return;
+        pushUndo();
+        var item = S.data.obras.splice(from, 1)[0];
+        S.data.obras.splice(to, 0, item);
+        changed(); persistDraft(); render();
+        toast('Ordem atualizada.');
+      });
+    });
+  }
+
+  // ------------------------------------------------------------------ obras: ações
+  function newObra() {
+    pushUndo();
+    var o = {
+      id: nowId(), titulo: 'Nova obra', categoria: 'Retratos', tecnica: 'Óleo sobre tela',
+      dimensoes: '', ano: String(new Date().getFullYear()), preco: '', status: 'exibicao',
+      descricao: '', img: 'assets/bruno-amaral-perfil.jpg', destaque: false
+    };
+    S.data.obras.unshift(o);
+    changed(); persistDraft();
+    if (S.view !== 'obras') go('obras'); else render();
+    setTimeout(function () { openObra(o.id); }, 40);
+  }
+  function duplicateObra(id) {
+    var i = S.data.obras.findIndex(function (o) { return o.id === id; });
+    if (i < 0) return;
+    pushUndo();
+    var copy = clone(S.data.obras[i]);
+    copy.id = nowId();
+    copy.titulo = (copy.titulo || 'Obra') + ' (cópia)';
+    S.data.obras.splice(i + 1, 0, copy);
+    changed(); persistDraft(); render();
+    toast('Obra duplicada.');
+  }
+  function removeObra(id) {
+    var i = S.data.obras.findIndex(function (o) { return o.id === id; });
+    if (i < 0) return;
+    var removed = S.data.obras[i];
+    pushUndo();
+    S.data.obras.splice(i, 1);
+    changed(); persistDraft(); render();
+    var t = toast('“' + (removed.titulo || 'Obra') + '” removida.', 'err');
+    var btn = document.createElement('button');
+    btn.className = 'btn sm ghost';
+    btn.textContent = 'Desfazer';
+    btn.style.color = '#E8C97A';
+    btn.addEventListener('click', function () { undo(); t.remove(); });
+    t.appendChild(btn);
+  }
+  function restoreSection(section) {
+    if (!S.published) return;
+    pushUndo();
+    if (section === 'footerDescricao') S.data.footerDescricao = S.published.footerDescricao || '';
+    else S.data[section] = clone(S.published[section]);
+    changed(); persistDraft(); render();
+    toast('Seção restaurada do conteúdo publicado.');
+  }
+
+  // ------------------------------------------------------------------ editor de obra
+  function openObra(id) {
+    var o = S.data.obras.find(function (x) { return x.id === id; });
+    if (!o) return;
+    S.editing = id;
+    var root = $('#modalRoot');
+    root.innerHTML =
+      '<div class="overlay" data-overlay>' +
+        '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="obraTitle">' +
+          '<div class="sheet-head">' +
+            '<h3 id="obraTitle">Editar obra</h3><span class="spacer"></span>' +
+            '<span class="pill ' + esc(o.status) + '" id="edStatusPill">' + esc((STATUS[o.status] || STATUS.exibicao).short) + '</span>' +
+            '<button class="btn sm ghost" data-close aria-label="Fechar">✕</button>' +
+          '</div>' +
+          '<div class="sheet-body">' +
+            '<div class="dropzone" id="dropzone">' +
+              '<img id="edThumb" src="' + esc(o.img) + '" alt="">' +
+              '<div class="dz-text"><strong>Foto da obra</strong>' +
+                '<span>Clique ou arraste uma imagem aqui. Ela é otimizada (até 1600px) e enviada na hora.</span>' +
+                '<div style="margin-top:.5rem" class="small"><button class="btn sm" data-pick>Escolher arquivo</button></div>' +
+              '</div>' +
+              '<input type="file" accept="image/*" id="edFile" style="display:none">' +
+            '</div>' +
+            '<div class="divider"></div>' +
+            '<div class="grid2">' +
+              '<div class="field"><label class="f">Título</label><input type="text" id="edTitulo" value="' + esc(o.titulo) + '"></div>' +
+              '<div class="field"><label class="f">Categoria</label><select id="edCategoria">' + CATEGORIAS.map(function (c) {
+                return '<option value="' + esc(c) + '"' + (o.categoria === c ? ' selected' : '') + '>' + esc(c) + '</option>';
+              }).join('') + '</select></div>' +
+            '</div>' +
+            '<div class="grid3">' +
+              '<div class="field"><label class="f">Técnica</label><input type="text" id="edTecnica" value="' + esc(o.tecnica) + '"></div>' +
+              '<div class="field"><label class="f">Dimensões</label><input type="text" id="edDimensoes" value="' + esc(o.dimensoes) + '" placeholder="80 × 60 cm"></div>' +
+              '<div class="field"><label class="f">Ano</label><input type="text" id="edAno" value="' + esc(o.ano) + '"></div>' +
+            '</div>' +
+            '<div class="grid2">' +
+              '<div class="field"><label class="f">Status</label><select id="edStatus">' + Object.keys(STATUS).map(function (k) {
+                return '<option value="' + k + '"' + (o.status === k ? ' selected' : '') + '>' + esc(STATUS[k].label) + '</option>';
+              }).join('') + '</select></div>' +
+              '<div class="field"><label class="f">Preço (R$)</label><input type="number" id="edPreco" min="0" step="100" value="' + esc(o.preco) + '" placeholder="15000"></div>' +
+            '</div>' +
+            '<div class="field"><label class="f">Descrição</label><textarea id="edDescricao" data-max="600" placeholder="História, técnica, contexto da obra…">' + esc(o.descricao) + '</textarea>' +
+              '<div class="field-foot"><span>Aparece no modal da obra no site.</span><span id="edDescCount"></span></div></div>' +
+            '<label class="f" style="display:flex;align-items:center;gap:.55rem;text-transform:none;letter-spacing:0;font-family:inherit;font-size:.92rem;color:var(--ink)">' +
+              '<input type="checkbox" id="edDestaque"' + (o.destaque ? ' checked' : '') + ' style="width:auto"> Destaque na galeria (cartão maior)' +
+            '</label>' +
+            '<div class="divider"></div>' +
+            '<div class="field"><label class="f">Identificador</label><input type="text" id="edId" value="' + esc(o.id) + '" readonly style="background:#F3EAD6;color:#7A6A45"></div>' +
+            '<p class="hint">O identificador é usado como âncora e não precisa ser alterado.</p>' +
+          '</div>' +
+          '<div class="sheet-foot">' +
+            '<button class="btn ghost" data-close>Cancelar</button>' +
+            '<span style="flex:1"></span>' +
+            '<button class="btn danger" id="edDelete">Remover obra</button>' +
+            '<button class="btn primary" data-close>Concluir</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    var dz = $('#dropzone');
+    var file = $('#edFile');
+    var busy = false;
+
+    function field(el, key, transform) {
+      el.addEventListener('input', function () {
+        var v = transform ? transform(el.value) : el.value;
+        updateField(key, v);
+      });
+    }
+    function updateField(key, v) {
+      o[key] = v;
+      changed();
+      if (key === 'status') {
+        var pill = $('#edStatusPill');
+        pill.className = 'pill ' + v;
+        pill.textContent = (STATUS[v] || STATUS.exibicao).short;
+      }
+    }
+    field($('#edTitulo'), 'titulo');
+    field($('#edTecnica'), 'tecnica');
+    field($('#edDimensoes'), 'dimensoes');
+    field($('#edAno'), 'ano');
+    field($('#edPreco'), 'preco', function (v) { return v === '' ? '' : Number(v); });
+    field($('#edDescricao'), 'descricao');
+    $('#edCategoria').addEventListener('change', function () { updateField('categoria', this.value); });
+    $('#edStatus').addEventListener('change', function () { updateField('status', this.value); });
+    $('#edDestaque').addEventListener('change', function () { updateField('destaque', this.checked); });
+
+    function syncCount() { $('#edDescCount').textContent = $('#edDescricao').value.length + '/600'; }
+    syncCount(); $('#edDescricao').addEventListener('input', syncCount);
+
+    $('[data-pick]').addEventListener('click', function (e) { e.stopPropagation(); file.click(); });
+    dz.addEventListener('click', function (e) { if (e.target.closest('[data-pick]')) return; file.click(); });
+    file.addEventListener('change', function () { if (file.files[0]) handleFile(file.files[0]); });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('over'); });
+    });
+    dz.addEventListener('drop', function (e) {
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) handleFile(f);
+    });
+
+    async function handleFile(f) {
+      if (busy) return;
+      if (!/^image\//.test(f.type)) { toast('Envie um arquivo de imagem.', 'err'); return; }
+      busy = true;
+      dz.classList.add('busy');
+      var t = toast('Enviando foto…');
+      try {
+        pushUndo();
+        var dataUrl = await reduzirImagem(f);
+        $('#edThumb').src = dataUrl;
+        var r = await api('/api/upload', { dataUrl: dataUrl });
+        o.img = r.url;
+        $('#edThumb').src = r.url;
+        changed(); persistDraft();
+        toast('Foto enviada. Publique para atualizar o site.', 'ok');
+      } catch (err) {
+        toast('Falha ao enviar a foto: ' + err.message, 'err');
+        $('#edThumb').src = o.img;
+      } finally {
+        busy = false;
+        dz.classList.remove('busy');
+        t.remove();
+      }
+    }
+
+    $('#edDelete').addEventListener('click', function () { closeSheet(); removeObra(id); });
+
+    $$('[data-close]').forEach(function (b) { b.addEventListener('click', closeSheet); });
+    $('[data-overlay]').addEventListener('mousedown', function (e) { if (e.target === e.currentTarget) closeSheet(); });
+
+    function closeSheet() {
+      S.editing = null;
+      root.innerHTML = '';
+      render();
+    }
+  }
+  // ------------------------------------------------------------------ expo/depo ações
+  function addExpo() {
+    pushUndo();
+    S.data.exposicoes = S.data.exposicoes || [];
+    S.data.exposicoes.push({ ano: String(new Date().getFullYear()), titulo: '', local: '', tag: 'A confirmar' });
+    changed(); persistDraft(); render();
+  }
+  function addDepo() {
+    pushUndo();
+    S.data.depoimentos = S.data.depoimentos || [];
+    S.data.depoimentos.push({ texto: '', nome: '', papel: '' });
+    changed(); persistDraft(); render();
+  }
+
+  // ------------------------------------------------------------------ publicar
+  async function publish() {
+    if (!getPassword(false)) {
+      var pw = await askPassword();
+      if (!pw) return;
+      sessionStorage.setItem(PW_KEY, pw);
+    }
+    var btn = toast('Publicando…');
+    try {
+      await api('/api/save', S.data);
+      S.published = clone(S.data);
+      S.lastPublish = new Date();
+      localStorage.removeItem(DRAFT_KEY);
+      localStorage.removeItem(LEGACY_DRAFT_KEY);
+      S.undo = [];
+      updateChrome();
+      btn.remove();
+      toast('Publicado! O site já está atualizado.', 'ok');
+      if (S.view === 'publicar' || S.view === 'dashboard') render();
+    } catch (err) {
+      btn.remove();
+      if (/Senha incorreta|401/.test(err.message)) {
+        sessionStorage.removeItem(PW_KEY);
+        toast('Senha incorreta. Tente publicar novamente.', 'err');
+      } else {
+        toast('Não foi possível publicar: ' + err.message, 'err');
+      }
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem(PW_KEY);
+    toast('Senha removida desta sessão.');
+  }
+
+  function discard() {
+    if (!confirm('Descartar as alterações locais e voltar ao conteúdo publicado?')) return;
+    discardDraft();
+  }
+
+  // ------------------------------------------------------------------ backup
+  function exportData() {
+    var content = '/* ==========================================================================\n' +
+      '   DATA.JS — Fonte única de dados do site Atelier Bruno Amaral\n' +
+      '   Gerado pela Área do Artista em ' + new Date().toLocaleString('pt-BR') + '\n' +
+      '   ========================================================================== */\n\n' +
+      'window.SITE_DATA = ' + JSON.stringify(S.data, null, 2) + ';\n';
+    var blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'data.js';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    toast('Backup data.js baixado.', 'ok');
+  }
+
+  function importData(file) {
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        var fn = new Function('window', ev.target.result + '\nreturn window.SITE_DATA;');
+        var imported = fn({});
+        if (!imported || !Array.isArray(imported.obras)) throw new Error('Formato inválido: falta window.SITE_DATA com obras.');
+        pushUndo();
+        S.data = imported;
+        changed(); persistDraft(); render();
+        toast('data.js importado. Revise e publique.', 'ok');
+      } catch (err) {
+        toast('Falha ao importar: ' + err.message, 'err');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ------------------------------------------------------------------ imagem
   function reduzirImagem(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = ev => {
-        const img = new Image();
-        img.onerror = reject;
-        img.onload = () => {
-          const max = 1600;
-          const escala = Math.min(1, max / Math.max(img.width, img.height));
-          const c = document.createElement('canvas');
-          c.width = Math.round(img.width * escala);
-          c.height = Math.round(img.height * escala);
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          resolve(c.toDataURL('image/jpeg', 0.85));
+    return new Promise(function (resolve, reject) {
+      if (!/^image\//.test(file.type)) return reject(new Error('Arquivo não é imagem'));
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('Falha ao ler o arquivo')); };
+      reader.onload = function (ev) {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('Imagem inválida')); };
+        img.onload = function () {
+          var max = 1600;
+          var escala = Math.min(1, max / Math.max(img.width, img.height));
+          var c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(img.width * escala));
+          c.height = Math.max(1, Math.round(img.height * escala));
+          var ctx = c.getContext('2d');
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, c.width, c.height);
+          ctx.drawImage(img, 0, 0, c.width, c.height);
+          resolve(c.toDataURL('image/jpeg', 0.86));
         };
         img.src = ev.target.result;
       };
@@ -240,311 +1211,63 @@
     });
   }
 
-  async function publishData() {
-    try {
-      showStatus('Publicando...');
-      await api('/api/save', DATA);
-      localStorage.removeItem(DIRTY_KEY);
-      showStatus('✓ Publicado! O site já está atualizado.');
-    } catch (err) {
-      alert('Não foi possível publicar: ' + err.message);
-    }
-  }
+  // ------------------------------------------------------------------ init
+  function init() {
+    var base = window.SITE_DATA ? clone(window.SITE_DATA) : null;
+    S.data = base ? clone(base) : { site: {}, sobre: {}, contato: {}, footerDescricao: '', exposicoes: [], depoimentos: [], obras: [] };
+    S.published = base ? clone(base) : null;
 
-  function showStatus(msg) {
-    const el = document.getElementById('statusMsg');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 3500);
-  }
-
-  // ---------- TABS ----------
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
-    };
-  });
-
-  // ---------- BIND SIMPLES (sobre/inicio/contato) ----------
-  const simpleFields = [
-    ['f-logoNome', () => DATA.site.logoNome, v => DATA.site.logoNome = v],
-    ['f-logoSub', () => DATA.site.logoSub, v => DATA.site.logoSub = v],
-    ['f-heroL1', () => DATA.site.heroTituloLinha1, v => DATA.site.heroTituloLinha1 = v],
-    ['f-heroForte', () => DATA.site.heroTituloForte, v => DATA.site.heroTituloForte = v],
-    ['f-heroL2', () => DATA.site.heroTituloLinha2, v => DATA.site.heroTituloLinha2 = v],
-    ['f-heroSub', () => DATA.site.heroSubtitulo, v => DATA.site.heroSubtitulo = v],
-    ['f-heroDesc', () => DATA.site.heroDescricao, v => DATA.site.heroDescricao = v],
-    ['f-sobreChamada', () => DATA.sobre.chamada, v => DATA.sobre.chamada = v],
-    ['f-p1', () => DATA.sobre.paragrafos[0] || '', v => DATA.sobre.paragrafos[0] = v],
-    ['f-p2', () => DATA.sobre.paragrafos[1] || '', v => DATA.sobre.paragrafos[1] = v],
-    ['f-p3', () => DATA.sobre.paragrafos[2] || '', v => DATA.sobre.paragrafos[2] = v],
-    ['f-citacao', () => DATA.sobre.citacao, v => DATA.sobre.citacao = v],
-    ['f-statAnos', () => DATA.sobre.statAnos, v => DATA.sobre.statAnos = v],
-    ['f-statObras', () => DATA.sobre.statObras, v => DATA.sobre.statObras = v],
-    ['f-statPaises', () => DATA.sobre.statPaises, v => DATA.sobre.statPaises = v],
-    ['f-footerDesc', () => DATA.footerDescricao, v => DATA.footerDescricao = v],
-    ['f-email', () => DATA.contato.email, v => DATA.contato.email = v],
-    ['f-telefone', () => DATA.contato.telefone, v => DATA.contato.telefone = v],
-    ['f-local', () => DATA.contato.localizacao, v => DATA.contato.localizacao = v],
-    ['f-horario', () => DATA.contato.horario, v => DATA.contato.horario = v],
-    ['f-instagram', () => DATA.contato.instagram, v => DATA.contato.instagram = v],
-    ['f-facebook', () => DATA.contato.facebook, v => DATA.contato.facebook = v],
-    ['f-youtube', () => DATA.contato.youtube, v => DATA.contato.youtube = v],
-    ['f-pinterest', () => DATA.contato.pinterest, v => DATA.contato.pinterest = v],
-  ];
-
-  function renderSimpleFields() {
-    simpleFields.forEach(([id, getter]) => {
-      document.getElementById(id).value = getter() || '';
-    });
-  }
-
-  simpleFields.forEach(([id, getter, setter]) => {
-    document.getElementById(id).addEventListener('input', e => {
-      setter(e.target.value);
-      saveDraft();
-    });
-  });
-
-  // ---------- OBRAS ----------
-  const CATEGORIAS = ['Retratos', 'Paisagens', 'Religiosas', 'Natureza-Morta', 'Mitológicas', 'Esculturas', 'Outra'];
-  const STATUS_OPCOES = [
-    ['exibicao', 'Só na Galeria (não à venda)'],
-    ['disponivel', 'Disponível'],
-    ['reservado', 'Reservado'],
-    ['vendido', 'Vendido']
-  ];
-
-  function renderObras() {
-    const wrap = document.getElementById('obrasList');
-    wrap.innerHTML = '';
-    DATA.obras.forEach((o, idx) => {
-      const div = document.createElement('div');
-      div.className = 'obra-card';
-      div.innerHTML = `
-        <div class="obra-head">
-          <img class="obra-thumb" src="${o.img}" alt="">
-          <div class="obra-fields">
-            <div class="grid2">
-              <div><label>Título</label><input type="text" data-f="titulo" value="${escAttr(o.titulo)}"></div>
-              <div><label>Categoria</label>
-                <select data-f="categoria">${CATEGORIAS.map(c => `<option value="${c}" ${c === o.categoria ? 'selected' : ''}>${c}</option>`).join('')}</select>
-              </div>
-            </div>
-            <div class="grid3">
-              <div><label>Técnica</label><input type="text" data-f="tecnica" value="${escAttr(o.tecnica)}" placeholder="Óleo sobre tela"></div>
-              <div><label>Dimensões</label><input type="text" data-f="dimensoes" value="${escAttr(o.dimensoes)}" placeholder="80×60cm"></div>
-              <div><label>Ano</label><input type="text" data-f="ano" value="${escAttr(o.ano)}" placeholder="2024"></div>
-            </div>
-            <div class="grid2">
-              <div><label>Status</label>
-                <select data-f="status">${STATUS_OPCOES.map(([v, l]) => `<option value="${v}" ${v === o.status ? 'selected' : ''}>${l}</option>`).join('')}</select>
-              </div>
-              <div><label>Preço (R$, se disponível)</label><input type="number" data-f="preco" value="${escAttr(o.preco)}" placeholder="15000"></div>
-            </div>
-            <label>Descrição</label><textarea data-f="descricao">${escAttr(o.descricao)}</textarea>
-            <label><input type="checkbox" data-f="destaque" ${o.destaque ? 'checked' : ''} style="width:auto;display:inline-block;vertical-align:middle;margin-right:0.4rem;"> Destaque (imagem maior na galeria)</label>
-            <div class="file-input-wrap">
-              <label style="margin:0;">Trocar foto:</label>
-              <input type="file" accept="image/*" data-imgfor="${idx}">
-              <span class="small">(nova imagem será incorporada diretamente no data.js)</span>
-            </div>
-          </div>
-        </div>
-        <div class="obra-actions">
-          <button class="danger" data-remove="${idx}">Remover Obra</button>
-        </div>
-      `;
-      wrap.appendChild(div);
-
-      div.querySelectorAll('[data-f]').forEach(input => {
-        const field = input.dataset.f;
-        const eventName = input.type === 'checkbox' ? 'change' : 'input';
-        input.addEventListener(eventName, () => {
-          let val = input.type === 'checkbox' ? input.checked : input.value;
-          if (field === 'preco' && val !== '') val = Number(val);
-          DATA.obras[idx][field] = val;
-          saveDraft();
-        });
-      });
-
-      div.querySelector(`[data-imgfor="${idx}"]`).addEventListener('change', async function (e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        try {
-          showStatus('Enviando foto...');
-          const reduzida = await reduzirImagem(file);
-          div.querySelector('.obra-thumb').src = reduzida;
-          const { url } = await api('/api/upload', { dataUrl: reduzida });
-          DATA.obras[idx].img = url;
-          div.querySelector('.obra-thumb').src = url;
-          saveDraft();
-          showStatus('✓ Foto enviada. Clique em "Publicar no site" para salvar.');
-        } catch (err) {
-          alert('Não foi possível enviar a foto: ' + err.message);
-        }
-      });
-
-      div.querySelector('[data-remove]').addEventListener('click', () => {
-        if (confirm('Remover esta obra?')) {
-          DATA.obras.splice(idx, 1);
-          renderObras();
-          saveDraft();
-        }
-      });
-    });
-  }
-
-  function addObra() {
-    DATA.obras.unshift({
-      id: 'obra-' + Date.now(),
-      titulo: 'Nova Obra',
-      categoria: 'Retratos',
-      tecnica: 'Óleo sobre tela',
-      dimensoes: '',
-      ano: '',
-      preco: '',
-      status: 'exibicao',
-      descricao: '',
-      img: 'assets/bruno-amaral-perfil.jpg',
-      destaque: false
-    });
-    renderObras();
-    saveDraft();
-  }
-
-  // ---------- EXPOSICOES ----------
-  function renderExpos() {
-    const wrap = document.getElementById('expoList');
-    wrap.innerHTML = '';
-    DATA.exposicoes.forEach((e, idx) => {
-      const div = document.createElement('div');
-      div.className = 'list-item';
-      div.innerHTML = `
-        <div class="grid3">
-          <div><label>Ano</label><input type="text" data-f="ano" value="${escAttr(e.ano)}"></div>
-          <div><label>Status</label>
-            <select data-f="tag">
-              <option value="Em Cartaz" ${e.tag === 'Em Cartaz' ? 'selected' : ''}>Em Cartaz</option>
-              <option value="Encerrada" ${e.tag === 'Encerrada' ? 'selected' : ''}>Encerrada</option>
-              <option value="A confirmar" ${e.tag === 'A confirmar' ? 'selected' : ''}>A confirmar</option>
-            </select>
-          </div>
-          <div></div>
-        </div>
-        <label>Nome da exposição</label><input type="text" data-f="titulo" value="${escAttr(e.titulo)}">
-        <label>Local</label><input type="text" data-f="local" value="${escAttr(e.local)}" placeholder="Local · Cidade, País">
-        <div class="list-item-actions"><button class="danger" data-remove="${idx}">Remover</button></div>
-      `;
-      wrap.appendChild(div);
-      div.querySelectorAll('[data-f]').forEach(input => {
-        input.addEventListener('input', () => { DATA.exposicoes[idx][input.dataset.f] = input.value; saveDraft(); });
-      });
-      div.querySelector('[data-remove]').addEventListener('click', () => {
-        DATA.exposicoes.splice(idx, 1); renderExpos(); saveDraft();
-      });
-    });
-  }
-  function addExpo() {
-    DATA.exposicoes.push({ ano: '', titulo: '', local: '', tag: 'A confirmar' });
-    renderExpos(); saveDraft();
-  }
-
-  // ---------- DEPOIMENTOS ----------
-  function renderDepos() {
-    const wrap = document.getElementById('depoList');
-    wrap.innerHTML = '';
-    DATA.depoimentos.forEach((d, idx) => {
-      const div = document.createElement('div');
-      div.className = 'list-item';
-      div.innerHTML = `
-        <label>Depoimento</label><textarea data-f="texto">${escAttr(d.texto)}</textarea>
-        <div class="grid2">
-          <div><label>Nome</label><input type="text" data-f="nome" value="${escAttr(d.nome)}"></div>
-          <div><label>Cidade / Relação</label><input type="text" data-f="papel" value="${escAttr(d.papel)}"></div>
-        </div>
-        <div class="list-item-actions"><button class="danger" data-remove="${idx}">Remover</button></div>
-      `;
-      wrap.appendChild(div);
-      div.querySelectorAll('[data-f]').forEach(input => {
-        input.addEventListener('input', () => { DATA.depoimentos[idx][input.dataset.f] = input.value; saveDraft(); });
-      });
-      div.querySelector('[data-remove]').addEventListener('click', () => {
-        DATA.depoimentos.splice(idx, 1); renderDepos(); saveDraft();
-      });
-    });
-  }
-  function addDepo() {
-    DATA.depoimentos.push({ texto: '', nome: '', papel: '' });
-    renderDepos(); saveDraft();
-  }
-
-  function escAttr(str) {
-    return (str === undefined || str === null ? '' : String(str)).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-  }
-
-  // ---------- EXPORTAR ----------
-  function exportData() {
-    const json = JSON.stringify(DATA, null, 2);
-    const content = `/* ==========================================================================\n   DATA.JS — Fonte única de dados do site Atelier Bruno Amaral\n   Gerado pela Área do Artista em ${new Date().toLocaleString('pt-BR')}\n   ========================================================================== */\n\nwindow.SITE_DATA = ${json};\n`;
-    const blob = new Blob([content], { type: 'text/javascript' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'data.js';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showStatus('✓ data.js baixado! Substitua o arquivo antigo na pasta do site por este.');
-  }
-
-  // ---------- IMPORTAR ----------
-  document.getElementById('importFile').addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (ev) {
+    // rascunho local (v2) ou migração do v1
+    var draft = localStorage.getItem(DRAFT_KEY) || localStorage.getItem(LEGACY_DRAFT_KEY);
+    if (draft) {
       try {
-        const tempWindow = {};
-        const fn = new Function('window', ev.target.result + '\nreturn window.SITE_DATA;');
-        const imported = fn(tempWindow);
-        if (!imported) throw new Error('Formato inválido');
-        DATA = imported;
-        saveDraft();
-        renderAll();
-        showStatus('✓ data.js importado com sucesso.');
-      } catch (err) {
-        alert('Não foi possível importar este arquivo: ' + err.message);
-      }
-    };
-    reader.readAsText(file);
-  });
+        var d = JSON.parse(draft);
+        if (d && Array.isArray(d.obras)) { S.data = d; S.restaurado = true; }
+      } catch (e) {}
+    }
 
-  function renderAll() {
-    renderSimpleFields();
-    renderObras();
-    renderExpos();
-    renderDepos();
+    // busca o publicado (mais recente que o data.js)
+    fetch('/api/data?t=' + Date.now(), { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error('sem publicação');
+      return r.json();
+    }).then(function (pub) {
+      if (!pub || !pub.obras || !pub.site) return;
+      S.published = clone(pub);
+      if (!S.restaurado) S.data = clone(pub);
+      render();
+    }).catch(function () { /* usa data.js local */ }).then(function () {
+      render();
+    });
+
+    render();
+    if (S.restaurado) toast('Rascunho local restaurado.');
   }
 
-  // Começa pelos dados publicados; se houver alterações não publicadas neste navegador, mantém o rascunho
-  (async function init() {
-    DATA = JSON.parse(JSON.stringify(window.SITE_DATA));
-    const rascunho = localStorage.getItem(DRAFT_KEY);
-    if (rascunho && localStorage.getItem(DIRTY_KEY)) {
-      try { DATA = JSON.parse(rascunho); showStatus('Rascunho com alterações não publicadas restaurado.'); } catch (e) {}
-    } else {
-      try {
-        const r = await fetch('/api/data?t=' + Date.now());
-        if (r.ok) {
-          const publicado = await r.json();
-          if (publicado && publicado.obras && publicado.site) DATA = publicado;
-        }
-      } catch (e) { /* sem servidor: usa o data.js */ }
+  // ------------------------------------------------------------------ eventos globais
+  $('#importFile').addEventListener('change', function (e) {
+    if (e.target.files[0]) importData(e.target.files[0]);
+    e.target.value = '';
+  });
+  document.addEventListener('keydown', function (e) {
+    var mod = e.ctrlKey || e.metaKey;
+    if (mod && e.key.toLowerCase() === 's') { e.preventDefault(); publish(); }
+    else if (mod && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (S.view !== 'obras') go('obras');
+      var q = $('#q'); if (q) { q.focus(); q.select(); }
+    } else if (mod && e.key.toLowerCase() === 'z') {
+      if (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
+      e.preventDefault(); undo();
+    } else if (e.key === 'Escape') {
+      var root = $('#modalRoot'); if (root) root.innerHTML = '';
     }
-    renderAll();
-  })();
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 </script>
+
+<input type="file" id="importFile" accept="application/javascript,.js,text/javascript" style="display:none">
 </body>
 </html>
