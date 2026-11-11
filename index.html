@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Atelier Bruno Amaral · Pintor Clássico Renascentista</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #8B6914;
+    --cream: #F5EDD8;
+    --cream-dark: #EBD9B4;
+    --parchment: #F0E4C4;
+    --ink: #1C1208;
+    --ink-mid: #3D2B0E;
+    --ink-light: #6B4E2A;
+    --red-renaissance: #8B1A1A;
+    --blue-lapis: #1A3A5C;
+    --bg: #FAF4E8;
+    --border: rgba(201,168,76,0.3);
+    --shadow: rgba(28,18,8,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'EB Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===== TEXTURE OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* ===== NAVIGATION ===== */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(250,244,232,0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 70px;
+  }
+
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .nav-logo span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    color: var(--gold-dark);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--ink-mid);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 3px;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover { color: var(--gold-dark); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-cta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dark);
+    text-decoration: none;
+    border: 1px solid var(--gold);
+    padding: 8px 20px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  .nav-mobile-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--ink);
+  }
+
+  /* ===== HERO ===== */
+  #inicio {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 70px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(139,26,26,0.05) 0%, transparent 60%),
+      linear-gradient(160deg, #FAF4E8 0%, #F0E4C4 50%, #EBD9B4 100%);
+  }
+
+  .hero-ornament {
+    position: absolute;
+    top: 50%;
+    right: 8%;
+    transform: translateY(-50%);
+    width: 420px;
+    height: 560px;
+    border: 1px solid rgba(201,168,76,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-ornament::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .hero-portrait-placeholder {
+    width: 380px;
+    height: 520px;
+    background: linear-gradient(160deg, #D4C19A 0%, #C4A97A 40%, #8B7450 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-portrait-placeholder svg {
+    opacity: 0.3;
+  }
+
+  .portrait-label {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(250,244,232,0.7);
+    white-space: nowrap;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 580px;
+    padding: 0 4rem 0 8rem;
+    animation: fadeInUp 1.2s ease both;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 40px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-title strong {
+    font-weight: 600;
+    font-style: italic;
+    color: var(--ink-mid);
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--ink-mid);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    max-width: 460px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .btn-primary {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    padding: 14px 32px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--ink-mid);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--ink-mid);
+    border: 1px solid var(--border);
+    padding: 14px 32px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold-dark);
+  }
+
+  /* ===== ORNAMENTAL DIVIDER ===== */
+  .divider {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: var(--gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.5em;
+    opacity: 0.6;
+  }
+
+  /* ===== SECTIONS GENERAL ===== */
+  section { padding: 100px 2rem; }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .section-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  .section-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink-mid);
+  }
+
+  .section-rule {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 1.5rem auto;
+  }
+
+  /* ===== SOBRE ===== */
+  #sobre {
+    background: linear-gradient(180deg, var(--bg) 0%, var(--parchment) 100%);
+  }
+
+  .sobre-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .sobre-img-wrap {
+    position: relative;
+  }
+
+  .sobre-img-frame {
+    border: 1px solid var(--border);
+    padding: 16px;
+    position: relative;
+  }
+
+  .sobre-img-frame::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: -8px;
+    right: 8px; bottom: 8px;
+    border: 1px solid rgba(201,168,76,0.2);
+    pointer-events: none;
+  }
+
+  .sobre-img-inner {
+    width: 100%;
+    height: 520px;
+    background: linear-gradient(145deg, #C8B080 0%, #A8905A 40%, #7A6440 70%, #5C4A2A 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    color: rgba(250,244,232,0.5);
+    letter-spacing: 0.2em;
+    font-style: italic;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sobre-img-inner svg { opacity: 0.2; margin-bottom: 1rem; }
+
+  .sobre-caption {
+    position: absolute;
+    bottom: -2.5rem;
+    right: 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ink-light);
+  }
+
+  .sobre-text h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-mid);
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .sobre-text p {
+    color: var(--ink-mid);
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .sobre-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--gold-dark);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  .sobre-signature {
+    margin-top: 2.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold-dark);
+    opacity: 0.7;
+  }
+
+  /* ===== GALERIA ===== */
+  #galeria {
+    background: var(--ink);
+  }
+
+  #galeria .section-title {
+    color: var(--cream);
+  }
+
+  #galeria .section-eyebrow {
+    color: var(--gold-light);
+  }
+
+  #galeria .section-rule {
+    background: var(--gold-light);
+    opacity: 0.6;
+  }
+
+  .gallery-filter {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: transparent;
+    color: rgba(245,237,216,0.5);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 3/4;
+    background: var(--ink-mid);
+  }
+
+  .gallery-item.large {
+    grid-row: span 2;
+    aspect-ratio: auto;
+  }
+
+  .gallery-thumb {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+  }
+
+  .gallery-thumb-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .gallery-item:hover .gallery-thumb-bg { transform: scale(1.06); }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(28,18,8,0.95) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+  }
+
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+  .gallery-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 0.3rem;
+  }
+
+  .gallery-meta {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+
+  .gallery-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--gold-light);
+    margin-top: 0.5rem;
+  }
+
+  /* ===== À VENDA ===== */
+  #venda {
+    background: var(--parchment);
+  }
+
+  .venda-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .quadro-card {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    transition: all 0.4s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .quadro-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px var(--shadow);
+    border-color: var(--gold);
+  }
+
+  .quadro-img {
+    width: 100%;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quadro-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 5px 12px;
+    z-index: 2;
+  }
+
+  .quadro-badge.reserved {
+    background: var(--red-renaissance);
+    color: var(--cream);
+  }
+
+  .quadro-info {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .quadro-nome {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .quadro-details {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 1rem;
+  }
+
+  .quadro-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .quadro-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--gold-dark);
+  }
+
+  .btn-inquire {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-inquire:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  /* ADD QUADRO FORM */
+  .add-quadro-section {
+    background: var(--ink);
+    padding: 3rem;
+    margin-top: 2rem;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .add-quadro-toggle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0 auto 0;
+  }
+
+  .add-quadro-toggle:hover { background: var(--gold-light); }
+
+  .add-form-wrap {
+    display: none;
+    margin-top: 2rem;
+  }
+
+  .add-form-wrap.open { display: block; }
+
+  .add-form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  .add-form-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  .form-group label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(245,237,216,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--cream);
+    padding: 12px 16px;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--gold);
+  }
+
+  .form-group select option { background: var(--ink); }
+
+  .form-group textarea { resize: vertical; min-height: 100px; }
+
+  .upload-zone {
+    border: 1px dashed rgba(201,168,76,0.3);
+    padding: 2.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .upload-zone:hover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+
+  .upload-zone input { display: none; }
+
+  .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5; }
+
+  .upload-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--cream-dark);
+    opacity: 0.6;
+  }
+
+  .upload-subtext {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.5;
+    margin-top: 0.4rem;
+  }
+
+  .btn-submit {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    padding: 15px 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1rem;
+    font-weight: 700;
+  }
+
+  .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ===== TÉCNICA ===== */
+  #tecnica {
+    background: var(--bg);
+  }
+
+  .tecnica-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .tecnica-sidebar {
+    position: sticky;
+    top: 100px;
+  }
+
+  .tecnica-sidebar h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-mid);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .tecnica-sidebar p {
+    font-size: 1rem;
+    color: var(--ink-light);
+    margin-bottom: 2rem;
+  }
+
+  .process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .process-step {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .process-step:hover .step-num { color: var(--gold-dark); }
+
+  .step-num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    opacity: 0.7;
+    width: 30px;
+    flex-shrink: 0;
+    padding-top: 3px;
+    transition: color 0.3s;
+  }
+
+  .step-content h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .step-content p {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.6;
+  }
+
+  .tecnica-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .tecnica-card {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .tecnica-card::before {
+    content: attr(data-letter);
+    position: absolute;
+    top: -0.5rem;
+    left: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold);
+    opacity: 0.15;
+    line-height: 1;
+  }
+
+  .tecnica-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 0.8rem;
+  }
+
+  .tecnica-card p {
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    line-height: 1.7;
+  }
+
+  .tecnica-card.wide { grid-column: span 2; }
+
+  /* ===== ENCOMENDAS ===== */
+  #encomendas {
+    background: linear-gradient(160deg, var(--parchment) 0%, var(--cream-dark) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #encomendas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23C9A84C' opacity='0.15'/%3E%3C/svg%3E") center/60px;
+  }
+
+  .encomenda-wrap {
+    position: relative;
+    z-index: 2;
+    max-width: 750px;
+    margin: 0 auto;
+  }
+
+  .contact-form {
+    background: rgba(245,237,216,0.7);
+    border: 1px solid var(--border);
+    padding: 3.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .contact-form .form-grid { gap: 1.5rem; }
+
+  .contact-form label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    background: rgba(250,244,232,0.8);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 12px 16px;
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    outline: none;
+    width: 100%;
+  }
+
+  .contact-form input:focus,
+  .contact-form select:focus,
+  .contact-form textarea:focus {
+    border-color: var(--gold);
+  }
+
+  .contact-form textarea { resize: vertical; min-height: 130px; }
+
+  .contact-form select option { background: var(--cream); color: var(--ink); }
+
+  .contact-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+
+  .contact-privacy {
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  /* ===== EXPOSIÇÕES ===== */
+  #exposicoes {
+    background: var(--ink);
+  }
+
+  #exposicoes .section-title { color: var(--cream); }
+  #exposicoes .section-eyebrow { color: var(--gold-light); }
+  #exposicoes .section-rule { background: var(--gold-light); opacity: 0.6; }
+
+  .expo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .expo-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem 2.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    transition: background 0.3s;
+  }
+
+  .expo-item:last-child { border-bottom: none; }
+  .expo-item:hover { background: rgba(245,237,216,0.03); }
+
+  .expo-year {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    opacity: 0.7;
+    width: 55px;
+  }
+
+  .expo-info h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+
+  .expo-info p {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,237,216,0.4);
+  }
+
+  .expo-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border: 1px solid;
+  }
+
+  .expo-tag.atual {
+    color: var(--gold-light);
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  .expo-tag.passada {
+    color: rgba(245,237,216,0.3);
+    border-color: rgba(245,237,216,0.15);
+  }
+
+  /* ===== DEPOIMENTOS ===== */
+  #depoimentos {
+    background: var(--bg);
+  }
+
+  .depo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .depo-card {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    position: relative;
+  }
+
+  .depo-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 0.5;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  .depo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--ink-mid);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .depo-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .depo-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--cream-dark);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  .depo-name {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    display: block;
+  }
+
+  .depo-role {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--ink-light);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--ink);
+    padding: 5rem 2rem 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    margin-bottom: 2rem;
+  }
+
+  .footer-brand {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cream);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  .footer-brand-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--gold);
+    opacity: 0.7;
+    letter-spacing: 0.15em;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-desc {
+    font-size: 0.9rem;
+    color: rgba(245,237,216,0.45);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .footer-social {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .social-link {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(245,237,216,0.4);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    font-family: 'Cinzel', serif;
+  }
+
+  .social-link:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .footer-col h5 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .footer-links a {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    color: rgba(245,237,216,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--cream-dark); }
+
+  .footer-contact p {
+    font-size: 0.88rem;
+    color: rgba(245,237,216,0.45);
+    margin-bottom: 0.6rem;
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .footer-contact span { color: var(--gold); opacity: 0.7; font-size: 0.8rem; }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: rgba(245,237,216,0.25);
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28,18,8,0.92);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s;
+    padding: 2rem;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal-content {
+    background: var(--cream);
+    max-width: 700px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    transform: translateY(20px);
+    transition: transform 0.4s;
+    max-height: 90vh;
+    overflow: hidden;
+  }
+
+  .modal-overlay.open .modal-content {
+    transform: translateY(0);
+  }
+
+  .modal-img {
+    height: 100%;
+    min-height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-info {
+    padding: 3rem 2.5rem;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 40px;
+    height: 40px;
+    background: rgba(245,237,216,0.1);
+    border: 1px solid rgba(245,237,216,0.2);
+    color: var(--cream);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 10;
+  }
+
+  .modal-close:hover { background: rgba(245,237,216,0.2); }
+
+  .modal-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 0.8rem;
+  }
+
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .modal-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-spec {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+  }
+
+  .modal-spec span:first-child {
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+  .modal-spec span:last-child {
+    color: var(--ink);
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .modal-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--gold-dark);
+    margin-bottom: 1.5rem;
+  }
+
+  /* ===== NOTIFICATION ===== */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--ink);
+    color: var(--cream);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    padding: 1rem 1.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 900;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .toast.show { transform: translateX(0); }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInUp 1.5s ease 0.5s both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.5; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  .scroll-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-mobile-btn { display: block; }
+
+    .hero-content { padding: 0 2rem 0 2rem; max-width: 100%; }
+    .hero-ornament { display: none; }
+    .scroll-indicator { display: none; }
+
+    .sobre-grid, .tecnica-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .sobre-stats { grid-template-columns: repeat(3, 1fr); }
+
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item.large { grid-row: span 1; }
+
+    .depo-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+    .modal-content { grid-template-columns: 1fr; }
+    .modal-img { min-height: 220px; }
+
+    .form-grid { grid-template-columns: 1fr; }
+    .expo-item { grid-template-columns: auto 1fr; }
+    .expo-tag { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    section { padding: 60px 1.5rem; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .add-quadro-section { padding: 2rem; }
+    .contact-form { padding: 2rem 1.5rem; }
+    .sobre-stats { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    .venda-grid { grid-template-columns: 1fr; }
+    .contact-row { flex-direction: column; gap: 1rem; }
+  }
+
+  /* ===== NAV MOBILE MENU ===== */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28,18,8,0.97);
+    z-index: 200;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cream);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+
+  .mobile-menu a:hover { opacity: 1; color: var(--gold); }
+
+  .mobile-menu-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--cream);
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+
+  .mobile-menu-close:hover { opacity: 1; }
+</style>
+
+<style>
+  .admin-link { font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.12em; color: var(--ink-light); text-decoration:none; opacity:0.55; }
+  .admin-link:hover { opacity:1; color:var(--gold-dark); }
+</style>
+
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#inicio" class="nav-logo">
+      <span id="navLogoNome">ATELIER BRUNO AMARAL</span>
+      <span id="navLogoSub">Pintor Clássico Renascentista</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#galeria">Galeria</a></li>
+      <li><a href="#venda">À Venda</a></li>
+      <li><a href="#tecnica">Técnica</a></li>
+      <li><a href="#exposicoes">Exposições</a></li>
+      <li><a href="#depoimentos">Colecionadores</a></li>
+    </ul>
+    <a href="#encomendas" class="nav-cta">Encomendar Obra</a>
+    <button class="nav-mobile-btn" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+  <a href="#sobre" onclick="toggleMobileMenu()">Sobre</a>
+  <a href="#galeria" onclick="toggleMobileMenu()">Galeria</a>
+  <a href="#venda" onclick="toggleMobileMenu()">À Venda</a>
+  <a href="#tecnica" onclick="toggleMobileMenu()">Técnica</a>
+  <a href="#exposicoes" onclick="toggleMobileMenu()">Exposições</a>
+  <a href="#depoimentos" onclick="toggleMobileMenu()">Colecionadores</a>
+  <a href="#encomendas" onclick="toggleMobileMenu()">Encomendar</a>
+  <a href="admin.html" style="margin-top:2rem;opacity:0.6;">Área do Artista</a>
+</div>
+
+<section id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="heroEyebrow">Atelier Bruno Amaral</p>
+    <h1 class="hero-title" id="heroTitulo">Arte que<br><strong>transcende</strong><br>o tempo</h1>
+    <p class="hero-subtitle" id="heroSubtitulo">Pintura a óleo no espírito dos grandes mestres do Renascimento</p>
+    <p class="hero-desc" id="heroDescricao"></p>
+    <div class="hero-btns">
+      <a href="#galeria" class="btn-primary">Ver Galeria</a>
+      <a href="#sobre" class="btn-outline">Conhecer o Artista</a>
+    </div>
+  </div>
+  <div class="hero-ornament">
+    <div class="hero-portrait-placeholder" id="heroFoto">
+      <div class="portrait-label">BRUNO AMARAL · NO ATELIER</div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <p class="scroll-text">Scroll</p>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-img-wrap">
+        <div class="sobre-img-frame">
+          <div class="sobre-img-inner" id="sobreFoto"></div>
+          <p class="sobre-caption">Bruno Amaral, no atelier</p>
+        </div>
+      </div>
+      <div class="sobre-text">
+        <h2 class="section-eyebrow">Sobre o Artista</h2>
+        <div class="section-rule" style="margin: 1rem 0;"></div>
+        <h3 id="sobreChamada"></h3>
+        <div id="sobreParagrafos"></div>
+        <blockquote id="sobreCitacao" style="border-left: 2px solid var(--gold); padding-left: 1.5rem; margin: 2rem 0; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; color:var(--ink-mid);"></blockquote>
+        <div class="sobre-stats">
+          <div class="stat-item"><span class="stat-num" id="statAnos"></span><span class="stat-label">Anos de ofício</span></div>
+          <div class="stat-item"><span class="stat-num" id="statObras"></span><span class="stat-label">Obras criadas</span></div>
+          <div class="stat-item"><span class="stat-num" id="statPaises"></span><span class="stat-label">Países colecionadores</span></div>
+        </div>
+        <div class="sobre-signature">Bruno Amaral</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="galeria">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Obras Selecionadas</p>
+      <h2 class="section-title">A <em>Galeria</em></h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="gallery-filter" id="galleryFilter">
+      <button class="filter-btn active" onclick="filterGallery(this, 'all')">Todas as Obras</button>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div style="text-align:center; margin-top:3rem;">
+      <a href="#venda" class="btn-outline" style="color:rgba(245,237,216,0.6); border-color:rgba(201,168,76,0.3);">Ver obras disponíveis para venda</a>
+    </div>
+  </div>
+</section>
+
+<section id="venda">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Coleção Disponível</p>
+      <h2 class="section-title">Obras <em>à Venda</em></h2>
+      <div class="section-rule"></div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--ink-light);max-width:500px;margin:0 auto;">Cada obra acompanha certificado de autenticidade, documentação técnica e moldura artesanal.</p>
+    </div>
+    <div class="venda-grid" id="vendaGrid"></div>
+    <div style="text-align:center;margin-top:3rem;">
+      <a href="admin.html" class="admin-link">✎ Área do Artista — editar obras, textos e informações do site</a>
+    </div>
+  </div>
+</section>
+
+<section id="tecnica">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">O Processo Criativo</p>
+      <h2 class="section-title">Materiais & <em>Técnica</em></h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="tecnica-grid">
+      <div class="tecnica-sidebar">
+        <h3>Pintura a óleo, com materiais de qualidade</h3>
+        <p>Bruno Amaral pinta a óleo, com o olhar nos mestres que admira, como Sargent, Zorn e Velázquez. Estes são os materiais de cada obra.</p>
+      </div>
+      <div class="tecnica-visual">
+        <div class="tecnica-card" data-letter="T"><h4>Tintas Premium</h4><p>Todas as obras são pintadas com tintas a óleo premium.</p></div>
+        <div class="tecnica-card" data-letter="A"><h4>Tela de Algodão</h4><p>O suporte das pinturas é a tela de algodão.</p></div>
+        <div class="tecnica-card wide" data-letter="M"><h4>Médium de Óleo de Linhaça</h4><p>O médium utilizado é o óleo de linhaça.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="exposicoes">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Presença Internacional</p>
+      <h2 class="section-title"><em>Exposições</em> & Mostras</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="expo-list" id="expoList"></div>
+  </div>
+</section>
+
+<section id="depoimentos">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Vozes dos Colecionadores</p>
+      <h2 class="section-title">O que dizem sobre <em>as obras</em></h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="depo-grid" id="depoGrid"></div>
+  </div>
+</section>
+
+<section id="encomendas">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">Obras sob Medida</p>
+      <h2 class="section-title">Encomendar <em>uma Obra</em></h2>
+      <div class="section-rule"></div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--ink-light);max-width:500px;margin:0 auto;">Cada encomenda é tratada com exclusividade. Entre em contacto para discutir a sua visão.</p>
+    </div>
+    <div class="encomenda-wrap">
+      <div class="contact-form">
+        <form onsubmit="submitEncomenda(event)">
+          <div class="form-grid">
+            <div class="form-group"><label>Nome Completo</label><input type="text" placeholder="Seu nome" required></div>
+            <div class="form-group"><label>Email</label><input type="email" placeholder="seu@email.com" required></div>
+            <div class="form-group"><label>Telefone / WhatsApp</label><input type="tel" placeholder="+55 (21) 99999-9999"></div>
+            <div class="form-group"><label>País / Cidade</label><input type="text" placeholder="Rio de Janeiro, Brasil"></div>
+            <div class="form-group">
+              <label>Tipo de Obra Desejada</label>
+              <select>
+                <option>Retrato Individual</option>
+                <option>Retrato em Grupo / Família</option>
+                <option>Paisagem</option>
+                <option>Natureza-Morta</option>
+                <option>Tema Religioso</option>
+                <option>Tema Mitológico</option>
+                <option>Escultura</option>
+                <option>Outro (descrever abaixo)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Dimensões Aproximadas</label>
+              <select>
+                <option>Pequeno (até 50×40cm)</option>
+                <option>Médio (até 80×60cm)</option>
+                <option>Grande (até 120×90cm)</option>
+                <option>Monumental (acima de 120cm)</option>
+                <option>A definir</option>
+              </select>
+            </div>
+            <div class="form-group full"><label>Descrição da Obra Desejada</label><textarea placeholder="Descreva com detalhes o que imagina para a sua obra. Incluindo referências, cores, tema, ambiente e qualquer detalhe relevante..."></textarea></div>
+            <div class="form-group">
+              <label>Prazo Desejado</label>
+              <select><option>Sem prazo definido</option><option>Em até 6 meses</option><option>Em até 1 ano</option><option>Mais de 1 ano</option></select>
+            </div>
+            <div class="form-group">
+              <label>Orçamento Estimado (R$)</label>
+              <select><option>Até R$ 2.000</option><option>R$ 2.000 – R$ 10.000</option><option>R$ 10.000 – R$ 25.000</option><option>R$ 25.000 – R$ 50.000</option><option>Acima de R$ 50.000</option><option>A discutir</option></select>
+            </div>
+          </div>
+          <div class="contact-row">
+            <p class="contact-privacy">✦ Suas informações são mantidas com absoluta discrição</p>
+            <button type="submit" class="btn-submit" style="margin-top:0;">Enviar pelo WhatsApp →</button>
+          </div>
+        </form>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;text-align:center;">
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-dark);margin-bottom:0.3rem;">✉</div><p style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.3rem;">Email</p><p style="font-size:0.9rem;color:var(--ink-mid);" id="contatoEmail1"></p></div>
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-dark);margin-bottom:0.3rem;">☎</div><p style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.3rem;">WhatsApp</p><p style="font-size:0.9rem;color:var(--ink-mid);" id="contatoTelefone1"></p></div>
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-dark);margin-bottom:0.3rem;">⌖</div><p style="font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.3rem;">Atelier</p><p style="font-size:0.9rem;color:var(--ink-mid);" id="contatoLocal1"></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <span class="footer-brand" id="footerBrand">ATELIER BRUNO AMARAL</span>
+      <span class="footer-brand-sub" id="footerBrandSub">Pintor Clássico Renascentista</span>
+      <p class="footer-desc" id="footerDesc"></p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+    <div class="footer-col">
+      <h5>Navegação</h5>
+      <ul class="footer-links">
+        <li><a href="#sobre">Sobre o Artista</a></li>
+        <li><a href="#galeria">Galeria de Obras</a></li>
+        <li><a href="#venda">Obras à Venda</a></li>
+        <li><a href="#tecnica">Técnica & Processo</a></li>
+        <li><a href="#exposicoes">Exposições</a></li>
+        <li><a href="#encomendas">Encomendar Obra</a></li>
+        <li><a href="admin.html" style="opacity:0.7;">Área do Artista</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Categorias</h5>
+      <ul class="footer-links" id="footerCategorias"></ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contacto</h5>
+      <div class="footer-contact">
+        <p><span>✉</span> <span id="contatoEmail2"></span></p>
+        <p><span>☎</span> <span id="contatoTelefone2"></span></p>
+        <p><span>⌖</span> <span id="contatoLocal2"></span></p>
+        <p><span>◷</span> <span id="contatoHorario"></span></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 Atelier Bruno Amaral · Todos os direitos reservados</p>
+    <p class="footer-copy">Pinturas protegidas por direitos autorais · Reprodução proibida sem autorização</p>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="modal-content" id="modalContent">
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-info" id="modalInfo"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

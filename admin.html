@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área do Artista · Editar Site</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,500&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C; --gold-dark: #8B6914; --ink: #1C1208; --ink-mid: #3D2B0E;
+    --bg: #FAF4E8; --card: #ffffff; --border: #E3D6B4; --danger: #A33; --ok: #3A7A3A;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'EB Garamond', Georgia, serif; background:var(--bg); color:var(--ink); }
+  header { background:var(--ink); color:var(--bg); padding:1.2rem 2rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; position:sticky; top:0; z-index:50; }
+  header h1 { font-family:'Cinzel',serif; font-size:1.05rem; letter-spacing:0.08em; margin:0; }
+  header a.back { color:var(--gold); text-decoration:none; font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.1em; }
+  .toolbar { display:flex; gap:0.6rem; flex-wrap:wrap; }
+  button, .btn { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--gold); background:transparent; color:var(--gold); padding:0.55rem 1rem; cursor:pointer; border-radius:2px; transition:.2s; }
+  button:hover, .btn:hover { background:var(--gold); color:var(--ink); }
+  button.primary { background:var(--gold); color:var(--ink); }
+  button.danger { border-color:var(--danger); color:var(--danger); }
+  button.danger:hover { background:var(--danger); color:#fff; }
+  main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+  .tabs { display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.5rem; border-bottom:1px solid var(--border); padding-bottom:1rem; }
+  .tab-btn { font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; padding:0.6rem 1rem; border:1px solid var(--border); background:#fff; color:var(--ink-mid); cursor:pointer; border-radius:2px; }
+  .tab-btn.active { background:var(--ink); color:var(--gold); border-color:var(--ink); }
+  .panel { display:none; }
+  .panel.active { display:block; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1.5rem; margin-bottom:1.2rem; }
+  .card h2 { font-family:'Cinzel',serif; font-size:0.95rem; letter-spacing:0.06em; margin:0 0 1rem; color:var(--ink); }
+  label { display:block; font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-mid); margin-bottom:0.35rem; margin-top:0.9rem; }
+  label:first-child { margin-top:0; }
+  input[type=text], input[type=email], input[type=tel], input[type=number], input[type=url], textarea, select {
+    width:100%; padding:0.6rem 0.7rem; border:1px solid var(--border); border-radius:3px; font-family:'EB Garamond',serif; font-size:1rem; background:#fffdf7;
+  }
+  textarea { min-height:80px; resize:vertical; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; }
+  @media (max-width:700px) { .grid2, .grid3 { grid-template-columns:1fr; } }
+  .obra-card { border:1px solid var(--border); border-radius:4px; padding:1.2rem; margin-bottom:1rem; background:#fffefb; position:relative; }
+  .obra-head { display:flex; gap:1rem; align-items:flex-start; }
+  .obra-thumb { width:90px; height:110px; object-fit:cover; border-radius:3px; border:1px solid var(--border); flex-shrink:0; background:#eee; }
+  .obra-fields { flex:1; }
+  .obra-actions { display:flex; gap:0.5rem; margin-top:1rem; }
+  .list-item { border:1px solid var(--border); border-radius:4px; padding:1rem; margin-bottom:0.8rem; background:#fffefb; }
+  .list-item-actions { display:flex; justify-content:flex-end; margin-top:0.6rem; }
+  .hint { font-size:0.85rem; color:#7a6a45; font-style:italic; margin:0.4rem 0 0; }
+  .status-msg { font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.05em; padding:0.8rem 1rem; border-radius:3px; margin-bottom:1rem; display:none; }
+  .status-msg.show { display:block; }
+  .status-msg.ok { background:#EAF4EA; color:var(--ok); border:1px solid var(--ok); }
+  .file-input-wrap { display:flex; align-items:center; gap:0.8rem; margin-top:0.4rem; flex-wrap:wrap; }
+  .add-row { margin-top:1rem; }
+  .small { font-size:0.85rem; color:#6b5b3a; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>✎ ÁREA DO ARTISTA</h1>
+  <div class="toolbar">
+    <label style="margin:0;color:var(--gold);cursor:pointer;">
+      <input type="file" id="importFile" accept="application/javascript,.js,text/javascript" style="display:none;">
+      <span class="btn" onclick="document.getElementById('importFile').click()">Importar data.js</span>
+    </label>
+    <button class="primary" onclick="publishData()">☁ Publicar no site</button>
+    <button onclick="exportData()">⬇ Baixar cópia (data.js)</button>
+    <a class="back btn" href="index.html" target="_blank">Ver Site ↗</a>
+  </div>
+</header>
+
+<main>
+  <div class="status-msg ok" id="statusMsg"></div>
+  <p class="hint" style="margin-bottom:1.5rem;">Edite os campos abaixo e clique em <strong>"Baixar data.js atualizado"</strong>. Depois, substitua o arquivo <code>data.js</code> antigo (na mesma pasta do <code>index.html</code>) pelo novo arquivo baixado. Suas alterações também ficam salvas automaticamente neste navegador enquanto você trabalha (rascunho), mas só valem de verdade depois de baixar e substituir o arquivo.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="obras">Obras</button>
+    <button class="tab-btn" data-tab="sobre">Sobre / Início</button>
+    <button class="tab-btn" data-tab="contato">Contato & Redes</button>
+    <button class="tab-btn" data-tab="exposicoes">Exposições</button>
+    <button class="tab-btn" data-tab="depoimentos">Depoimentos</button>
+  </div>
+
+  <!-- OBRAS -->
+  <div class="panel active" id="panel-obras">
+    <div class="card">
+      <h2>Obras (Galeria e À Venda)</h2>
+      <p class="hint">Cada obra aparece na Galeria. Se o status for "Disponível", "Reservado" ou "Vendido", ela também aparece em "À Venda". Marque "Destaque" para uma obra maior na galeria.</p>
+      <div id="obrasList"></div>
+      <div class="add-row"><button onclick="addObra()">+ Adicionar Nova Obra</button></div>
+    </div>
+  </div>
+
+  <!-- SOBRE / INICIO -->
+  <div class="panel" id="panel-sobre">
+    <div class="card">
+      <h2>Início (Hero)</h2>
+      <div class="grid2">
+        <div><label>Nome do atelier (logo)</label><input type="text" id="f-logoNome"></div>
+        <div><label>Subtítulo do logo</label><input type="text" id="f-logoSub"></div>
+      </div>
+      <div class="grid3">
+        <div><label>Título linha 1</label><input type="text" id="f-heroL1"></div>
+        <div><label>Título em destaque</label><input type="text" id="f-heroForte"></div>
+        <div><label>Título linha 2</label><input type="text" id="f-heroL2"></div>
+      </div>
+      <label>Subtítulo</label><input type="text" id="f-heroSub">
+      <label>Descrição</label><textarea id="f-heroDesc"></textarea>
+    </div>
+    <div class="card">
+      <h2>Sobre o Artista</h2>
+      <label>Chamada / título da seção</label><input type="text" id="f-sobreChamada">
+      <label>Parágrafo 1</label><textarea id="f-p1"></textarea>
+      <label>Parágrafo 2</label><textarea id="f-p2"></textarea>
+      <label>Parágrafo 3</label><textarea id="f-p3"></textarea>
+      <label>Citação (opcional)</label><input type="text" id="f-citacao">
+      <div class="grid3">
+        <div><label>Anos de ofício</label><input type="text" id="f-statAnos"></div>
+        <div><label>Obras criadas</label><input type="text" id="f-statObras"></div>
+        <div><label>Países colecionadores</label><input type="text" id="f-statPaises"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Rodapé</h2>
+      <label>Descrição curta do rodapé</label><textarea id="f-footerDesc"></textarea>
+    </div>
+  </div>
+
+  <!-- CONTATO -->
+  <div class="panel" id="panel-contato">
+    <div class="card">
+      <h2>Contato</h2>
+      <div class="grid2">
+        <div><label>E-mail</label><input type="email" id="f-email"></div>
+        <div><label>Telefone / WhatsApp</label><input type="text" id="f-telefone"></div>
+      </div>
+      <div class="grid2">
+        <div><label>Localização</label><input type="text" id="f-local"></div>
+        <div><label>Horário de atendimento</label><input type="text" id="f-horario"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Redes Sociais (deixe em branco para ocultar)</h2>
+      <div class="grid2">
+        <div><label>Instagram (link completo)</label><input type="url" id="f-instagram" placeholder="https://instagram.com/..."></div>
+        <div><label>Facebook (link completo)</label><input type="url" id="f-facebook" placeholder="https://facebook.com/..."></div>
+      </div>
+      <div class="grid2">
+        <div><label>YouTube (link completo)</label><input type="url" id="f-youtube" placeholder="https://youtube.com/..."></div>
+        <div><label>Pinterest (link completo)</label><input type="url" id="f-pinterest" placeholder="https://pinterest.com/..."></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPOSICOES -->
+  <div class="panel" id="panel-exposicoes">
+    <div class="card">
+      <h2>Exposições & Mostras</h2>
+      <div id="expoList"></div>
+      <div class="add-row"><button onclick="addExpo()">+ Adicionar Exposição</button></div>
+    </div>
+  </div>
+
+  <!-- DEPOIMENTOS -->
+  <div class="panel" id="panel-depoimentos">
+    <div class="card">
+      <h2>Depoimentos de Colecionadores</h2>
+      <div id="depoList"></div>
+      <div class="add-row"><button onclick="addDepo()">+ Adicionar Depoimento</button></div>
+    </div>
+  </div>
+
+</main>
+
+<script src="data.js"></script>
+<script>
+  // Trabalhamos numa cópia dos dados (rascunho), restaurando de localStorage se existir
+  let DATA = null;
+  const DRAFT_KEY = 'atelierBrunoAmaral_draft_v1';
+
+  function loadInitialData() {
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if (draft) {
+      try { return JSON.parse(draft); } catch (e) { /* ignora rascunho corrompido */ }
+    }
+    return JSON.parse(JSON.stringify(window.SITE_DATA));
+  }
+
+  const DIRTY_KEY = 'atelierBrunoAmaral_dirty_v1';
+
+  function saveDraft() {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(DATA));
+    localStorage.setItem(DIRTY_KEY, '1');
+  }
+
+  // ---------- SENHA / API ----------
+  function getSenha(forcar) {
+    let s = forcar ? null : sessionStorage.getItem('adminPw');
+    if (!s) {
+      s = prompt('Senha da Área do Artista:');
+      if (s) sessionStorage.setItem('adminPw', s);
+    }
+    return s;
+  }
+
+  async function api(path, body) {
+    const senha = getSenha(false);
+    if (!senha) throw new Error('Senha não informada');
+    const r = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': senha },
+      body: JSON.stringify(body)
+    });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 401) { sessionStorage.removeItem('adminPw'); throw new Error('Senha incorreta'); }
+    if (!r.ok) throw new Error(j.error || 'Erro ' + r.status);
+    return j;
+  }
+
+  // Reduz a foto (máx. 1600px, JPEG) para caber no envio e carregar rápido no site
+  function reduzirImagem(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = ev => {
+        const img = new Image();
+        img.onerror = reject;
+        img.onload = () => {
+          const max = 1600;
+          const escala = Math.min(1, max / Math.max(img.width, img.height));
+          const c = document.createElement('canvas');
+          c.width = Math.round(img.width * escala);
+          c.height = Math.round(img.height * escala);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          resolve(c.toDataURL('image/jpeg', 0.85));
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function publishData() {
+    try {
+      showStatus('Publicando...');
+      await api('/api/save', DATA);
+      localStorage.removeItem(DIRTY_KEY);
+      showStatus('✓ Publicado! O site já está atualizado.');
+    } catch (err) {
+      alert('Não foi possível publicar: ' + err.message);
+    }
+  }
+
+  function showStatus(msg) {
+    const el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3500);
+  }
+
+  // ---------- TABS ----------
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    };
+  });
+
+  // ---------- BIND SIMPLES (sobre/inicio/contato) ----------
+  const simpleFields = [
+    ['f-logoNome', () => DATA.site.logoNome, v => DATA.site.logoNome = v],
+    ['f-logoSub', () => DATA.site.logoSub, v => DATA.site.logoSub = v],
+    ['f-heroL1', () => DATA.site.heroTituloLinha1, v => DATA.site.heroTituloLinha1 = v],
+    ['f-heroForte', () => DATA.site.heroTituloForte, v => DATA.site.heroTituloForte = v],
+    ['f-heroL2', () => DATA.site.heroTituloLinha2, v => DATA.site.heroTituloLinha2 = v],
+    ['f-heroSub', () => DATA.site.heroSubtitulo, v => DATA.site.heroSubtitulo = v],
+    ['f-heroDesc', () => DATA.site.heroDescricao, v => DATA.site.heroDescricao = v],
+    ['f-sobreChamada', () => DATA.sobre.chamada, v => DATA.sobre.chamada = v],
+    ['f-p1', () => DATA.sobre.paragrafos[0] || '', v => DATA.sobre.paragrafos[0] = v],
+    ['f-p2', () => DATA.sobre.paragrafos[1] || '', v => DATA.sobre.paragrafos[1] = v],
+    ['f-p3', () => DATA.sobre.paragrafos[2] || '', v => DATA.sobre.paragrafos[2] = v],
+    ['f-citacao', () => DATA.sobre.citacao, v => DATA.sobre.citacao = v],
+    ['f-statAnos', () => DATA.sobre.statAnos, v => DATA.sobre.statAnos = v],
+    ['f-statObras', () => DATA.sobre.statObras, v => DATA.sobre.statObras = v],
+    ['f-statPaises', () => DATA.sobre.statPaises, v => DATA.sobre.statPaises = v],
+    ['f-footerDesc', () => DATA.footerDescricao, v => DATA.footerDescricao = v],
+    ['f-email', () => DATA.contato.email, v => DATA.contato.email = v],
+    ['f-telefone', () => DATA.contato.telefone, v => DATA.contato.telefone = v],
+    ['f-local', () => DATA.contato.localizacao, v => DATA.contato.localizacao = v],
+    ['f-horario', () => DATA.contato.horario, v => DATA.contato.horario = v],
+    ['f-instagram', () => DATA.contato.instagram, v => DATA.contato.instagram = v],
+    ['f-facebook', () => DATA.contato.facebook, v => DATA.contato.facebook = v],
+    ['f-youtube', () => DATA.contato.youtube, v => DATA.contato.youtube = v],
+    ['f-pinterest', () => DATA.contato.pinterest, v => DATA.contato.pinterest = v],
+  ];
+
+  function renderSimpleFields() {
+    simpleFields.forEach(([id, getter]) => {
+      document.getElementById(id).value = getter() || '';
+    });
+  }
+
+  simpleFields.forEach(([id, getter, setter]) => {
+    document.getElementById(id).addEventListener('input', e => {
+      setter(e.target.value);
+      saveDraft();
+    });
+  });
+
+  // ---------- OBRAS ----------
+  const CATEGORIAS = ['Retratos', 'Paisagens', 'Religiosas', 'Natureza-Morta', 'Mitológicas', 'Esculturas', 'Outra'];
+  const STATUS_OPCOES = [
+    ['exibicao', 'Só na Galeria (não à venda)'],
+    ['disponivel', 'Disponível'],
+    ['reservado', 'Reservado'],
+    ['vendido', 'Vendido']
+  ];
+
+  function renderObras() {
+    const wrap = document.getElementById('obrasList');
+    wrap.innerHTML = '';
+    DATA.obras.forEach((o, idx) => {
+      const div = document.createElement('div');
+      div.className = 'obra-card';
+      div.innerHTML = `
+        <div class="obra-head">
+          <img class="obra-thumb" src="${o.img}" alt="">
+          <div class="obra-fields">
+            <div class="grid2">
+              <div><label>Título</label><input type="text" data-f="titulo" value="${escAttr(o.titulo)}"></div>
+              <div><label>Categoria</label>
+                <select data-f="categoria">${CATEGORIAS.map(c => `<option value="${c}" ${c === o.categoria ? 'selected' : ''}>${c}</option>`).join('')}</select>
+              </div>
+            </div>
+            <div class="grid3">
+              <div><label>Técnica</label><input type="text" data-f="tecnica" value="${escAttr(o.tecnica)}" placeholder="Óleo sobre tela"></div>
+              <div><label>Dimensões</label><input type="text" data-f="dimensoes" value="${escAttr(o.dimensoes)}" placeholder="80×60cm"></div>
+              <div><label>Ano</label><input type="text" data-f="ano" value="${escAttr(o.ano)}" placeholder="2024"></div>
+            </div>
+            <div class="grid2">
+              <div><label>Status</label>
+                <select data-f="status">${STATUS_OPCOES.map(([v, l]) => `<option value="${v}" ${v === o.status ? 'selected' : ''}>${l}</option>`).join('')}</select>
+              </div>
+              <div><label>Preço (R$, se disponível)</label><input type="number" data-f="preco" value="${escAttr(o.preco)}" placeholder="15000"></div>
+            </div>
+            <label>Descrição</label><textarea data-f="descricao">${escAttr(o.descricao)}</textarea>
+            <label><input type="checkbox" data-f="destaque" ${o.destaque ? 'checked' : ''} style="width:auto;display:inline-block;vertical-align:middle;margin-right:0.4rem;"> Destaque (imagem maior na galeria)</label>
+            <div class="file-input-wrap">
+              <label style="margin:0;">Trocar foto:</label>
+              <input type="file" accept="image/*" data-imgfor="${idx}">
+              <span class="small">(nova imagem será incorporada diretamente no data.js)</span>
+            </div>
+          </div>
+        </div>
+        <div class="obra-actions">
+          <button class="danger" data-remove="${idx}">Remover Obra</button>
+        </div>
+      `;
+      wrap.appendChild(div);
+
+      div.querySelectorAll('[data-f]').forEach(input => {
+        const field = input.dataset.f;
+        const eventName = input.type === 'checkbox' ? 'change' : 'input';
+        input.addEventListener(eventName, () => {
+          let val = input.type === 'checkbox' ? input.checked : input.value;
+          if (field === 'preco' && val !== '') val = Number(val);
+          DATA.obras[idx][field] = val;
+          saveDraft();
+        });
+      });
+
+      div.querySelector(`[data-imgfor="${idx}"]`).addEventListener('change', async function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          showStatus('Enviando foto...');
+          const reduzida = await reduzirImagem(file);
+          div.querySelector('.obra-thumb').src = reduzida;
+          const { url } = await api('/api/upload', { dataUrl: reduzida });
+          DATA.obras[idx].img = url;
+          div.querySelector('.obra-thumb').src = url;
+          saveDraft();
+          showStatus('✓ Foto enviada. Clique em "Publicar no site" para salvar.');
+        } catch (err) {
+          alert('Não foi possível enviar a foto: ' + err.message);
+        }
+      });
+
+      div.querySelector('[data-remove]').addEventListener('click', () => {
+        if (confirm('Remover esta obra?')) {
+          DATA.obras.splice(idx, 1);
+          renderObras();
+          saveDraft();
+        }
+      });
+    });
+  }
+
+  function addObra() {
+    DATA.obras.unshift({
+      id: 'obra-' + Date.now(),
+      titulo: 'Nova Obra',
+      categoria: 'Retratos',
+      tecnica: 'Óleo sobre tela',
+      dimensoes: '',
+      ano: '',
+      preco: '',
+      status: 'exibicao',
+      descricao: '',
+      img: 'assets/bruno-amaral-perfil.jpg',
+      destaque: false
+    });
+    renderObras();
+    saveDraft();
+  }
+
+  // ---------- EXPOSICOES ----------
+  function renderExpos() {
+    const wrap = document.getElementById('expoList');
+    wrap.innerHTML = '';
+    DATA.exposicoes.forEach((e, idx) => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `
+        <div class="grid3">
+          <div><label>Ano</label><input type="text" data-f="ano" value="${escAttr(e.ano)}"></div>
+          <div><label>Status</label>
+            <select data-f="tag">
+              <option value="Em Cartaz" ${e.tag === 'Em Cartaz' ? 'selected' : ''}>Em Cartaz</option>
+              <option value="Encerrada" ${e.tag === 'Encerrada' ? 'selected' : ''}>Encerrada</option>
+              <option value="A confirmar" ${e.tag === 'A confirmar' ? 'selected' : ''}>A confirmar</option>
+            </select>
+          </div>
+          <div></div>
+        </div>
+        <label>Nome da exposição</label><input type="text" data-f="titulo" value="${escAttr(e.titulo)}">
+        <label>Local</label><input type="text" data-f="local" value="${escAttr(e.local)}" placeholder="Local · Cidade, País">
+        <div class="list-item-actions"><button class="danger" data-remove="${idx}">Remover</button></div>
+      `;
+      wrap.appendChild(div);
+      div.querySelectorAll('[data-f]').forEach(input => {
+        input.addEventListener('input', () => { DATA.exposicoes[idx][input.dataset.f] = input.value; saveDraft(); });
+      });
+      div.querySelector('[data-remove]').addEventListener('click', () => {
+        DATA.exposicoes.splice(idx, 1); renderExpos(); saveDraft();
+      });
+    });
+  }
+  function addExpo() {
+    DATA.exposicoes.push({ ano: '', titulo: '', local: '', tag: 'A confirmar' });
+    renderExpos(); saveDraft();
+  }
+
+  // ---------- DEPOIMENTOS ----------
+  function renderDepos() {
+    const wrap = document.getElementById('depoList');
+    wrap.innerHTML = '';
+    DATA.depoimentos.forEach((d, idx) => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = `
+        <label>Depoimento</label><textarea data-f="texto">${escAttr(d.texto)}</textarea>
+        <div class="grid2">
+          <div><label>Nome</label><input type="text" data-f="nome" value="${escAttr(d.nome)}"></div>
+          <div><label>Cidade / Relação</label><input type="text" data-f="papel" value="${escAttr(d.papel)}"></div>
+        </div>
+        <div class="list-item-actions"><button class="danger" data-remove="${idx}">Remover</button></div>
+      `;
+      wrap.appendChild(div);
+      div.querySelectorAll('[data-f]').forEach(input => {
+        input.addEventListener('input', () => { DATA.depoimentos[idx][input.dataset.f] = input.value; saveDraft(); });
+      });
+      div.querySelector('[data-remove]').addEventListener('click', () => {
+        DATA.depoimentos.splice(idx, 1); renderDepos(); saveDraft();
+      });
+    });
+  }
+  function addDepo() {
+    DATA.depoimentos.push({ texto: '', nome: '', papel: '' });
+    renderDepos(); saveDraft();
+  }
+
+  function escAttr(str) {
+    return (str === undefined || str === null ? '' : String(str)).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+
+  // ---------- EXPORTAR ----------
+  function exportData() {
+    const json = JSON.stringify(DATA, null, 2);
+    const content = `/* ==========================================================================\n   DATA.JS — Fonte única de dados do site Atelier Bruno Amaral\n   Gerado pela Área do Artista em ${new Date().toLocaleString('pt-BR')}\n   ========================================================================== */\n\nwindow.SITE_DATA = ${json};\n`;
+    const blob = new Blob([content], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'data.js';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showStatus('✓ data.js baixado! Substitua o arquivo antigo na pasta do site por este.');
+  }
+
+  // ---------- IMPORTAR ----------
+  document.getElementById('importFile').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      try {
+        const tempWindow = {};
+        const fn = new Function('window', ev.target.result + '\nreturn window.SITE_DATA;');
+        const imported = fn(tempWindow);
+        if (!imported) throw new Error('Formato inválido');
+        DATA = imported;
+        saveDraft();
+        renderAll();
+        showStatus('✓ data.js importado com sucesso.');
+      } catch (err) {
+        alert('Não foi possível importar este arquivo: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  function renderAll() {
+    renderSimpleFields();
+    renderObras();
+    renderExpos();
+    renderDepos();
+  }
+
+  // Começa pelos dados publicados; se houver alterações não publicadas neste navegador, mantém o rascunho
+  (async function init() {
+    DATA = JSON.parse(JSON.stringify(window.SITE_DATA));
+    const rascunho = localStorage.getItem(DRAFT_KEY);
+    if (rascunho && localStorage.getItem(DIRTY_KEY)) {
+      try { DATA = JSON.parse(rascunho); showStatus('Rascunho com alterações não publicadas restaurado.'); } catch (e) {}
+    } else {
+      try {
+        const r = await fetch('/api/data?t=' + Date.now());
+        if (r.ok) {
+          const publicado = await r.json();
+          if (publicado && publicado.obras && publicado.site) DATA = publicado;
+        }
+      } catch (e) { /* sem servidor: usa o data.js */ }
+    }
+    renderAll();
+  })();
+</script>
+</body>
+</html>
