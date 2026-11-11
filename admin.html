@@ -926,6 +926,16 @@
       var path = el.dataset.bind;
       var max = Number(el.dataset.max || 0);
       if (max) updateCounter(el, max);
+      el.addEventListener('focus', function () { el._snap = JSON.stringify(S.data); });
+      el.addEventListener('blur', function () {
+        if (el._snap && el._snap !== JSON.stringify(S.data)) {
+          S.undo.push(el._snap);
+          if (S.undo.length > 40) S.undo.shift();
+          S.redo.length = 0;
+          el._snap = JSON.stringify(S.data);
+          updateChrome();
+        }
+      });
       el.addEventListener('input', function () {
         var val = el.type === 'checkbox' ? el.checked : el.value;
         set(S.data, path, val);

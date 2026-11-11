@@ -236,10 +236,23 @@
   };
 
   // ---------- MODAL ----------
+  let modalIdx = -1;
+
+  function atualizaContador() {
+    const c = document.getElementById('modalCounter');
+    if (!c) return;
+    c.textContent = modalIdx >= 0 ? (modalIdx + 1) + ' / ' + D.obras.length : '';
+    const prev = document.getElementById('modalPrev');
+    const next = document.getElementById('modalNext');
+    if (prev) prev.style.opacity = modalIdx <= 0 ? '.3' : '';
+    if (next) next.style.opacity = modalIdx >= D.obras.length - 1 ? '.3' : '';
+  }
+
   window.openModal = function (id) {
     const o = D.obras.find(x => x.id === id);
     if (!o) return;
-    document.getElementById('modalImg').innerHTML = `<div style="width:100%;height:100%;min-height:350px;background:url('${o.img}') center/cover no-repeat;"></div>`;
+    modalIdx = D.obras.indexOf(o);
+    document.getElementById('modalImg').innerHTML = `<div style="position:absolute;inset:0;background:url('${o.img}') center/cover no-repeat;"></div>`;
     document.getElementById('modalInfo').innerHTML = `
       <p class="modal-tag">${esc(o.categoria)}</p>
       <h2 class="modal-title">${esc(o.titulo)}</h2>
@@ -254,18 +267,34 @@
     `;
     document.getElementById('modal').classList.add('open');
     document.body.style.overflow = 'hidden';
+    atualizaContador();
+  };
+
+  window.modalStep = function (delta) {
+    if (modalIdx < 0) return;
+    const proximo = modalIdx + delta;
+    if (proximo < 0 || proximo >= D.obras.length) return;
+    openModal(D.obras[proximo].id);
   };
 
   window.closeModal = function () {
     document.getElementById('modal').classList.remove('open');
     document.body.style.overflow = '';
+    modalIdx = -1;
+    atualizaContador();
   };
 
   window.closeModalOutside = function (e) {
     if (e.target === document.getElementById('modal')) closeModal();
   };
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    const aberto = document.getElementById('modal')?.classList.contains('open');
+    if (!aberto) return;
+    if (e.key === 'ArrowLeft') modalStep(-1);
+    if (e.key === 'ArrowRight') modalStep(1);
+  });
 
   window.showToast = function (msg) {
     const toast = document.getElementById('toast');
