@@ -4,11 +4,20 @@
 (async function () {
   // Usa os dados publicados pelo painel (/api/data); se não houver, usa o data.js
   let D = window.SITE_DATA;
+  const PREVIEW = /[?&]preview=1/.test(location.search);
+  if (PREVIEW) {
+    try {
+      const p = sessionStorage.getItem('atelierPreview');
+      if (p) { const d = JSON.parse(p); if (d && d.obras && d.site) D = d; }
+    } catch (e) { /* preview indisponível */ }
+  }
   try {
-    const r = await fetch('/api/data');
-    if (r.ok) {
-      const publicado = await r.json();
-      if (publicado && publicado.obras && publicado.site) D = publicado;
+    if (!PREVIEW) {
+      const r = await fetch('/api/data');
+      if (r.ok) {
+        const publicado = await r.json();
+        if (publicado && publicado.obras && publicado.site) D = publicado;
+      }
     }
   } catch (e) { /* offline ou abrindo o arquivo direto: segue com o data.js */ }
   if (!D) {
