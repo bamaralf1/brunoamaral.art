@@ -52,8 +52,6 @@
   document.getElementById('heroDescricao').textContent = D.site.heroDescricao;
   const heroFoto = document.getElementById('heroFoto');
   heroFoto.style.backgroundImage = `url('${D.site.fotoPerfil}')`;
-  heroFoto.style.backgroundSize = 'cover';
-  heroFoto.style.backgroundPosition = 'center top';
 
   // ---------- SOBRE ----------
   document.getElementById('sobreChamada').textContent = D.sobre.chamada;
@@ -261,8 +259,10 @@
         ${o.dimensoes ? `<div class="modal-spec"><span>Dimensões</span><span>${esc(o.dimensoes)}</span></div>` : ''}
         ${o.ano ? `<div class="modal-spec"><span>Ano</span><span>${esc(o.ano)}</span></div>` : ''}
       </div>
-      ${o.descricao ? `<p style="font-size:0.95rem;color:var(--ink-mid);line-height:1.7;margin-bottom:1.5rem;">${esc(o.descricao)}</p>` : ''}
-      <p class="modal-price">${precoTexto(o) || '&nbsp;'}</p>
+      ${o.descricao ? `<p style="font-size:0.95rem;color:var(--ink-3);line-height:1.7;margin-bottom:1.5rem;">${esc(o.descricao)}</p>` : ''}
+      ${precoTexto(o)
+        ? `<p class="modal-price">${precoTexto(o)}</p>`
+        : `<p class="modal-note">${o.status === 'exibicao' ? 'Obra em exposição — sob consulta' : 'Valor sob consulta'}</p>`}
       <a href="#encomendas" class="btn-primary" onclick="closeModal()" style="font-size:0.65rem;letter-spacing:0.15em;">Consultar Disponibilidade</a>
     `;
     document.getElementById('modal').classList.add('open');
