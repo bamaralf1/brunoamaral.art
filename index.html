@@ -756,10 +756,10 @@
       <div class="reveal d1">
         <form onsubmit="submitEncomenda(event)">
           <div class="form-grid">
-            <div class="form-group"><label for="fNome">Nome Completo</label><input id="fNome" name="nome" type="text" placeholder="Seu nome" required></div>
-            <div class="form-group"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" placeholder="seu@email.com" required></div>
-            <div class="form-group"><label for="fTel">Telefone / WhatsApp</label><input id="fTel" name="telefone" type="tel" placeholder="+55 (21) 99999-9999"></div>
-            <div class="form-group"><label for="fPais">País / Cidade</label><input id="fPais" name="local" type="text" placeholder="Rio de Janeiro, Brasil"></div>
+            <div class="form-group"><label for="fNome">Nome Completo</label><input id="fNome" name="nome" type="text" autocomplete="name" placeholder="Seu nome" required></div>
+            <div class="form-group"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" autocomplete="email" placeholder="seu@email.com" required></div>
+            <div class="form-group"><label for="fTel">Telefone / WhatsApp</label><input id="fTel" name="telefone" type="tel" autocomplete="tel" placeholder="+55 (21) 99999-9999"></div>
+            <div class="form-group"><label for="fPais">País / Cidade</label><input id="fPais" name="local" type="text" autocomplete="address-level2" placeholder="Rio de Janeiro, Brasil"></div>
             <div class="form-group">
               <label for="fTipo">Tipo de Obra Desejada</label>
               <select id="fTipo" name="tipo">
