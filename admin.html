@@ -1992,11 +1992,15 @@
     var semDados = !itens.length;
 
     return '' +
-      '<div class="toolbar">' +
-        '<div class="search"><input type="text" id="pesqQ" aria-label="Buscar respostas" placeholder="Buscar por cliente, obra ou comentário…" value="' + esc(p.q) + '"></div>' +
+      (semDados ?
+      '<div class="toolbar" style="justify-content:flex-end">' +
         (p.atualizado ? '<span class="pesq-note">Atualizado ' + esc(dataHora(p.atualizado)) + '</span>' : '') +
         '<button class="btn" data-pesq-refresh>Atualizar</button>' +
-      '</div>' +
+      '</div>' :
+      '<div class="toolbar">' +
+        '<div class="search"><input type="text" id="pesqQ" aria-label="Buscar respostas" placeholder="Buscar por cliente, obra ou comentário…" value="' + esc(p.q) + '"></div>' +
+        '<button class="btn" data-pesq-refresh>Atualizar</button>' +
+      '</div>') +
       '<div class="stats">' +
         stat('Respostas', s.n, s.ultima ? 'última em ' + dataCurta(s.ultima.recebidoEm || s.ultima._enviado_em) : 'convide um colecionador') +
         '<div class="stat"><div class="k">NPS</div><div class="v">' + (s.nps === null ? '—' : s.nps) + '</div><div class="m">' + esc(npsRotulo(s.nps)) + '</div></div>' +
@@ -2053,7 +2057,7 @@
           esc([o.categoria, o.ano].filter(Boolean).join(' · ') || 'Obra vendida') +
           (c ? ' · convite ' + esc(dataCurta(c.em)) : ' · ainda sem convite') +
         '</span></div>' +
-        '<button class="btn sm gold" data-invite="' + esc(o.id) + '">Preparar convite</button>' +
+        '<button class="btn sm" data-invite="' + esc(o.id) + '">Preparar convite</button>' +
       '</div>';
     }).join('') + '</div>' : '<div class="empty"><strong>Nenhuma obra marcada como vendida</strong>Marque a obra como vendida em Obras para a ver aqui — ou gere um convite para qualquer obra abaixo.</div>';
 
