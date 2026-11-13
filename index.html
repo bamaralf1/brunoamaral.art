@@ -369,7 +369,8 @@
      ========================================================================== */
   #depoimentos { padding: clamp(6rem, 12vw, 10rem) 0; background: var(--paper); }
   .depo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: clamp(2rem, 4vw, 3.4rem); margin-top: clamp(2.4rem, 5vw, 3.4rem); }
-  .depo-card { border-top: 1px solid var(--line-light); padding-top: 1.6rem; }
+  /* com um só depoimento a coluna esticaria a página toda: a medida fica legível */
+  .depo-card { border-top: 1px solid var(--line-light); padding-top: 1.6rem; max-width: 44rem; }
   .depo-quote { display: none; }
   .depo-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.25rem, 2vw, 1.55rem); line-height: 1.55; color: var(--ink-3); }
   .depo-author { display: flex; align-items: center; gap: .9rem; margin-top: 1.6rem; }

@@ -342,6 +342,8 @@
   .item-head { display:flex; align-items:center; gap:.7rem; margin-bottom:.9rem; }
   .item-head .n { font-family:var(--caps); font-size:.5rem; letter-spacing:.16em; color:var(--ink-soft); text-transform:uppercase; }
   .item-head .spacer { flex:1; }
+  .item--vazio { border-style:dashed; background:transparent; }
+  .item--vazio .item-head .pill { margin-left:.5rem; }
   .item-actions { display:flex; justify-content:flex-end; gap:.45rem; margin-top:.8rem; }
 
   /* ---------- toast ---------- */
@@ -1047,8 +1049,11 @@
       '<h2>Exposições & mostras <span class="line"></span></h2>' +
       '<p class="sub">Aparecem na seção “Exposições” do site. Deixe vazio para ocultar a seção.</p>' +
       (list.length ? list.map(function (e, i) {
-        return '<div class="item">' +
-          '<div class="item-head"><span class="n">Exposição ' + (i + 1) + '</span><span class="spacer"></span>' +
+        var vazia = !String(e.titulo || '').trim() && !String(e.local || '').trim();
+        return '<div class="item' + (vazia ? ' item--vazio' : '') + '">' +
+          '<div class="item-head"><span class="n">Exposição ' + (i + 1) + '</span>' +
+          (vazia ? '<span class="pill pas">em branco — não aparece no site</span>' : '') +
+          '<span class="spacer"></span>' +
           '<button class="btn sm ghost" data-expo-up="' + i + '" title="Subir">↑</button>' +
           '<button class="btn sm ghost" data-expo-down="' + i + '" title="Descer">↓</button>' +
           '<button class="btn sm danger" data-expo-del="' + i + '">Remover</button></div>' +
@@ -1070,10 +1075,13 @@
     var list = S.data.depoimentos || [];
     return '<div class="card">' +
       '<h2>Depoimentos <span class="line"></span></h2>' +
-      '<p class="sub">Testemunhos de colecionadores exibidos no site.</p>' +
+      '<p class="sub">Testemunhos de colecionadores exibidos no site. Um depoimento sem texto é ignorado na publicação; sem nenhum depoimento, a seção fica oculta.</p>' +
       (list.length ? list.map(function (d, i) {
-        return '<div class="item">' +
-          '<div class="item-head"><span class="n">Depoimento ' + (i + 1) + '</span><span class="spacer"></span>' +
+        var vazio = !String(d.texto || '').trim();
+        return '<div class="item' + (vazio ? ' item--vazio' : '') + '">' +
+          '<div class="item-head"><span class="n">Depoimento ' + (i + 1) + '</span>' +
+          (vazio ? '<span class="pill pas">em branco — não aparece no site</span>' : '') +
+          '<span class="spacer"></span>' +
           '<button class="btn sm ghost" data-depo-up="' + i + '" title="Subir">↑</button>' +
           '<button class="btn sm ghost" data-depo-down="' + i + '" title="Descer">↓</button>' +
           '<button class="btn sm danger" data-depo-del="' + i + '">Remover</button></div>' +
@@ -2240,6 +2248,26 @@
     }).length;
     return { novos: novos, alterados: alterados, removidos: removidos, textos: textos };
   }
+  /* entradas em branco gerariam cartões vazios no site: ficam fora da publicação */
+  function limparVazios() {
+    var removidos = { depoimentos: 0, exposicoes: 0 };
+    if (Array.isArray(S.data.depoimentos)) {
+      var antesD = S.data.depoimentos.length;
+      S.data.depoimentos = S.data.depoimentos.filter(function (d) {
+        return d && String(d.texto || '').trim();
+      });
+      removidos.depoimentos = antesD - S.data.depoimentos.length;
+    }
+    if (Array.isArray(S.data.exposicoes)) {
+      var antesE = S.data.exposicoes.length;
+      S.data.exposicoes = S.data.exposicoes.filter(function (e) {
+        return e && (String(e.titulo || '').trim() || String(e.local || '').trim() || String(e.ano || '').trim());
+      });
+      removidos.exposicoes = antesE - S.data.exposicoes.length;
+    }
+    return removidos;
+  }
+
   function diffRow(label, n, tone) {
     return '<div class="diff-row"><span>' + esc(label) + '</span><b style="color:' + (n ? (tone || 'var(--gold-dark)') : 'var(--ink-soft)') + '">' + n + '</b></div>';
   }
@@ -2285,6 +2313,7 @@
       goBtn.disabled = true;
       $('#pubProg').classList.add('show');
       try {
+        var limpos = limparVazios();
         await api('/api/save', S.data);
         S.published = clone(S.data);
         S.lastPublish = new Date();
@@ -2294,6 +2323,10 @@
         root.innerHTML = '';
         updateChrome();
         toast('Publicado! O site já está atualizado.', 'ok');
+        var perdidos = [];
+        if (limpos.depoimentos) perdidos.push(limpos.depoimentos + (limpos.depoimentos > 1 ? ' depoimentos em branco' : ' depoimento em branco'));
+        if (limpos.exposicoes) perdidos.push(limpos.exposicoes + (limpos.exposicoes > 1 ? ' exposições em branco' : ' exposição em branco'));
+        if (perdidos.length) toast('Ficaram de fora ' + perdidos.join(' e ') + ', que não apareceriam no site.');
         render();
       } catch (err) {
         goBtn.disabled = false;

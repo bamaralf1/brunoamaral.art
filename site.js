@@ -25,6 +25,15 @@
     return;
   }
 
+  // Um dados publicado incompleto não pode derrubar a renderização da página inteira
+  D.site = D.site || {};
+  D.sobre = D.sobre || {};
+  D.contato = D.contato || {};
+  D.obras = Array.isArray(D.obras) ? D.obras : [];
+  D.depoimentos = Array.isArray(D.depoimentos) ? D.depoimentos : [];
+  D.exposicoes = Array.isArray(D.exposicoes) ? D.exposicoes : [];
+  D.sobre.paragrafos = Array.isArray(D.sobre.paragrafos) ? D.sobre.paragrafos : [];
+
   const CAT_SLUG = {
     "Retratos": "retratos",
     "Paisagens": "paisagens",
@@ -156,8 +165,11 @@
 
   // ---------- EXPOSIÇÕES ----------
   const expoList = document.getElementById('expoList');
-  if (!D.exposicoes.length) hideSection('exposicoes');
-  D.exposicoes.forEach(e => {
+  const exposicoes = (D.exposicoes || []).filter(e => e && (
+    String(e.titulo || '').trim() || String(e.local || '').trim() || String(e.ano || '').trim()
+  ));
+  if (!exposicoes.length) hideSection('exposicoes');
+  exposicoes.forEach(e => {
     const div = document.createElement('div');
     div.className = 'expo-item';
     const tagClass = (e.tag === 'Em Cartaz') ? 'atual' : 'passada';
@@ -169,18 +181,22 @@
   });
 
   // ---------- DEPOIMENTOS ----------
+  // Um depoimento sem texto deixaria um cartão em branco na página: não entra.
   const depoGrid = document.getElementById('depoGrid');
-  if (!D.depoimentos.length) hideSection('depoimentos');
-  D.depoimentos.forEach(dep => {
+  const depoimentos = (D.depoimentos || []).filter(dep => dep && String(dep.texto || '').trim());
+  if (!depoimentos.length) hideSection('depoimentos');
+  depoimentos.forEach(dep => {
     const div = document.createElement('div');
     div.className = 'depo-card';
-    const iniciais = (dep.nome || '?').split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+    const nome = String(dep.nome || '').trim() || 'Colecionador';
+    const papel = String(dep.papel || '').trim();
+    const iniciais = nome.split(' ').filter(Boolean).map(p => p[0]).join('').slice(0, 2).toUpperCase();
     div.innerHTML = `
       <div class="depo-quote">"</div>
       <p class="depo-text">${esc(dep.texto)}</p>
       <div class="depo-author">
-        <div class="depo-avatar">${iniciais}</div>
-        <div><span class="depo-name">${esc(dep.nome)}</span><span class="depo-role">${esc(dep.papel)}</span></div>
+        <div class="depo-avatar">${esc(iniciais)}</div>
+        <div><span class="depo-name">${esc(nome)}</span>${papel ? `<span class="depo-role">${esc(papel)}</span>` : ''}</div>
       </div>`;
     depoGrid.appendChild(div);
   });
