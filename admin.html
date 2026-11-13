@@ -28,8 +28,10 @@
   * { box-sizing:border-box; }
   html, body { height:100%; }
   body {
-    margin:0; background:var(--paper); color:var(--ink);
+    margin:0; background-color:var(--paper); color:var(--ink);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
     font-family:'EB Garamond', Georgia, serif; font-size:16px; line-height:1.5;
+    font-feature-settings:'kern' 1,'liga' 1;
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   }
   button, input, select, textarea { font:inherit; color:inherit; }
@@ -40,7 +42,8 @@
   .app { display:flex; min-height:100vh; }
 
   aside#sidebar {
-    width:264px; flex:0 0 264px; background:#0C0A07; color:#E8DECA;
+    width:264px; flex:0 0 264px; background-color:#0C0A07; color:#E8DECA;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
     display:flex; flex-direction:column; position:sticky; top:0; height:100vh;
     border-right:1px solid #221C13; z-index:40;
   }
@@ -66,14 +69,16 @@
     font-family:var(--caps); font-size:.6rem; letter-spacing:.13em; text-transform:uppercase; text-align:left;
     transition:color .18s, border-color .18s, background .18s;
   }
-  nav#nav button .ico { width:1.1rem; text-align:center; font-family:var(--serif); font-size:.95rem; opacity:.7; letter-spacing:0; }
+  nav#nav button .ico { width:1.1rem; height:1.1rem; flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; opacity:.75; }
+  nav#nav button .ico svg, .btn svg { display:block; width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.1; stroke-linecap:square; stroke-linejoin:miter; }
+  .btn svg { width:14px; height:14px; }
   nav#nav button:hover { color:#F0E7D5; background:rgba(255,255,255,.025); }
   nav#nav button:hover .ico { opacity:1; color:var(--gold-soft); }
   nav#nav button.active { color:var(--gold-soft); border-left-color:var(--gold); background:linear-gradient(90deg,rgba(176,141,69,.12),transparent 70%); }
   nav#nav button.active .ico { opacity:1; color:var(--gold); }
   nav#nav .nav-count { margin-left:auto; font-family:var(--serif); font-size:.78rem; letter-spacing:0; color:#7D7159; }
 
-  .side-foot { padding:1.1rem .9rem 1.2rem; border-top:1px solid #1E1911; display:flex; flex-direction:column; gap:.45rem; }
+  .side-foot { padding:1.1rem .9rem 1.2rem; border-top:1px solid rgba(176,141,69,.24); display:flex; flex-direction:column; gap:.45rem; }
   .side-foot .btn { background:transparent; border-color:#2E2719; color:#C6BAA2; }
   .side-foot .btn:hover { background:#16120B; border-color:var(--gold); color:var(--gold-soft); }
   .side-foot .btn.gold { background:var(--gold); border-color:var(--gold); color:#14100A; }
@@ -167,7 +172,7 @@
   .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; margin-bottom:1.2rem; background:var(--line); border:1px solid var(--line); }
   .stat { background:var(--card); padding:1.3rem 1.4rem 1.4rem; border-radius:0; box-shadow:none; }
   .stat .k { font-family:var(--caps); font-size:.5rem; letter-spacing:.17em; text-transform:uppercase; color:var(--ink-soft); }
-  .stat .v { font-family:var(--serif); font-weight:400; font-size:2.6rem; line-height:1; margin:.5rem 0 .35rem; letter-spacing:-.01em; }
+  .stat .v { font-family:var(--serif); font-weight:400; font-size:2.6rem; line-height:1; margin:.5rem 0 .35rem; letter-spacing:-.01em; font-variant-numeric:lining-nums tabular-nums; }
   .stat .m { font-family:var(--serif); font-size:.82rem; font-style:italic; color:#8C7D5C; }
   .stat.gold { background:linear-gradient(155deg,#F3E9D2,#EADFBF); }
 
@@ -175,9 +180,10 @@
   .bar-row { display:grid; grid-template-columns:120px 1fr 2rem; gap:.8rem; align-items:center; font-size:.9rem; }
   .bar { height:3px; background:var(--line-soft); border-radius:0; overflow:hidden; }
   .bar span { display:block; height:100%; background:linear-gradient(90deg,var(--gold-dark),var(--gold)); border-radius:0; }
-  .bar-row .n { text-align:right; font-family:var(--serif); font-size:.86rem; color:var(--ink-soft); }
+  .bar-row .n { text-align:right; font-family:var(--serif); font-size:.86rem; color:var(--ink-soft); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
 
   .empty { text-align:center; padding:2.6rem 1.2rem; border:1px dashed var(--line); border-radius:0; color:var(--ink-soft); background:transparent; }
+  .empty::before { content:''; display:block; width:2.2rem; height:1px; background:var(--gold); opacity:.8; margin:0 auto 1.15rem; }
   .empty strong { display:block; font-family:var(--caps); font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; margin-bottom:.5rem; color:var(--ink-2); }
   .empty + .btn { margin-top:1rem; }
 
@@ -189,9 +195,13 @@
     transition:border-color .2s, box-shadow .2s; position:relative;
   }
   .obra:hover { border-color:#C7B48A; box-shadow:var(--shadow); }
+  .obra::after { content:''; position:absolute; left:0; right:0; top:0; height:1px; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .5s cubic-bezier(.2,.7,.2,1); pointer-events:none; z-index:2; }
+  .obra:hover::after { transform:scaleX(1); }
   .obra.dragging { opacity:.4; }
   .obra.drop-target { outline:1px dashed var(--gold); outline-offset:-4px; }
-  .obra .thumb { position:relative; aspect-ratio:4/3; background:#E9E0CD center/cover no-repeat; cursor:pointer; }
+  .obra .thumb { position:relative; overflow:hidden; aspect-ratio:4/3; background:#E9E0CD center/cover no-repeat; cursor:pointer; }
+  .obra .thumb-img { display:block; width:100%; height:100%; object-fit:cover; transform:scale(1); transition:transform .8s cubic-bezier(.2,.7,.2,1); }
+  .obra:hover .thumb-img { transform:scale(1.045); }
   .obra .thumb::after { content:''; position:absolute; inset:0; box-shadow:inset 0 0 0 1px rgba(16,13,9,.06); pointer-events:none; }
   .obra .thumb .pill { position:absolute; left:.6rem; top:.6rem; }
   .obra .thumb .drag {
@@ -224,6 +234,77 @@
   .pill.disponivel { color:#A9C7A7; border-color:#2E3D2C; background:#111710; }
   .pill.reservado { color:#DEC48B; border-color:#4A3B1D; background:#1A150A; }
   .pill.vendido { color:#DCA79D; border-color:#4A2B25; background:#1A100E; }
+  .pill.pro { color:#A9C7A7; border-color:#2E3D2C; background:#111710; }
+  .pill.pas { color:#DEC48B; border-color:#4A3B1D; background:#1A150A; }
+  .pill.det { color:#DCA79D; border-color:#4A2B25; background:#1A100E; }
+  /* sobre o papel claro do painel as etiquetas ficam em tom baixo, não em bloco escuro */
+  .resp .pill { border-color:var(--line); background:transparent; }
+  .resp .pill.pro { color:#2E6B47; border-color:#C2D3C3; background:rgba(63,122,88,.06); }
+  .resp .pill.pas { color:#8A6A22; border-color:#DFCFA8; background:rgba(176,141,69,.07); }
+  .resp .pill.det { color:#A55544; border-color:#DCC0B8; background:rgba(165,85,68,.06); }
+  .pill::before { content:''; width:3px; height:3px; border-radius:50%; background:currentColor; opacity:.85; flex:0 0 auto; }
+
+  /* ---------- pesquisa de satisfação ---------- */
+  .pesq-head { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:1.2rem; }
+  .pesq-head h2 { font-family:var(--serif); font-size:1.5rem; font-weight:500; margin:0; }
+  .pesq-head p { margin:.3rem 0 0; font-size:.92rem; font-style:italic; color:var(--ink-soft); }
+  .pesq-actions { display:flex; gap:.5rem; align-items:center; }
+  .pesq-note { font-family:var(--serif); font-size:.82rem; font-style:italic; color:#8C7D5C; }
+  .nps-chart { display:grid; grid-template-columns:repeat(11,minmax(0,1fr)); gap:5px; margin:.4rem 0 1.1rem; }
+  .nps-col { display:flex; flex-direction:column; align-items:center; gap:.35rem; min-width:0; }
+  .nps-col .n { font-family:var(--serif); font-size:.78rem; color:var(--ink-soft); min-height:1rem; font-variant-numeric:lining-nums tabular-nums; }
+  .nps-track { width:100%; height:88px; display:flex; align-items:flex-end; background:transparent; border-bottom:1px solid var(--line); }
+  .nps-track i { display:block; width:100%; min-height:0; background:#B9A57D; transition:height .4s var(--ease, ease); }
+  .nps-col.pro .nps-track i { background:#3F7A58; }
+  .nps-col.pas .nps-track i { background:var(--gold); }
+  .nps-col.det .nps-track i { background:#A55544; }
+  .nps-col .l { font-family:var(--caps); font-size:.5rem; letter-spacing:.06em; color:var(--ink-soft); }
+  .nps-legend { display:flex; gap:1.1rem; flex-wrap:wrap; font-family:var(--serif); font-size:.86rem; font-style:italic; color:var(--ink-soft); }
+  .nps-legend b { font-weight:500; color:var(--ink-2); }
+  .legend-dot { display:inline-block; width:6px; height:6px; margin-right:.35rem; vertical-align:1px; }
+  .legend-dot.pro { background:#3F7A58; } .legend-dot.pas { background:var(--gold); } .legend-dot.det { background:#A55544; }
+
+  .resp-list { display:grid; grid-template-columns:minmax(0,1fr); gap:.65rem; }
+  .resp { border:1px solid var(--line); background:var(--card); transition:border-color .18s; min-width:0; }
+  .resp:hover { border-color:#C7B48A; }
+  .resp-head { display:flex; align-items:center; gap:.85rem; padding:.85rem 1rem; cursor:pointer; min-width:0; }
+  .resp-score { flex:0 0 2.5rem; text-align:center; font-family:var(--serif); font-size:1.55rem; line-height:1; color:var(--ink-2); font-variant-numeric:lining-nums tabular-nums; }
+  .resp-score.pro { color:#2E6B47; } .resp-score.pas { color:var(--gold-dark); } .resp-score.det { color:var(--danger); }
+  .resp-id { flex:1; min-width:0; }
+  .resp-name { display:block; font-family:var(--serif); font-size:1.08rem; line-height:1.2; overflow-wrap:anywhere; }
+  .resp-meta { display:block; font-family:var(--serif); font-size:.82rem; font-style:italic; color:var(--ink-soft); margin-top:.1rem; overflow-wrap:anywhere; }
+  .resp-excerpt {
+    display:block; margin-top:.3rem; max-width:58ch; font-family:var(--serif); font-size:.9rem;
+    color:#7B6C50; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .resp-chev { flex:0 0 auto; color:var(--ink-soft); transition:transform .2s; }
+  .resp-chev svg { display:block; width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.2; }
+  .resp.open .resp-chev { transform:rotate(180deg); }
+  .resp-body { display:none; border-top:1px solid var(--line-soft); padding:.9rem 1rem 1rem; }
+  .resp.open .resp-body { display:block; }
+  .resp-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 1.6rem; }
+  .resp-row { display:flex; justify-content:space-between; gap:.8rem; padding:.32rem 0; border-bottom:1px solid var(--line-soft); font-size:.9rem; }
+  .resp-row span:first-child { color:var(--ink-soft); font-style:italic; flex:0 0 auto; }
+  .resp-row span:last-child { text-align:right; min-width:0; overflow-wrap:anywhere; }
+  .resp-quote { border-left:2px solid var(--gold); padding:.45rem 0 .45rem .9rem; margin:.9rem 0 0; font-family:var(--serif); font-size:1rem; font-style:italic; color:var(--ink-2); white-space:pre-wrap; }
+  .resp-foot { display:flex; align-items:center; gap:.6rem; margin-top:.9rem; flex-wrap:wrap; }
+  .resp-foot .spacer { flex:1; }
+  .resp-all { margin-top:.8rem; border-top:1px solid var(--line-soft); padding-top:.55rem; }
+  .resp-all summary { cursor:pointer; font-family:var(--caps); font-size:.5rem; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-soft); }
+  .resp-all[open] summary { color:var(--gold-dark); }
+  .resp-all .resp-grid { margin-top:.45rem; }
+
+  .invite-list { display:grid; gap:.1rem; }
+  .invite-row { display:flex; align-items:center; gap:.9rem; padding:.75rem 0; border-bottom:1px solid var(--line-soft); flex-wrap:wrap; }
+  .invite-row:last-child { border-bottom:0; }
+  .invite-thumb { width:2.6rem; height:3.1rem; object-fit:cover; border:1px solid var(--line); background:#E9E0CD; flex:0 0 auto; filter:sepia(.06); }
+  .invite-row .t { flex:1; min-width:160px; }
+  .invite-row .t b { display:block; font-family:var(--serif); font-size:1.04rem; font-weight:500; }
+  .invite-row .t span { display:block; font-family:var(--serif); font-size:.8rem; font-style:italic; color:var(--ink-soft); }
+  .invite-link-field { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82rem !important; }
+  .pesq-loading { display:flex; align-items:center; gap:.7rem; font-family:var(--serif); font-style:italic; color:var(--ink-soft); padding:1.6rem .2rem; }
+  .pesq-loading::before { content:''; width:.55rem; height:.55rem; border:1px solid var(--gold); border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
 
   /* ---------- modal ---------- */
   .overlay { position:fixed; inset:0; background:rgba(12,10,7,.6); backdrop-filter:blur(3px); z-index:80; display:flex; justify-content:flex-end; }
@@ -251,7 +332,7 @@
     display:flex; gap:1.1rem; align-items:center; cursor:pointer; transition:.18s;
   }
   .dropzone:hover, .dropzone.over { border-color:var(--gold); background:rgba(176,141,69,.08); }
-  .dropzone img { width:110px; height:132px; object-fit:cover; border-radius:0; border:1px solid var(--line); background:#E9E0CD; flex:0 0 auto; filter:sepia(.06); }
+  .dropzone img { width:110px; height:132px; object-fit:cover; border-radius:0; border:1px solid var(--line); background:#E9E0CD; flex:0 0 auto; filter:sepia(.06); box-shadow:0 16px 32px -24px rgba(16,13,9,.75); }
   .dropzone .dz-text strong { display:block; font-family:var(--caps); font-size:.54rem; letter-spacing:.15em; text-transform:uppercase; margin-bottom:.35rem; }
   .dropzone .dz-text span { font-family:var(--serif); font-size:.88rem; font-style:italic; color:var(--ink-soft); }
   .dropzone.busy { opacity:.5; pointer-events:none; }
@@ -290,6 +371,8 @@
   .btn:active { transform:translateY(1px); }
   .saved-chip { display:inline-flex; align-items:center; gap:.4rem; font-family:var(--serif); font-size:.8rem; font-style:italic; color:#8C7D5C; }
   .saved-chip b { font-weight:500; }
+  .topbar h1, .obra .title { text-wrap:balance; }
+  .card .sub, .hint, .dialog p { text-wrap:pretty; }
   .icon-btn { width:2.2rem; height:2.2rem; padding:0; justify-content:center; font-size:.9rem; }
   code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.82em; letter-spacing:0; background:var(--paper-2); padding:.12em .35em; color:var(--ink-2); }
 
@@ -368,7 +451,7 @@
   @media (max-width: 860px) {
     aside#sidebar { position:fixed; inset:0 auto 0 0; transform:translateX(-102%); transition:transform .24s ease; box-shadow:var(--shadow-lg); }
     aside#sidebar.open { transform:none; }
-    body:has(aside#sidebar.open)::before { content:''; position:fixed; inset:0; background:rgba(12,10,7,.45); z-index:25; }
+    body:has(aside#sidebar.open)::before { content:''; position:fixed; inset:0; background:rgba(12,10,7,.45); z-index:35; }
     #menuToggle { display:inline-flex; }
     .topbar { padding:.75rem 1rem; gap:.5rem; }
     #view { padding:1.2rem 1rem 2.5rem; }
@@ -392,6 +475,24 @@
     .topbar h1 { font-size:1.1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
     #dirtyBadge { display:none; }
     #view { padding:1rem .9rem 2.5rem; }
+    .resp-grid { grid-template-columns:1fr; }
+    .resp-head {
+      display:grid; align-items:start;
+      grid-template-columns:auto minmax(0,1fr) auto;
+      grid-template-areas:"score id chev" "score pill chev";
+      gap:.2rem .7rem; padding:.75rem .8rem;
+    }
+    .resp-score { grid-area:score; align-self:center; }
+    .resp-id { grid-area:id; }
+    .resp-head .pill { grid-area:pill; justify-self:start; margin-top:.45rem; }
+    .resp-chev { grid-area:chev; align-self:center; }
+    .resp-excerpt { max-width:100%; white-space:normal; overflow:hidden; text-overflow:clip; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+    .nps-chart { gap:3px; }
+    .nps-track { height:64px; }
+    .nps-col .n { font-size:.7rem; }
+    .pesq-note { width:100%; }
+    .toolbar [data-pesq-refresh] { flex:1 1 100%; }
+    .dialog .row { flex-wrap:wrap; }
   }
 </style>
 </head>
@@ -407,20 +508,21 @@
       </div>
     </div>
     <nav id="nav">
-      <button data-view="dashboard" class="active"><span class="ico">◈</span> Painel</button>
-      <button data-view="obras"><span class="ico">▣</span> Obras <span class="nav-count" id="navObras"></span></button>
-      <button data-view="inicio"><span class="ico">✦</span> Início</button>
-      <button data-view="sobre"><span class="ico">✎</span> Sobre</button>
-      <button data-view="contato"><span class="ico">✉</span> Contato</button>
-      <button data-view="exposicoes"><span class="ico">◷</span> Exposições</button>
-      <button data-view="depoimentos"><span class="ico">❝</span> Depoimentos</button>
-      <button data-view="publicar"><span class="ico">☁</span> Publicar</button>
+      <button data-view="dashboard" class="active"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg></span> Painel</button>
+      <button data-view="obras"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10"/><circle cx="5.6" cy="6.4" r="1.2"/><path d="M2 11.4l3.4-3 2.6 2 2-2 4 4"/></svg></span> Obras <span class="nav-count" id="navObras"></span></button>
+      <button data-view="inicio"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.4 1.4M11.55 11.55l1.4 1.4M12.95 3.05l-1.4 1.4M4.45 11.55l-1.4 1.4"/></svg></span> Início</button>
+      <button data-view="sobre"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M11.4 2.3l2.3 2.3L6 12.3l-3.3.9.9-3.3 7.8-7.6z"/><path d="M9.9 3.8l2.3 2.3"/></svg></span> Sobre</button>
+      <button data-view="contato"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="1.5" y="3.5" width="13" height="9"/><path d="M1.5 4.6L8 9.1l6.5-4.5"/></svg></span> Contato</button>
+      <button data-view="exposicoes"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11"/><path d="M2 6h12M5 1.5V4M11 1.5V4M6 9h1M9 9h1M6 11.5h1M9 11.5h1"/></svg></span> Exposições</button>
+      <button data-view="depoimentos"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 4h4v4H5c0 2-1 3.1-2 3.6M9 4h4v4h-2c0 2-1 3.1-2 3.6"/></svg></span> Depoimentos</button>
+      <button data-view="pesquisa"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 2.5h8v11H4z"/><path d="M6 5.5h4M6 8h4M6 10.5h2.5"/></svg></span> Pesquisa <span class="nav-count" id="navPesq"></span></button>
+      <button data-view="publicar"><span class="ico" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 10.5V2M5 5l3-3 3 3"/><path d="M2 10v4h12v-4"/></svg></span> Publicar</button>
     </nav>
     <div class="side-foot">
       <div class="pub-state"><span class="dot" id="pubDot"></span><span id="pubText">Carregando…</span></div>
       <button class="btn block" data-action="new-obra">+ Nova obra</button>
-      <button class="btn block" data-action="preview">◱ Prévia do site</button>
-      <button class="btn gold block" data-action="publish">☁ Publicar no site</button>
+      <button class="btn block" data-action="preview"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="9"/><path d="M2 6h12M5 14h6"/></svg> Prévia do site</button>
+      <button class="btn gold block" data-action="publish"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5V2M5 5l3-3 3 3"/><path d="M2 10v4h12v-4"/></svg> Publicar no site</button>
       <a class="link" href="index.html" target="_blank" rel="noopener">Ver site ↗</a>
       <button class="link" data-action="logout" style="background:none;border:0;cursor:pointer;">Sair</button>
     </div>
@@ -428,16 +530,16 @@
 
   <main id="main">
     <div class="topbar">
-      <button class="btn ghost sm" id="menuToggle" aria-label="Menu">☰</button>
+      <button class="btn ghost sm icon-btn" id="menuToggle" aria-label="Menu"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg></button>
       <h1 id="viewTitle">Painel</h1>
       <div class="spacer"></div>
       <span class="saved-chip hide-sm" id="savedChip"></span>
       <span class="badge" id="dirtyBadge"></span>
-      <button class="btn sm icon-btn hide-sm" id="btnUndo" title="Desfazer (Ctrl+Z)" aria-label="Desfazer">↺</button>
-      <button class="btn sm icon-btn hide-sm" id="btnRedo" title="Refazer (Ctrl+Shift+Z)" aria-label="Refazer">↻</button>
+      <button class="btn sm icon-btn hide-sm" id="btnUndo" title="Desfazer (Ctrl+Z)" aria-label="Desfazer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3L2 7l4 4"/><path d="M2 7h7a4 4 0 0 1 0 8H6"/></svg></button>
+      <button class="btn sm icon-btn hide-sm" id="btnRedo" title="Refazer (Ctrl+Shift+Z)" aria-label="Refazer"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3l4 4-4 4"/><path d="M14 7H7a4 4 0 0 0 0 8h3"/></svg></button>
       <button class="btn sm hide-sm" data-action="bulk" id="btnBulk">Selecionar</button>
-      <button class="btn sm hide-sm" data-action="preview">◱ Prévia</button>
-      <button class="btn ghost sm icon-btn" data-action="palette" title="Buscar (Ctrl+K)" aria-label="Buscar">⌕</button>
+      <button class="btn sm hide-sm" data-action="preview"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="9"/><path d="M2 6h12M5 14h6"/></svg> Prévia</button>
+      <button class="btn ghost sm icon-btn" data-action="palette" title="Buscar (Ctrl+K)" aria-label="Buscar"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="M10.4 10.4L14 14"/></svg></button>
       <button class="btn primary sm" data-action="publish">Publicar</button>
     </div>
     <div id="view"></div>
@@ -470,8 +572,17 @@
   };
   var VIEW_TITLES = {
     dashboard: 'Painel', obras: 'Obras', inicio: 'Início', sobre: 'Sobre o artista',
-    contato: 'Contato & redes', exposicoes: 'Exposições', depoimentos: 'Depoimentos', publicar: 'Publicar'
+    contato: 'Contato & redes', exposicoes: 'Exposições', depoimentos: 'Depoimentos',
+    pesquisa: 'Pesquisa de satisfação', publicar: 'Publicar'
   };
+  var CONVITES_KEY = 'atelierBrunoAmaral_convites_v1';
+  var SITE_BASE = (function () {
+    var host = location.hostname;
+    var producao = 'https://brunoamaralart1.vercel.app';
+    if (!host || /^(localhost|127\.0\.0\.1|\[::1\])$/i.test(host)) return producao;
+    if (/\.vercel\.app$/i.test(host) && host !== 'brunoamaralart1.vercel.app') return producao;
+    return location.origin;
+  })();
 
   // ------------------------------------------------------------------ estado
   var S = {
@@ -491,7 +602,8 @@
     bulk: false,
     sel: {},
     preview: false,
-    device: 'desktop'
+    device: 'desktop',
+    pesq: { status: 'idle', itens: [], erro: '', atualizado: null, q: '', open: {} }
   };
   var previewTimer = null;
 
@@ -579,6 +691,31 @@
     });
     var j = await r.json().catch(function () { return {}; });
     if (r.status === 401) { sessionStorage.removeItem(PW_KEY); throw new Error('Senha incorreta'); }
+    if (!r.ok) throw new Error(j.error || ('Erro ' + r.status));
+    return j;
+  }
+
+  async function apiGet(path) {
+    var pw = getPassword(false);
+    if (!pw) throw new Error('Sem senha');
+    var r = await fetch(path, { headers: { 'x-admin-password': pw }, cache: 'no-store' });
+    var j = await r.json().catch(function () { return {}; });
+    if (r.status === 401) { sessionStorage.removeItem(PW_KEY); var e = new Error('Senha incorreta'); e.code = 401; throw e; }
+    if (!r.ok) throw new Error(j.error || ('Erro ' + r.status));
+    return j;
+  }
+
+  async function apiDelete(path, body) {
+    var pw = getPassword(false);
+    if (!pw) throw new Error('Sem senha');
+    var opts = { method: 'DELETE', headers: { 'x-admin-password': pw } };
+    if (body) {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(body);
+    }
+    var r = await fetch(path, opts);
+    var j = await r.json().catch(function () { return {}; });
+    if (r.status === 401) { sessionStorage.removeItem(PW_KEY); var e = new Error('Senha incorreta'); e.code = 401; throw e; }
     if (!r.ok) throw new Error(j.error || ('Erro ' + r.status));
     return j;
   }
@@ -703,6 +840,7 @@
       : v === 'contato' ? viewContato()
       : v === 'exposicoes' ? viewExposicoes()
       : v === 'depoimentos' ? viewDepoimentos()
+      : v === 'pesquisa' ? viewPesquisa()
       : viewPublicar();
     $('#view').innerHTML = html;
     bindView();
@@ -729,7 +867,7 @@
         stat('Vendidas', vendidas.length, 'marcadas como vendidas') +
         '<div class="stat gold"><div class="k">Valor à venda</div><div class="v">' + (total ? money(total) : '—') + '</div><div class="m">soma das obras disponíveis</div></div>' +
       '</div>' +
-      '<div class="grid2" style="align-items:start">' +
+      '<div class="grid2">' +
         '<div class="card">' +
           '<h2>Acervo por categoria <span class="line"></span></h2>' +
           (catList.length ? '<div class="bars">' + catList.map(function (c) {
@@ -793,7 +931,8 @@
     var selected = !!S.sel[o.id];
     var bulk = S.bulk && !compact;
     return '<article class="obra' + (bulk ? ' selectable' : '') + (selected ? ' selected' : '') + '" draggable="' + (!compact && !bulk ? 'true' : 'false') + '" data-id="' + esc(o.id) + '">' +
-      '<div class="thumb" style="background-image:url(\'' + esc(o.img || '') + '\')" data-open="' + esc(o.id) + '">' +
+      '<div class="thumb" data-open="' + esc(o.id) + '">' +
+        (o.img ? '<img class="thumb-img" src="' + esc(o.img) + '" alt="" loading="lazy" draggable="false">' : '') +
         '<span class="pill ' + esc(o.status) + '">' + esc(st.short) + '</span>' +
         (compact ? '' : '<span class="check">' + (selected ? '✓' : '') + '</span>') +
         (compact || bulk ? '' : '<button class="drag" title="Arrastar para reordenar" aria-label="Arrastar">⠿</button>') +
@@ -953,7 +1092,7 @@
   function viewPublicar() {
     var d = S.data;
     var dirty = isDirty();
-    return '<div class="grid2" style="align-items:start">' +
+    return '<div class="grid2">' +
       '<div class="card">' +
         '<h2>Publicar no site <span class="line"></span></h2>' +
         '<p class="sub">Grava os dados no Vercel Blob. O site passa a usar este conteúdo em segundos.</p>' +
@@ -1023,6 +1162,17 @@
     var fo = $('#filterSort'); if (fo) fo.addEventListener('change', function () { S.sort = fo.value; render(); });
 
     enableDrag();
+
+    if (S.view === 'pesquisa') {
+      if (S.pesq.status === 'idle') setTimeout(function () {
+        if (S.view === 'pesquisa' && S.pesq.status === 'idle') loadPesquisas(false);
+      }, 0);
+      var pesqQ = $('#pesqQ');
+      if (pesqQ) pesqQ.addEventListener('input', function () {
+        S.pesq.q = pesqQ.value;
+        renderRespList();
+      });
+    }
   }
 
   // ------------------------------------------------------------------ ações (delegação)
@@ -1056,6 +1206,24 @@
     if ((el = t.closest('[data-depo-del]'))) { removeAt(S.data.depoimentos, Number(el.dataset.depoDel)); return; }
     if ((el = t.closest('[data-depo-up]'))) { move(S.data.depoimentos, Number(el.dataset.depoUp), -1); return; }
     if ((el = t.closest('[data-depo-down]'))) { move(S.data.depoimentos, Number(el.dataset.depoDown), 1); return; }
+
+    if (t.closest('[data-pesq-auth]')) { entrarPesquisa(); return; }
+    if (t.closest('[data-pesq-refresh]')) { loadPesquisas(true); return; }
+    if (t.closest('[data-invite-any]')) {
+      var selObra = $('#inviteObraSel');
+      if (selObra && selObra.value) openInvite(selObra.value);
+      return;
+    }
+    if ((el = t.closest('[data-invite]'))) { openInvite(el.dataset.invite); return; }
+    if ((el = t.closest('[data-resp-toggle]'))) {
+      var rid = el.dataset.respToggle;
+      S.pesq.open[rid] = !S.pesq.open[rid];
+      var rcard = el.closest('.resp');
+      if (rcard) rcard.classList.toggle('open', !!S.pesq.open[rid]);
+      el.setAttribute('aria-expanded', S.pesq.open[rid] ? 'true' : 'false');
+      return;
+    }
+    if ((el = t.closest('[data-resp-del]'))) { removerResposta(el.dataset.respDel); return; }
 
     var act = t.closest('[data-action]');
     if (act) {
@@ -1463,6 +1631,8 @@
       { label: 'Contato & redes', run: function () { go('contato'); } },
       { label: 'Exposições', run: function () { go('exposicoes'); } },
       { label: 'Depoimentos', run: function () { go('depoimentos'); } },
+      { label: 'Pesquisa de satisfação · respostas', run: function () { go('pesquisa'); } },
+      { label: 'Enviar pesquisa a um colecionador', run: function () { go('pesquisa'); setTimeout(function () { var b = $('[data-invite]'); if (b) b.focus(); }, 120); } },
       { label: 'Baixar backup data.js', run: exportData },
       { label: 'Descartar rascunho', run: discard },
       { label: 'Ver site publicado', run: function () { window.open('index.html', '_blank'); } }
@@ -1541,6 +1711,512 @@
     $('[data-cmdk-overlay]').addEventListener('mousedown', function (e) { if (e.target === this) close(); });
     renderList();
     input.focus();
+  }
+
+  // ------------------------------------------------------------------ pesquisa
+  var CAMPOS = {
+    nps: 'Recomendação (NPS)', satisfacao_geral: 'Satisfação geral', clareza_comunicacao: 'Clareza da comunicação',
+    valor_percebido: 'Valor percebido', servico_transportadora: 'Serviço da transportadora',
+    descoberta: 'Como descobriu o atelier', descoberta_outro: 'Descoberta — outro', tempo_conhecimento: 'Tempo de conhecimento',
+    primeira_impressao: 'Primeira impressão', primeira_impressao_outro: 'Primeira impressão — outro',
+    tipo_obra: 'Tipo de aquisição', fricao: 'Obstáculos', fricao_outro: 'Obstáculos — outro',
+    acompanhamento_processo: 'Acompanhamento do processo', fidelidade_imagem: 'Fidelidade da imagem',
+    fidelidade_imagem_detalhe: 'Fidelidade — detalhe', qualidade_execucao: 'Qualidade da execução',
+    acabamento: 'Acabamento', acabamento_detalhe: 'Acabamento — detalhe', acabamento_falta: 'Acabamento em falta',
+    reacao_emocional: 'Reação emocional', detalhe_marcante: 'Detalhe marcante',
+    prazo_envio: 'Prazo de envio', prazo_envio_motivo: 'Prazo — motivo', embalagem: 'Embalagem',
+    embalagem_melhorar: 'Embalagem — a melhorar', estado_fisico: 'Estado na chegada', estado_fisico_descricao: 'Estado — descrição',
+    certificado: 'Certificado', recompra: 'Intenção de recompra', interesse_futuro: 'Interesses futuros',
+    sugestao: 'Sugestão', testemunho: 'Testemunho', permissao_testemunho: 'Permissão do testemunho',
+    novidades: 'Novidades', contato: 'Contato', obra: 'Obra', _obra_titulo: 'Obra (convite)'
+  };
+
+  function numero(v) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = parseFloat(String(v).replace(',', '.'));
+    return isNaN(n) ? null : n;
+  }
+  function media(lista) {
+    var vals = lista.filter(function (v) { return v !== null && v !== undefined && !isNaN(v); });
+    if (!vals.length) return null;
+    return vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+  }
+  function fmt1(v) { return v === null || v === undefined ? '—' : v.toFixed(1).replace('.', ','); }
+  function pct(parte, total) { return total ? Math.round(parte / total * 100) : 0; }
+  function notaClasse(v) { return v === null ? '' : v >= 9 ? 'pro' : v >= 7 ? 'pas' : 'det'; }
+  function notaNome(v) { return v === null ? 'Sem nota' : v >= 9 ? 'Promotor' : v >= 7 ? 'Neutro' : 'Detrator'; }
+  function qualNota(v) {
+    var mapa = { 'Excepcional': 5, 'Muito boa': 4, 'Boa': 3.5, 'Razoável': 2.5, 'Abaixo das expectativas': 1 };
+    return mapa[String(v || '').trim()] || null;
+  }
+  function contarCampo(itens, campo) {
+    var mapa = {};
+    itens.forEach(function (r) {
+      [].concat(r[campo] || []).forEach(function (v) {
+        var t = String(v || '').trim();
+        if (t) mapa[t] = (mapa[t] || 0) + 1;
+      });
+    });
+    return mapa;
+  }
+  function topo(mapa) {
+    var melhor = null;
+    Object.keys(mapa).forEach(function (k) { if (!melhor || mapa[k] > mapa[melhor]) melhor = k; });
+    return melhor ? { label: melhor, n: mapa[melhor] } : null;
+  }
+  function dataCurta(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  function dataHora(ts) {
+    if (!ts) return '';
+    return new Date(ts).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  }
+  function nomeCliente(r) {
+    var c = String(r.contato || '').trim();
+    if (!c) return 'Colecionador';
+    return c.split(/[·|]/)[0].trim() || c;
+  }
+  function obraCliente(r) {
+    return String(r.obra || r._obra_titulo || '').trim() || 'Obra não indicada';
+  }
+  function nomeObra(id) {
+    var o = S.data.obras.find(function (x) { return x.id === id; });
+    return o ? (o.titulo || 'Sem título') : '';
+  }
+
+  function calcPesquisa(itens) {
+    var comNps = itens.filter(function (r) { return numero(r.nps) !== null; });
+    var pro = 0, pas = 0, det = 0;
+    comNps.forEach(function (r) {
+      var n = numero(r.nps);
+      if (n >= 9) pro++; else if (n >= 7) pas++; else det++;
+    });
+    var nps = comNps.length ? Math.round((pro - det) / comNps.length * 100) : null;
+
+    var sat = media(itens.map(function (r) { return numero(r.satisfacao_geral); }));
+    var com = media(itens.map(function (r) { return numero(r.clareza_comunicacao); }));
+    var valor = media(itens.map(function (r) { return numero(r.valor_percebido); }));
+    var transp = media(itens.map(function (r) { return numero(r.servico_transportadora); }));
+    var qual = media(itens.map(function (r) { return qualNota(r.qualidade_execucao); }));
+
+    var partes = [
+      { v: nps === null ? null : (nps + 100) / 2, w: .30 },
+      { v: sat === null ? null : (sat / 5) * 100, w: .25 },
+      { v: qual === null ? null : (qual / 5) * 100, w: .20 },
+      { v: com === null ? null : (com / 5) * 100, w: .15 },
+      { v: transp === null ? null : (transp / 5) * 100, w: .10 }
+    ];
+    var peso = 0, soma = 0;
+    partes.forEach(function (p) { if (p.v !== null) { peso += p.w; soma += p.v * p.w; } });
+    var indice = peso ? Math.round(soma / peso) : null;
+
+    var comTexto = itens.filter(function (r) { return String(r.testemunho || '').trim(); });
+    var comSugestao = itens.filter(function (r) { return String(r.sugestao || '').trim(); });
+    var autorizados = itens.filter(function (r) { return /^sim/i.test(String(r.permissao_testemunho || '')); });
+
+    return {
+      n: itens.length, pro: pro, pas: pas, det: det, comNps: comNps.length, nps: nps,
+      sat: sat, com: com, valor: valor, transp: transp, qual: qual, indice: indice,
+      testemunhos: comTexto.length, sugestoes: comSugestao.length, autorizados: autorizados.length,
+      fricao: topo(contarCampo(itens, 'fricao')),
+      interesse: topo(contarCampo(itens, 'interesse_futuro')),
+      ultima: itens.slice().sort(function (a, b) {
+        return String(b.recebidoEm || b._enviado_em || '').localeCompare(String(a.recebidoEm || a._enviado_em || ''));
+      })[0] || null
+    };
+  }
+
+  function npsRotulo(v) {
+    if (v === null) return 'Sem respostas';
+    if (v >= 75) return 'Excelente';
+    if (v >= 50) return 'Forte';
+    if (v >= 0) return 'Em construção';
+    return 'Crítico';
+  }
+
+  function npsChart(itens) {
+    var contagem = [];
+    for (var i = 0; i <= 10; i++) contagem.push(0);
+    itens.forEach(function (r) {
+      var n = numero(r.nps);
+      if (n !== null && n >= 0 && n <= 10) contagem[Math.round(n)]++;
+    });
+    var max = Math.max.apply(null, contagem.concat([1]));
+    return '<div class="nps-chart" role="img" aria-label="Distribuição das notas de recomendação">' +
+      contagem.map(function (c, nota) {
+        var cls = nota >= 9 ? 'pro' : nota >= 7 ? 'pas' : 'det';
+        var alt = Math.max(c ? 4 : 0, Math.round(c / max * 100));
+        return '<div class="nps-col ' + cls + '" title="' + c + ' resposta(s) com nota ' + nota + '">' +
+          '<span class="n">' + (c || '') + '</span>' +
+          '<div class="nps-track"><i style="height:' + alt + '%"></i></div>' +
+          '<span class="l">' + nota + '</span>' +
+        '</div>';
+      }).join('') +
+    '</div>';
+  }
+
+  function barraPesquisa(label, valor, max, display) {
+    var largura = valor === null ? 0 : Math.max(3, Math.round(valor / max * 100));
+    return '<div class="bar-row"><span>' + esc(label) + '</span><div class="bar"><span style="width:' + largura + '%"></span></div><span class="n">' + esc(display) + '</span></div>';
+  }
+
+  function respostasFiltradas() {
+    var q = S.pesq.q.trim().toLowerCase();
+    if (!q) return S.pesq.itens;
+    return S.pesq.itens.filter(function (r) {
+      return [r.contato, r.obra, r._obra_titulo, r.sugestao, r.testemunho, r.detalhe_marcante, r.nps]
+        .join(' ').toLowerCase().indexOf(q) >= 0;
+    });
+  }
+
+  function respostaCard(r, i) {
+    var id = String(r.id || (r._arquivo ? r._arquivo.replace(/^pesquisas\//, '').replace(/\.json$/, '') : ''));
+    var nps = numero(r.nps);
+    var cls = notaClasse(nps);
+    var aberto = S.pesq.open[id] ? ' open' : '';
+    var data = r.recebidoEm || r._enviado_em;
+    var extras = Object.keys(r).filter(function (k) {
+      return k.indexOf('_') !== 0 && ['id', 'recebidoEm', 'botcheck', 'fotos'].indexOf(k) < 0 && r[k] !== '' && r[k] !== null && r[k] !== undefined;
+    });
+
+    var linhas = [];
+    function linha(label, valor) {
+      if (valor === undefined || valor === null || String(valor).trim() === '') return;
+      linhas.push('<div class="resp-row"><span>' + esc(label) + '</span><span>' + esc(valor) + '</span></div>');
+    }
+    linha('Satisfação', numero(r.satisfacao_geral) !== null ? fmt1(numero(r.satisfacao_geral)) + ' / 5' : '');
+    linha('Comunicação', numero(r.clareza_comunicacao) !== null ? fmt1(numero(r.clareza_comunicacao)) + ' / 5' : '');
+    linha('Valor percebido', numero(r.valor_percebido) !== null ? fmt1(numero(r.valor_percebido)) + ' / 5' : '');
+    linha('Execução', r.qualidade_execucao);
+    linha('Acompanhamento', r.acompanhamento_processo);
+    linha('Fidelidade da imagem', r.fidelidade_imagem);
+    linha('Acabamento', r.acabamento);
+    linha('Prazo', r.prazo_envio);
+    linha('Embalagem', r.embalagem);
+    linha('Estado na chegada', r.estado_fisico);
+    linha('Transportadora', numero(r.servico_transportadora) !== null ? fmt1(numero(r.servico_transportadora)) + ' / 5' : '');
+    linha('Certificado', r.certificado);
+    linha('Recompra', r.recompra);
+    linha('Interesses', [].concat(r.interesse_futuro || []).join(', '));
+    linha('Permissão do testemunho', r.permissao_testemunho);
+
+    var citacoes = '';
+    [['Sugestão', r.sugestao], ['Testemunho', r.testemunho], ['Detalhe marcante', r.detalhe_marcante]].forEach(function (par) {
+      var txt = String(par[1] || '').trim();
+      if (txt) citacoes += '<div class="resp-row" style="border-bottom:0;padding-top:.9rem"><span>' + esc(par[0]) + '</span><span></span></div><p class="resp-quote">' + esc(txt) + '</p>';
+    });
+
+    /* primeira frase do comentário, para se perceber a resposta sem abrir */
+    var resumo = '';
+    [r.testemunho, r.detalhe_marcante, r.sugestao].some(function (v) {
+      var t = String(v || '').replace(/\s+/g, ' ').trim();
+      if (t) { resumo = t.length > 128 ? t.slice(0, 126).replace(/[,;:\s]+\S*$/, '') + '…' : t; return true; }
+      return false;
+    });
+
+    var todos = extras.map(function (k) {
+      var v = r[k];
+      if (Array.isArray(v)) v = v.join(', ');
+      return '<div class="resp-row"><span>' + esc(CAMPOS[k] || k.replace(/_/g, ' ')) + '</span><span>' + esc(v) + '</span></div>';
+    }).join('');
+
+    return '<article class="resp' + aberto + '" data-id="' + esc(id) + '">' +
+      '<div class="resp-head" data-resp-toggle="' + esc(id) + '" role="button" tabindex="0" aria-expanded="' + (aberto ? 'true' : 'false') + '">' +
+        '<span class="resp-score ' + cls + '">' + (nps === null ? '—' : nps) + '</span>' +
+        '<span class="resp-id">' +
+          '<span class="resp-name">' + esc(nomeCliente(r)) + '</span>' +
+          '<span class="resp-meta">' + esc(obraCliente(r)) + (data ? ' · ' + esc(dataCurta(data)) : '') + '</span>' +
+          (resumo ? '<span class="resp-excerpt">“' + esc(resumo) + '”</span>' : '') +
+        '</span>' +
+        '<span class="pill ' + cls + '">' + esc(notaNome(nps)) + '</span>' +
+        '<span class="resp-chev" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M4 6l4 4 4-4"/></svg></span>' +
+      '</div>' +
+      '<div class="resp-body">' +
+        (linhas.length ? '<div class="resp-grid">' + linhas.join('') + '</div>' : '') +
+        citacoes +
+        (todos ? '<details class="resp-all"><summary>Todos os campos</summary><div class="resp-grid">' + todos + '</div></details>' : '') +
+        '<div class="resp-foot">' +
+          '<span class="pesq-note">Recebida em ' + esc(dataCurta(data) || 'data desconhecida') + '</span>' +
+          '<span class="spacer"></span>' +
+          '<button class="btn sm danger" data-resp-del="' + esc(id) + '">Remover resposta</button>' +
+        '</div>' +
+      '</div>' +
+    '</article>';
+  }
+
+  function respostasHtml(lista) {
+    if (!S.pesq.itens.length) {
+      return '<div class="empty"><strong>Ainda sem respostas</strong>Envie o primeiro convite a um colecionador na secção abaixo. As respostas aparecem aqui assim que forem enviadas.</div>';
+    }
+    if (!lista.length) return '<div class="empty"><strong>Nada encontrado</strong>Ajuste a busca por nome, obra ou palavra-chave.</div>';
+    return lista.map(respostaCard).join('');
+  }
+
+  function renderRespList() {
+    var box = $('#respList');
+    if (!box) return;
+    var lista = respostasFiltradas();
+    box.innerHTML = respostasHtml(lista);
+    var count = $('#pesqCount');
+    if (count) count.textContent = lista.length === S.pesq.itens.length ? String(S.pesq.itens.length) : lista.length + ' / ' + S.pesq.itens.length;
+  }
+
+  function viewPesquisa() {
+    var p = S.pesq;
+
+    if (p.status === 'idle' || p.status === 'loading') {
+      return '<div class="card"><div class="pesq-loading">A carregar as respostas do atelier…</div></div>';
+    }
+    if (p.status === 'auth') {
+      return '<div class="card">' +
+        '<h2>Respostas protegidas <span class="line"></span></h2>' +
+        '<p class="sub">As respostas dos colecionadores são confidenciais. Informe a senha do painel para as consultar.</p>' +
+        '<button class="btn gold" data-pesq-auth>Entrar e ver respostas</button>' +
+        '<p class="hint">A senha fica guardada apenas nesta sessão do navegador.</p>' +
+      '</div>';
+    }
+    if (p.status === 'error') {
+      return '<div class="card">' +
+        '<h2>Respostas indisponíveis <span class="line"></span></h2>' +
+        '<p class="sub">' + esc(p.erro || 'Não foi possível contactar o servidor.') + '</p>' +
+        '<div class="toolbar" style="margin:0"><button class="btn gold" data-pesq-refresh>Tentar novamente</button></div>' +
+        '<p class="hint">No ambiente local, a API de respostas só funciona na versão publicada.</p>' +
+      '</div>';
+    }
+
+    var itens = p.itens || [];
+    var s = calcPesquisa(itens);
+    var semDados = !itens.length;
+
+    return '' +
+      '<div class="toolbar">' +
+        '<div class="search"><input type="text" id="pesqQ" aria-label="Buscar respostas" placeholder="Buscar por cliente, obra ou comentário…" value="' + esc(p.q) + '"></div>' +
+        (p.atualizado ? '<span class="pesq-note">Atualizado ' + esc(dataHora(p.atualizado)) + '</span>' : '') +
+        '<button class="btn" data-pesq-refresh>Atualizar</button>' +
+      '</div>' +
+      '<div class="stats">' +
+        stat('Respostas', s.n, s.ultima ? 'última em ' + dataCurta(s.ultima.recebidoEm || s.ultima._enviado_em) : 'convide um colecionador') +
+        '<div class="stat"><div class="k">NPS</div><div class="v">' + (s.nps === null ? '—' : s.nps) + '</div><div class="m">' + esc(npsRotulo(s.nps)) + '</div></div>' +
+        stat('Satisfação', s.sat === null ? '—' : fmt1(s.sat) + ' / 5', 'média geral') +
+        '<div class="stat gold"><div class="k">Índice de solidez</div><div class="v">' + (s.indice === null ? '—' : s.indice) + '</div><div class="m">lealdade, obra e entrega</div></div>' +
+      '</div>' +
+
+      (semDados ? '' :
+      '<div class="grid2">' +
+        '<div class="card">' +
+          '<h2>Distribuição das notas <span class="line"></span></h2>' +
+          npsChart(itens) +
+          '<div class="nps-legend">' +
+            '<span><i class="legend-dot pro"></i><b>' + s.pro + '</b> promotores</span>' +
+            '<span><i class="legend-dot pas"></i><b>' + s.pas + '</b> neutros</span>' +
+            '<span><i class="legend-dot det"></i><b>' + s.det + '</b> detratores</span>' +
+          '</div>' +
+          '<p class="hint">NPS = promotores − detratores. Acima de 50 é forte; 75 é excelência. Detratores pedem uma conversa pessoal, não um formulário.</p>' +
+        '</div>' +
+        '<div class="card">' +
+          '<h2>Médias por dimensão <span class="line"></span></h2>' +
+          '<div class="bars">' +
+            barraPesquisa('Satisfação', s.sat, 5, s.sat === null ? '—' : fmt1(s.sat) + ' / 5') +
+            barraPesquisa('Execução', s.qual, 5, s.qual === null ? '—' : fmt1(s.qual) + ' / 5') +
+            barraPesquisa('Comunicação', s.com, 5, s.com === null ? '—' : fmt1(s.com) + ' / 5') +
+            barraPesquisa('Valor percebido', s.valor, 5, s.valor === null ? '—' : fmt1(s.valor) + ' / 5') +
+            barraPesquisa('Transportadora', s.transp, 5, s.transp === null ? '—' : fmt1(s.transp) + ' / 5') +
+          '</div>' +
+          '<div class="divider"></div>' +
+          '<div class="row-between" style="font-size:.9rem;color:var(--ink-soft)"><span>Testemunhos autorizados</span><strong>' + s.autorizados + '</strong></div>' +
+          '<div class="row-between" style="font-size:.9rem;color:var(--ink-soft);margin-top:.4rem"><span>Sugestões recebidas</span><strong>' + s.sugestoes + '</strong></div>' +
+          (s.fricao ? '<div class="row-between" style="font-size:.9rem;color:var(--ink-soft);margin-top:.4rem"><span>Atrito mais citado</span><strong>' + esc(s.fricao.label) + '</strong></div>' : '') +
+          (s.interesse ? '<div class="row-between" style="font-size:.9rem;color:var(--ink-soft);margin-top:.4rem"><span>Interesse futuro</span><strong>' + esc(s.interesse.label) + '</strong></div>' : '') +
+        '</div>' +
+      '</div>') +
+
+      '<div class="card">' +
+        '<h2>Respostas <span class="line"></span><span class="nav-count" id="pesqCount">' + (p.q ? respostasFiltradas().length + ' / ' + itens.length : itens.length) + '</span></h2>' +
+        '<div id="respList" class="resp-list">' + respostasHtml(respostasFiltradas()) + '</div>' +
+      '</div>' +
+
+      convitesCard();
+  }
+
+  function convitesCard() {
+    var convites = lerConvites();
+    var vendidas = S.data.obras.filter(function (o) { return o.status === 'vendido'; });
+
+    var lista = vendidas.length ? '<div class="invite-list">' + vendidas.map(function (o) {
+      var c = convites[o.id];
+      return '<div class="invite-row">' +
+        (o.img ? '<img class="invite-thumb" src="' + esc(o.img) + '" alt="" loading="lazy">' : '') +
+        '<div class="t"><b>' + esc(o.titulo || 'Sem título') + '</b><span>' +
+          esc([o.categoria, o.ano].filter(Boolean).join(' · ') || 'Obra vendida') +
+          (c ? ' · convite ' + esc(dataCurta(c.em)) : ' · ainda sem convite') +
+        '</span></div>' +
+        '<button class="btn sm gold" data-invite="' + esc(o.id) + '">Preparar convite</button>' +
+      '</div>';
+    }).join('') + '</div>' : '<div class="empty"><strong>Nenhuma obra marcada como vendida</strong>Marque a obra como vendida em Obras para a ver aqui — ou gere um convite para qualquer obra abaixo.</div>';
+
+    return '<div class="card">' +
+      '<h2>Enviar a pesquisa <span class="line"></span></h2>' +
+      '<p class="sub">Cada convite abre a pesquisa já personalizada com o nome do colecionador e a obra. Escolha a obra vendida e envie por WhatsApp, e-mail ou copie o link.</p>' +
+      lista +
+      '<div class="divider"></div>' +
+      '<div class="grid2">' +
+        '<div class="field"><label class="f" for="inviteObraSel">Qualquer obra do acervo</label><select id="inviteObraSel">' +
+          S.data.obras.map(function (o) {
+            return '<option value="' + esc(o.id) + '">' + esc(o.titulo || 'Sem título') + (o.status === 'vendido' ? ' — vendida' : '') + '</option>';
+          }).join('') +
+        '</select></div>' +
+        '<div class="field" style="display:flex;align-items:flex-end"><button class="btn gold block" data-invite-any>Preparar convite</button></div>' +
+      '</div>' +
+      '<p class="hint">O link não expira. As respostas ficam guardadas no atelier e aparecem nesta página.</p>' +
+    '</div>';
+  }
+
+  function lerConvites() {
+    try { return JSON.parse(localStorage.getItem(CONVITES_KEY) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function marcarConvite(obraId, nome) {
+    var c = lerConvites();
+    c[obraId] = { nome: nome || '', em: new Date().toISOString() };
+    try { localStorage.setItem(CONVITES_KEY, JSON.stringify(c)); } catch (e) {}
+  }
+  function linkConvite(o, nome, token) {
+    var qs = '?obra=' + encodeURIComponent(o.titulo || '') +
+      (nome ? '&cliente=' + encodeURIComponent(nome) : '') +
+      (token ? '&c=' + encodeURIComponent(token) : '');
+    return SITE_BASE + '/pesquisa' + qs;
+  }
+  function mensagemConvite(o, nome, link) {
+    var ola = nome ? 'Olá, ' + nome + '.' : 'Olá.';
+    var obra = o.titulo ? ' sobre a obra “' + o.titulo + '”' : '';
+    return ola + ' Preparei uma pequena pesquisa' + obra + ' — seis capítulos, cerca de cinco minutos. A sua opinião ajuda-me a melhorar o próximo trabalho.\n\n' + link;
+  }
+
+  function openInvite(id) {
+    var o = S.data.obras.find(function (x) { return x.id === id; });
+    if (!o) { toast('Obra não encontrada.', 'err'); return; }
+    var token = slugify(o.id) + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    var root = $('#modalRoot');
+    root.innerHTML =
+      '<div class="overlay center" data-overlay>' +
+        '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="inviteTitle" style="width:min(560px,100%)">' +
+          '<h3 id="inviteTitle">Convite de pesquisa</h3>' +
+          '<p>“' + esc(o.titulo || 'Obra') + '” · personalize o nome do colecionador.</p>' +
+          '<div class="field"><label class="f" for="inviteNome">Nome do cliente (opcional)</label><input type="text" id="inviteNome" placeholder="Ex.: Maria Silva" autocomplete="name"></div>' +
+          '<div class="field"><label class="f" for="inviteLink">Ligação personalizada</label><input class="invite-link-field" type="text" id="inviteLink" readonly></div>' +
+          '<div class="row" style="justify-content:flex-start;flex-wrap:wrap">' +
+            '<button class="btn gold" data-invite-copy>Copiar link</button>' +
+            '<button class="btn" data-invite-wa>WhatsApp</button>' +
+            '<button class="btn" data-invite-mail>E-mail</button>' +
+            '<button class="btn ghost" data-invite-open>Pré-visualizar</button>' +
+          '</div>' +
+          '<p class="hint" id="inviteStatus">O cliente vê a pesquisa com o nome e a obra já preenchidos.</p>' +
+          '<div class="row" style="margin-top:1rem"><button class="btn ghost" data-cancel>Fechar</button></div>' +
+        '</div>' +
+      '</div>';
+
+    var nomeInput = $('#inviteNome');
+    var linkInput = $('#inviteLink');
+    var status = $('#inviteStatus');
+    function atualizar() {
+      linkInput.value = linkConvite(o, nomeInput.value.trim(), token);
+    }
+    function copiar(texto, cb) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(texto).then(function () { cb(true); }, function () { cb(false); });
+      } else {
+        linkInput.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        cb(ok);
+      }
+    }
+    function fechar() { root.innerHTML = ''; render(); }
+
+    atualizar();
+    nomeInput.addEventListener('input', atualizar);
+    $('[data-cancel]').addEventListener('click', fechar);
+    $('[data-overlay]').addEventListener('mousedown', function (e) { if (e.target === e.currentTarget) fechar(); });
+
+    $('[data-invite-copy]').addEventListener('click', function () {
+      copiar(linkInput.value, function (ok) {
+        status.textContent = ok ? 'Link copiado. Envie ao colecionador pelo canal que preferir.' : 'Selecione o link e copie manualmente.';
+        if (ok) { marcarConvite(o.id, nomeInput.value.trim()); toast('Link do convite copiado.', 'ok'); }
+      });
+    });
+    $('[data-invite-wa]').addEventListener('click', function () {
+      var nome = nomeInput.value.trim();
+      var msg = mensagemConvite(o, nome, linkInput.value);
+      marcarConvite(o.id, nome);
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      status.textContent = 'WhatsApp aberto. Escolha o contacto e envie.';
+    });
+    $('[data-invite-mail]').addEventListener('click', function () {
+      var nome = nomeInput.value.trim();
+      var assunto = 'A sua opinião sobre “' + (o.titulo || 'a sua obra') + '” — Atelier Bruno Amaral';
+      var msg = mensagemConvite(o, nome, linkInput.value);
+      marcarConvite(o.id, nome);
+      window.location.href = 'mailto:?subject=' + encodeURIComponent(assunto) + '&body=' + encodeURIComponent(msg);
+      status.textContent = 'E-mail preparado no seu programa de correio.';
+    });
+    $('[data-invite-open]').addEventListener('click', function () {
+      window.open(linkInput.value, '_blank', 'noopener');
+    });
+    setTimeout(function () { nomeInput.focus(); }, 40);
+  }
+
+  function loadPesquisas(forcar) {
+    if (S.pesq.status === 'loading') return;
+    if (!getPassword(false)) {
+      S.pesq.status = 'auth';
+      if (S.view === 'pesquisa') render();
+      return;
+    }
+    S.pesq.status = 'loading';
+    S.pesq.erro = '';
+    if (S.view === 'pesquisa') render();
+
+    apiGet('/api/pesquisa').then(function (j) {
+      S.pesq.itens = Array.isArray(j.respostas) ? j.respostas : [];
+      S.pesq.status = 'ready';
+      S.pesq.atualizado = Date.now();
+      var badge = $('#navPesq');
+      if (badge) badge.textContent = S.pesq.itens.length || '';
+      if (S.view === 'pesquisa') render();
+      if (forcar) toast('Respostas atualizadas.', 'ok');
+    }).catch(function (err) {
+      S.pesq.status = err.code === 401 ? 'auth' : 'error';
+      S.pesq.erro = err.message;
+      if (S.view === 'pesquisa') render();
+      if (forcar) toast(err.code === 401 ? 'Senha incorreta.' : 'Não foi possível carregar: ' + err.message, 'err');
+    });
+  }
+
+  function entrarPesquisa() {
+    askPassword().then(function (pw) {
+      if (!pw) return;
+      sessionStorage.setItem(PW_KEY, pw);
+      S.pesq.status = 'idle';
+      loadPesquisas(true);
+    });
+  }
+
+  function removerResposta(id) {
+    if (!id) { toast('Esta resposta não pode ser removida.', 'err'); return; }
+    if (!confirm('Remover esta resposta? Esta ação não pode ser desfeita.')) return;
+    apiDelete('/api/pesquisa?id=' + encodeURIComponent(id)).then(function () {
+      S.pesq.itens = S.pesq.itens.filter(function (r) { return String(r.id) !== String(id); });
+      delete S.pesq.open[id];
+      var badge = $('#navPesq');
+      if (badge) badge.textContent = S.pesq.itens.length || '';
+      if (S.view === 'pesquisa') render();
+      toast('Resposta removida.', 'ok');
+    }).catch(function (err) {
+      if (err.code === 401) { S.pesq.status = 'auth'; render(); }
+      toast('Não foi possível remover: ' + err.message, 'err');
+    });
   }
 
   // ------------------------------------------------------------------ publicar
@@ -1748,6 +2424,9 @@
     } else if (mod && key === 'z') {
       if (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
       e.preventDefault(); undo();
+    } else if ((e.key === 'Enter' || e.key === ' ') && document.activeElement && document.activeElement.matches('[data-resp-toggle]')) {
+      e.preventDefault();
+      document.activeElement.click();
     } else if (e.key === 'Escape') {
       var root = $('#modalRoot'); if (root) root.innerHTML = '';
     }

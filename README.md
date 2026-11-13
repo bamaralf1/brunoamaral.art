@@ -9,10 +9,13 @@ Produção: https://brunoamaralart1.vercel.app
 - `index.html` — página pública
 - `site.js` — renderiza o site a partir de `window.SITE_DATA`
 - `data.js` — fonte de dados estática (fallback/publicação inicial)
-- `admin.html` — painel do artista (login por senha, edição de obras, upload de fotos)
+- `admin.html` — painel do artista (login por senha, edição de obras, upload de fotos, pesquisa de satisfação)
+- `pesquisa.html` — Pesquisa do Colecionador, servida em `/pesquisa` e personalizada por convite
+- `dashboard.html` — painel de análise autónomo da pesquisa (legado; a vista *Pesquisa* do admin já agrega as respostas)
 - `api/data.js` — `GET /api/data` devolve os dados publicados (Vercel Blob `site-data.json`)
 - `api/save.js` — `POST /api/save` publica os dados no Blob (exige `x-admin-password`)
 - `api/upload.js` — `POST /api/upload` envia fotos de obras para o Blob
+- `api/pesquisa.js` — `POST` público guarda respostas; `GET`/`DELETE` exigem `x-admin-password`
 - `api/_auth.js` — compara a senha enviada com `ADMIN_PASSWORD`
 - `assets/` — imagens do site e das obras
 

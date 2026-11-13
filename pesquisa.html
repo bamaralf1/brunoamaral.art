@@ -1,0 +1,2324 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voz do Colecionador — Bruno Amaral · Atelier</title>
+<meta name="description" content="Pesquisa de satisfação do colecionador. Seis capítulos, cinco minutos, uma obra melhor.">
+<meta name="theme-color" content="#080706">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..600&family=Archivo:wght@100..900&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23080706'/%3E%3Ccircle cx='32' cy='32' r='21' fill='none' stroke='%23c9a24a' stroke-width='1.6'/%3E%3Cpath d='M32 13q-6 12-12 19 6 7 12 19 6-12 12-19-6-7-12-19z' fill='none' stroke='%23efdca8' stroke-width='1.4'/%3E%3C/svg%3E">
+<script>
+/* Tema antes da primeira pintura — evita "flash" de cor errada. */
+(function(){
+  try{
+    var saved = localStorage.getItem('ba.theme');
+    if(saved === 'light' || saved === 'dark'){ document.documentElement.dataset.theme = saved; }
+  }catch(e){}
+})();
+</script>
+<style>
+/* ============================================================
+   1. TOKENS — dois climas: "Atelier" (escuro) e "Galeria" (claro)
+   ============================================================ */
+:root{
+  --font-display:'Fraunces','Cormorant Garamond',Georgia,serif;
+  --font-text:'Newsreader','EB Garamond',Georgia,serif;
+  --font-ui:'Archivo','Helvetica Neue',Arial,sans-serif;
+
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --shell:1220px;
+  --read:760px;
+  --r:2px;
+
+  /* ---- Atelier (escuro) ---- */
+  --bg:#080706;
+  --bg-soft:#0C0A08;
+  --surface:rgba(255,255,255,.022);
+  --surface-2:rgba(255,255,255,.045);
+  --surface-solid:#0E0C09;
+  --text:#F1E8D7;
+  --text-2:#BFB3A0;
+  --text-3:#8A8172;
+  --accent:#C9A24A;
+  --accent-hi:#EFDCA8;
+  --accent-deep:#8A6B22;
+  --on-accent:#0A0806;
+  --wash:rgba(201,162,74,.07);
+  --wash-strong:rgba(201,162,74,.15);
+  --line:rgba(201,162,74,.22);
+  --line-soft:rgba(241,232,215,.085);
+  --pos:#4E9C6E;
+  --neg:#C4422D;
+  --warn:#D9A33A;
+  --shadow:0 30px 80px rgba(0,0,0,.55);
+  --grain:.055;
+  --grain-blend:overlay;
+  --glow-a:rgba(201,162,74,.10);
+  --glow-b:rgba(196,66,45,.05);
+}
+[data-theme="light"]{
+  --bg:#F3EEE2;
+  --bg-soft:#EDE6D6;
+  --surface:rgba(255,255,255,.55);
+  --surface-2:#FFFDF8;
+  --surface-solid:#FBF7EE;
+  --text:#17130D;
+  --text-2:#4B4337;
+  --text-3:#7B7161;
+  --accent:#8A6516;
+  --accent-hi:#6B4C0B;
+  --accent-deep:#C09A4E;
+  --on-accent:#FCF8EF;
+  --wash:rgba(138,101,22,.065);
+  --wash-strong:rgba(138,101,22,.13);
+  --line:rgba(110,78,14,.24);
+  --line-soft:rgba(23,19,13,.11);
+  --pos:#2F6B4A;
+  --neg:#A5371F;
+  --warn:#8A6516;
+  --shadow:0 24px 60px rgba(70,50,15,.14);
+  --grain:.032;
+  --grain-blend:multiply;
+  --glow-a:rgba(138,101,22,.10);
+  --glow-b:rgba(165,55,31,.05);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-text);
+  font-size:clamp(16px,.45vw + 15.2px,18px);
+  line-height:1.62;
+  font-weight:350;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  transition:background .6s var(--ease), color .6s var(--ease);
+}
+
+/* ambiente: duas luzes de pigmento + trama de tela */
+body::before{
+  content:''; position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -10%, var(--glow-a), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 88% 78%, var(--glow-b), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 8% 62%, rgba(61,95,134,.045), transparent 70%),
+    var(--bg);
+}
+/* grão de filme / tela */
+body::after{
+  content:''; position:fixed; inset:0; z-index:70; pointer-events:none;
+  opacity:var(--grain); mix-blend-mode:var(--grain-blend);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection{ background:var(--accent); color:var(--on-accent); }
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+/* moldura de galeria */
+.frame{ display:none; }
+@media (min-width:900px){
+  .frame{ display:block; position:fixed; inset:16px; z-index:65; pointer-events:none; border:1px solid var(--line); opacity:.55; }
+  .frame i{ position:absolute; width:9px; height:9px; border:1px solid var(--accent); opacity:.8; }
+  .frame i:nth-child(1){ top:-5px; left:-5px; border-right:0; border-bottom:0; }
+  .frame i:nth-child(2){ top:-5px; right:-5px; border-left:0; border-bottom:0; }
+  .frame i:nth-child(3){ bottom:-5px; left:-5px; border-right:0; border-top:0; }
+  .frame i:nth-child(4){ bottom:-5px; right:-5px; border-left:0; border-top:0; }
+}
+
+.skip{
+  position:absolute; left:-9999px; top:0; z-index:200;
+  background:var(--accent); color:var(--on-accent);
+  padding:12px 20px; font-family:var(--font-ui); font-size:12px;
+}
+.skip:focus{ left:16px; top:16px; }
+
+/* ============================================================
+   2. TIPOGRAFIA
+   ============================================================ */
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:400;
+  font-variation-settings:'opsz' 96,'SOFT' 30,'WONK' 1;
+  line-height:1.04;
+  letter-spacing:-.022em;
+  margin:0;
+  color:var(--text);
+  text-wrap:balance;
+}
+p{ margin:0; }
+em{ font-style:italic; }
+
+.eyebrow{
+  font-family:var(--font-ui);
+  font-size:10px; font-weight:500;
+  letter-spacing:.34em; text-transform:uppercase;
+  color:var(--text-3);
+}
+.num{
+  font-family:var(--font-display);
+  font-style:italic; font-weight:300;
+  font-variation-settings:'opsz' 144;
+  letter-spacing:-.02em;
+}
+
+/* ============================================================
+   3. MASTHEAD + PROGRESSO
+   ============================================================ */
+.topbar{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:18px;
+  padding:18px clamp(16px,4vw,44px);
+  background:linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 70%, transparent) 70%, transparent 100%);
+  transition:background .4s var(--ease), padding .4s var(--ease), border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.topbar.is-stuck{
+  padding:12px clamp(16px,4vw,44px);
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(18px) saturate(120%);
+  -webkit-backdrop-filter:blur(18px) saturate(120%);
+  border-bottom-color:var(--line-soft);
+}
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+.brand-mark{
+  width:38px; height:38px; flex-shrink:0;
+  display:grid; place-items:center;
+  border:1px solid var(--line);
+  background:var(--wash);
+  position:relative;
+}
+.brand-mark::after{
+  content:''; position:absolute; inset:3px; border:1px solid var(--line-soft);
+}
+.brand-mark span{
+  font-family:var(--font-display); font-style:italic; font-weight:400;
+  font-size:15px; letter-spacing:.04em; color:var(--accent-hi);
+  position:relative; z-index:1;
+}
+.brand-txt{ display:flex; flex-direction:column; line-height:1.15; }
+.brand-txt b{
+  font-family:var(--font-display); font-weight:500; font-size:15px;
+  letter-spacing:.015em; color:var(--text);
+}
+.brand-txt small{
+  font-family:var(--font-ui); font-size:8.5px; letter-spacing:.26em;
+  text-transform:uppercase; color:var(--text-3); margin-top:3px;
+}
+.topbar-right{ display:flex; align-items:center; gap:10px; }
+.step-indicator{
+  display:none; align-items:center; gap:10px;
+  font-family:var(--font-ui); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--text-3);
+}
+@media (min-width:720px){ .step-indicator{ display:flex; } }
+.step-indicator b{ color:var(--accent-hi); font-weight:500; }
+.ticks{ display:flex; gap:4px; }
+.ticks i{
+  width:14px; height:2px; background:var(--line-soft); display:block;
+  transition:background .4s var(--ease), width .4s var(--ease);
+}
+.ticks i.on{ background:var(--accent); }
+.ticks i.now{ width:26px; background:var(--accent-hi); }
+
+.icon-btn{
+  width:38px; height:38px; display:grid; place-items:center;
+  background:transparent; border:1px solid var(--line-soft);
+  color:var(--text-2); cursor:pointer; padding:0;
+  transition:border-color .3s, color .3s, background .3s, transform .3s;
+}
+.icon-btn:hover{ border-color:var(--line); color:var(--accent-hi); background:var(--wash); transform:translateY(-1px); }
+.icon-btn svg{ width:16px; height:16px; }
+[data-theme="dark"] .ico-sun{ display:block; }
+[data-theme="dark"] .ico-moon{ display:none; }
+[data-theme="light"] .ico-sun{ display:none; }
+[data-theme="light"] .ico-moon{ display:block; }
+
+.progress{
+  position:fixed; top:0; left:0; right:0; height:2px; z-index:60;
+  background:transparent; pointer-events:none;
+}
+.progress i{
+  display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--accent-deep), var(--accent), var(--accent-hi));
+  box-shadow:0 0 18px var(--wash-strong);
+  transition:width .6s var(--ease-out);
+}
+
+/* ============================================================
+   4. CAPA
+   ============================================================ */
+.shell{ width:100%; max-width:var(--shell); margin:0 auto; padding:0 clamp(18px,4vw,44px); }
+
+.cover{
+  min-height:100svh;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:120px 0 64px;
+  position:relative;
+}
+.cover-inner{ max-width:1000px; }
+.cover .eyebrow{ display:flex; align-items:center; gap:14px; margin-bottom:26px; }
+.cover .eyebrow::after{ content:''; height:1px; width:70px; background:var(--line); }
+.cover h1{
+  font-size:clamp(46px,8.6vw,112px);
+  line-height:.92;
+  letter-spacing:-.035em;
+  font-variation-settings:'opsz' 144,'SOFT' 44,'WONK' 1;
+  max-width:15ch;
+}
+.cover h1 .ln{ display:block; }
+.cover h1 em{
+  font-style:italic;
+  color:var(--accent-hi);
+  font-variation-settings:'opsz' 144,'SOFT' 80,'WONK' 1;
+  position:relative;
+  white-space:nowrap;
+}
+.cover h1 em::after{
+  content:''; position:absolute; left:2px; right:2px; bottom:.06em; height:1px;
+  background:linear-gradient(90deg, var(--accent), transparent);
+}
+.cover-sub{
+  margin-top:28px; max-width:52ch;
+  font-size:clamp(16px,1.25vw,19px);
+  color:var(--text-2); line-height:1.66;
+  font-weight:350;
+}
+.cover-meta{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px 22px;
+  margin-top:36px;
+  font-family:var(--font-ui); font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.cover-meta span{ display:inline-flex; align-items:center; gap:8px; }
+.cover-meta span + span::before{ content:''; width:3px; height:3px; background:var(--accent); transform:rotate(45deg); opacity:.7; }
+.invite-note{
+  margin-top:28px; padding:15px 18px; max-width:540px;
+  border:1px solid var(--line); border-left:2px solid var(--accent);
+  background:var(--wash);
+}
+.invite-note[hidden]{ display:none; }
+.invite-note .in-label{
+  display:block; font-family:var(--font-ui); font-size:9.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.invite-note p{ margin:7px 0 0; font-size:15.5px; line-height:1.5; color:var(--text-2); }
+.invite-note b{ font-weight:500; color:var(--text); }
+.invite-note em{ color:var(--accent-hi); font-style:italic; }
+.cover-cta{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; margin-top:42px; }
+
+.why{ margin-top:28px; max-width:640px; border-top:1px solid var(--line-soft); }
+.why summary{
+  list-style:none; cursor:pointer; padding:16px 0;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  font-family:var(--font-ui); font-size:9.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--text-3);
+  transition:color .3s;
+}
+.why summary::-webkit-details-marker{ display:none; }
+.why summary:hover{ color:var(--accent-hi); }
+.why summary::after{
+  content:'+'; font-family:var(--font-ui); font-size:14px; font-weight:300;
+  color:var(--accent); line-height:1;
+}
+.why[open] summary::after{ content:'–'; }
+.why-body{ padding:0 0 20px; display:grid; gap:12px; max-width:60ch; }
+.why-body p{ font-size:14.5px; color:var(--text-2); line-height:1.6; }
+.why-body b{ color:var(--accent-hi); font-weight:500; font-family:var(--font-ui); font-size:11px; letter-spacing:.1em; }
+
+.btn{
+  position:relative; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  font-family:var(--font-ui); font-size:11px; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase;
+  padding:16px 30px; border:1px solid var(--accent);
+  background:transparent; color:var(--accent-hi);
+  text-decoration:none; cursor:pointer; overflow:hidden;
+  transition:color .4s var(--ease), border-color .4s, box-shadow .4s, transform .3s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn::before{
+  content:''; position:absolute; inset:0; z-index:0;
+  background:linear-gradient(120deg, var(--accent-hi), var(--accent));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform .5s var(--ease-out);
+}
+.btn span,.btn svg{ position:relative; z-index:1; }
+.btn svg{ width:15px; height:15px; transition:transform .4s var(--ease); }
+.btn:hover{ color:var(--on-accent); border-color:var(--accent-hi); box-shadow:0 14px 40px var(--wash-strong); }
+.btn:hover::before{ transform:scaleX(1); }
+.btn:hover svg{ transform:translateX(4px); }
+.btn:active{ transform:translateY(1px); }
+.btn--solid{ background:var(--accent); color:var(--on-accent); }
+.btn--solid::before{ background:linear-gradient(120deg, var(--accent-hi), var(--accent)); transform:scaleX(0); }
+.btn--solid:hover{ color:var(--on-accent); }
+.btn--solid:hover::before{ transform:scaleX(1); }
+.btn--ghost{ border-color:var(--line); color:var(--text-2); }
+.btn--ghost::before{ background:var(--wash-strong); }
+.btn--ghost:hover{ color:var(--text); border-color:var(--line); box-shadow:none; }
+.btn--sm{ padding:12px 22px; font-size:10px; }
+.btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn:disabled::before{ transform:scaleX(0); }
+
+.link-quiet{
+  font-family:var(--font-ui); font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--text-2); text-decoration:none;
+  border-bottom:1px solid var(--line); padding-bottom:5px;
+  transition:color .3s, border-color .3s;
+}
+.link-quiet:hover{ color:var(--accent-hi); border-color:var(--accent); }
+
+/* fita de pigmentos */
+.pigments{
+  display:grid; grid-template-columns:repeat(6,1fr);
+  gap:1px; margin-top:64px; max-width:820px;
+  border:1px solid var(--line-soft); background:var(--line-soft);
+}
+.pigment{
+  background:var(--surface); padding:14px 12px 12px;
+  display:flex; flex-direction:column; gap:10px;
+  position:relative; overflow:hidden;
+  transition:background .4s;
+}
+.pigment::before{
+  content:''; display:block; height:26px; width:100%;
+  background:var(--c);
+  transition:transform .5s var(--ease-out);
+  transform-origin:bottom;
+}
+.pigment:hover{ background:var(--surface-2); }
+.pigment:hover::before{ transform:scaleY(1.35); }
+.pigment b{
+  font-family:var(--font-ui); font-size:8px; font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--text-3);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.scroll-cue{
+  position:absolute; left:0; bottom:26px;
+  display:flex; align-items:center; gap:12px;
+  font-family:var(--font-ui); font-size:9px; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.scroll-cue i{ display:block; width:1px; height:46px; background:linear-gradient(var(--accent), transparent); position:relative; overflow:hidden; }
+.scroll-cue i::after{
+  content:''; position:absolute; left:0; top:-46px; width:1px; height:46px;
+  background:var(--accent-hi); animation:cue 2.4s var(--ease) infinite;
+}
+@keyframes cue{ 0%{ top:-46px; } 60%,100%{ top:46px; } }
+
+@media (max-width:720px){
+  .cover{ padding-top:104px; }
+  .cover .eyebrow{ font-size:9px; letter-spacing:.2em; gap:10px; }
+  .cover .eyebrow::after{ display:none; }
+  .cover-meta{ flex-direction:column; align-items:flex-start; gap:7px; margin-top:30px; }
+  .cover-meta span + span::before{ display:none; }
+  .cover-cta{ width:100%; gap:14px; }
+  .cover-cta .btn{ width:100%; }
+  .cover-cta .link-quiet{ margin:0 auto; }
+  .pigments{ grid-template-columns:repeat(3,1fr); margin-top:44px; }
+  .scroll-cue{ display:none; }
+}
+
+/* ============================================================
+   5. ESTRUTURA DO QUESTIONÁRIO
+   ============================================================ */
+.survey{ display:none; padding:120px 0 90px; }
+.survey.is-on{ display:block; }
+.survey-grid{ display:block; }
+@media (min-width:1040px){
+  .survey-grid{
+    display:grid; grid-template-columns:210px minmax(0,1fr);
+    gap:clamp(40px,5vw,86px); align-items:start;
+  }
+}
+
+.rail{ display:none; }
+@media (min-width:1040px){
+  .rail{
+    display:block; position:sticky; top:112px;
+    padding-top:6px;
+  }
+}
+.rail-title{
+  font-family:var(--font-ui); font-size:8.5px; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--text-3); margin-bottom:16px;
+}
+.rail ol{ list-style:none; margin:0; padding:0; }
+.rail li{ border-bottom:1px solid var(--line-soft); }
+.rail button{
+  width:100%; display:flex; align-items:baseline; gap:11px;
+  background:none; border:0; padding:12px 0; text-align:left; cursor:pointer;
+  font-family:var(--font-ui); font-size:10px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--text-3);
+  transition:color .3s, padding-left .3s;
+}
+.rail button:hover{ color:var(--text); padding-left:4px; }
+.rail button .rn{
+  font-family:var(--font-display); font-style:italic; font-size:13px;
+  letter-spacing:0; color:var(--text-3); min-width:22px;
+  transition:color .3s;
+}
+.rail button[aria-current="step"]{ color:var(--accent-hi); }
+.rail button[aria-current="step"] .rn{ color:var(--accent); }
+.rail button.is-done{ color:var(--text-2); }
+.rail button.is-done .rn{ color:var(--pos); }
+.rail-note{
+  margin-top:20px; font-size:12.5px; line-height:1.5;
+  color:var(--text-3); font-style:italic;
+  border-left:1px solid var(--line); padding-left:12px;
+}
+
+.deck{ max-width:var(--read); position:relative; }
+
+.step{ display:none; }
+.step.is-on{ display:block; animation:stepIn .6s var(--ease-out) both; }
+@keyframes stepIn{
+  from{ opacity:0; transform:translateY(18px); }
+  to{ opacity:1; transform:none; }
+}
+
+.chapter-head{ margin-bottom:clamp(34px,4vw,52px); }
+.chapter-top{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.chapter-num{
+  font-family:var(--font-display); font-style:italic; font-weight:300;
+  font-size:15px; letter-spacing:.1em; color:var(--accent);
+  border:1px solid var(--line); padding:5px 11px 4px;
+  background:var(--wash);
+}
+.chapter-kicker{
+  font-family:var(--font-ui); font-size:9px; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.chapter-head h2{
+  font-size:clamp(32px,4.6vw,52px);
+  line-height:1; letter-spacing:-.03em;
+  font-variation-settings:'opsz' 144,'SOFT' 36,'WONK' 1;
+}
+.chapter-head h2:focus,
+[tabindex="-1"]:focus{ outline:none; }
+.chapter-lede{
+  margin-top:16px; max-width:54ch;
+  color:var(--text-2); font-size:16.5px; line-height:1.62;
+}
+.chapter-rule{
+  height:1px; margin-top:26px;
+  background:linear-gradient(90deg, var(--line), transparent 85%);
+}
+
+/* ============================================================
+   6. PERGUNTAS
+   ============================================================ */
+.q{
+  border:0; margin:0 0 clamp(34px,4vw,46px); padding:0;
+  min-inline-size:0;
+}
+.q-title{
+  display:block; width:100%; padding:0;
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(19px,1.6vw,23px); line-height:1.28;
+  letter-spacing:-.012em; color:var(--text);
+  font-variation-settings:'opsz' 48,'SOFT' 20;
+  margin-bottom:6px;
+  text-wrap:balance;
+}
+.q-title .req{
+  color:var(--neg); font-size:.62em; vertical-align:super;
+  margin-left:4px; letter-spacing:0; font-family:var(--font-ui);
+}
+.q-opt-tag{
+  font-family:var(--font-ui); font-size:8.5px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--text-3);
+  margin-left:10px; font-weight:400; vertical-align:middle;
+}
+.q-help{
+  font-size:14.5px; color:var(--text-3); line-height:1.55;
+  margin-bottom:16px; max-width:60ch; font-style:italic;
+}
+.q-body{ margin-top:16px; }
+
+/* --- escolhas --- */
+.choices{ display:flex; flex-direction:column; gap:7px; }
+.choices--grid{ display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+@media (max-width:620px){ .choices--grid{ grid-template-columns:1fr; } }
+
+.choice{
+  position:relative;
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center; gap:14px;
+  padding:14px 18px;
+  border:1px solid var(--line-soft);
+  background:var(--surface);
+  cursor:pointer;
+  transition:border-color .3s var(--ease), background .3s, transform .3s var(--ease), box-shadow .3s;
+}
+.choice:hover{ border-color:var(--line); background:var(--surface-2); transform:translateX(3px); }
+.choice input{ position:absolute; opacity:0; width:1px; height:1px; }
+.choice-mark{
+  width:18px; height:18px; flex-shrink:0; position:relative;
+  border:1px solid var(--accent-deep); border-radius:50%;
+  transition:border-color .3s, background .3s, box-shadow .3s;
+}
+.choice-mark::after{
+  content:''; position:absolute; inset:0; margin:auto;
+  width:7px; height:7px; border-radius:50%;
+  background:var(--on-accent);
+  transform:scale(0); transition:transform .25s var(--ease-out);
+}
+.choice--check .choice-mark{ border-radius:2px; }
+.choice-body{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.choice-label{ font-size:16px; color:var(--text-2); transition:color .3s; line-height:1.4; }
+.choice-note{ font-family:var(--font-ui); font-size:9.5px; letter-spacing:.06em; color:var(--text-3); }
+.choice:has(input:checked){
+  border-color:var(--accent);
+  background:var(--wash);
+  box-shadow:inset 2px 0 0 var(--accent);
+}
+.choice:has(input:checked) .choice-label{ color:var(--text); }
+.choice:has(input:checked) .choice-mark{ border-color:var(--accent); background:var(--accent); }
+.choice:has(input:checked) .choice-mark::after{ transform:scale(1); }
+.choice:has(input:focus-visible){ outline:2px solid var(--accent); outline-offset:2px; }
+
+.choice .inline{
+  grid-column:2 / -1;
+  width:100%; margin-top:6px;
+  background:transparent; border:0; border-bottom:1px solid var(--line);
+  color:var(--text); font-family:var(--font-text); font-size:15px;
+  padding:6px 2px; outline:none; border-radius:0;
+  opacity:0; max-height:0; pointer-events:none;
+  transition:opacity .3s, max-height .3s, border-color .3s;
+}
+.choice:has(input:checked) .inline{ opacity:1; max-height:60px; pointer-events:auto; }
+.choice .inline:focus{ border-color:var(--accent); }
+.choice .inline::placeholder{ color:var(--text-3); font-style:italic; }
+
+/* --- escalas --- */
+.scale{ display:flex; flex-direction:column; gap:10px; }
+.scale-track{
+  display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr);
+  gap:5px;
+}
+.scale-opt{
+  position:relative; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:5px;
+  padding:13px 4px 11px; min-height:64px;
+  border:1px solid var(--line-soft); background:var(--surface);
+  cursor:pointer;
+  transition:border-color .25s, background .25s, transform .25s var(--ease), box-shadow .25s;
+}
+.scale-opt input{ position:absolute; opacity:0; width:1px; height:1px; }
+.scale-opt .n{
+  font-family:var(--font-ui); font-size:15px; font-weight:500;
+  color:var(--text-2); line-height:1; font-variant-numeric:tabular-nums;
+  transition:color .25s;
+}
+.scale-opt .t{
+  font-family:var(--font-ui); font-size:7.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--text-3); text-align:center;
+  line-height:1.2; transition:color .25s;
+}
+.scale-opt:hover{ border-color:var(--line); background:var(--surface-2); transform:translateY(-2px); }
+.scale-opt:has(input:checked){
+  border-color:var(--accent); background:var(--accent);
+  box-shadow:0 10px 28px var(--wash-strong);
+  transform:translateY(-2px);
+}
+.scale-opt:has(input:checked) .n,
+.scale-opt:has(input:checked) .t{ color:var(--on-accent); }
+.scale-opt:has(input:focus-visible){ outline:2px solid var(--accent); outline-offset:2px; }
+
+.scale-ends{
+  display:flex; justify-content:space-between; gap:20px;
+  font-family:var(--font-ui); font-size:9px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--text-3);
+  padding-top:2px;
+}
+.scale--nps .scale-track{ gap:4px; }
+.scale--nps .scale-opt{ min-height:58px; padding:11px 2px 9px; }
+.scale--nps .scale-opt[data-band="d"]{ border-bottom:2px solid var(--neg); }
+.scale--nps .scale-opt[data-band="p"]{ border-bottom:2px solid var(--warn); }
+.scale--nps .scale-opt[data-band="r"]{ border-bottom:2px solid var(--pos); }
+.scale--nps .scale-opt[data-band="d"]:has(input:checked){ background:var(--neg); border-color:var(--neg); }
+.scale--nps .scale-opt[data-band="p"]:has(input:checked){ background:var(--warn); border-color:var(--warn); }
+.scale--nps .scale-opt[data-band="r"]:has(input:checked){ background:var(--pos); border-color:var(--pos); }
+
+.scale-readout{
+  display:flex; align-items:baseline; gap:12px; margin-top:14px;
+  min-height:26px;
+}
+.scale-readout .val{
+  font-family:var(--font-display); font-style:italic; font-size:24px;
+  color:var(--accent-hi); line-height:1;
+}
+.scale-readout .lbl{
+  font-family:var(--font-ui); font-size:9px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--text-3);
+}
+
+@media (max-width:520px){
+  .scale-track{ gap:3px; }
+  .scale-opt{ min-height:54px; padding:10px 1px 8px; }
+  .scale-opt .n{ font-size:13px; }
+  .scale-opt .t{ display:none; }
+  .scale--nps .scale-opt .n{ font-size:12px; }
+}
+
+/* --- textos --- */
+.field{ position:relative; }
+textarea, .input{
+  width:100%; display:block;
+  background:var(--surface);
+  border:1px solid var(--line-soft); border-radius:0;
+  color:var(--text);
+  font-family:var(--font-text); font-size:16px; line-height:1.6;
+  padding:15px 17px;
+  outline:none; resize:vertical;
+  transition:border-color .3s, background .3s, box-shadow .3s;
+  box-shadow:inset 0 1px 0 rgba(0,0,0,.04);
+}
+textarea{ min-height:120px; }
+textarea:focus, .input:focus{
+  border-color:var(--accent);
+  background:var(--surface-2);
+  box-shadow:0 0 0 3px var(--wash);
+}
+textarea::placeholder, .input::placeholder{ color:var(--text-3); font-style:italic; opacity:.8; }
+.field-foot{
+  display:flex; justify-content:space-between; gap:14px;
+  margin-top:8px;
+  font-family:var(--font-ui); font-size:9px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.counter b{ color:var(--text-2); font-weight:500; }
+
+/* --- fricção / chips --- */
+.chips{ display:flex; flex-wrap:wrap; gap:7px; }
+.chip{
+  position:relative; display:inline-flex; align-items:center; gap:9px;
+  padding:10px 15px; border:1px solid var(--line-soft); background:var(--surface);
+  cursor:pointer; font-size:14.5px; color:var(--text-2);
+  transition:border-color .25s, background .25s, color .25s, transform .25s var(--ease);
+}
+.chip input{ position:absolute; opacity:0; width:1px; height:1px; }
+.chip .cm{
+  width:12px; height:12px; border:1px solid var(--accent-deep); border-radius:2px;
+  position:relative; flex-shrink:0; transition:background .25s, border-color .25s;
+}
+.chip .cm::after{
+  content:''; position:absolute; left:3px; top:1px; width:4px; height:7px;
+  border:solid var(--on-accent); border-width:0 1.5px 1.5px 0;
+  transform:rotate(45deg) scale(0); transition:transform .2s var(--ease-out);
+}
+.chip:hover{ border-color:var(--line); background:var(--surface-2); transform:translateY(-1px); }
+.chip:has(input:checked){ border-color:var(--accent); background:var(--wash); color:var(--text); }
+.chip:has(input:checked) .cm{ background:var(--accent); border-color:var(--accent); }
+.chip:has(input:checked) .cm::after{ transform:rotate(45deg) scale(1); }
+.chip:has(input:focus-visible){ outline:2px solid var(--accent); outline-offset:2px; }
+
+/* --- upload --- */
+.upload{
+  display:block; position:relative; border:1px dashed var(--line); background:var(--surface);
+  padding:26px 20px; text-align:center; cursor:pointer;
+  transition:border-color .3s, background .3s;
+}
+.upload:hover, .upload.dragover{ border-color:var(--accent); background:var(--wash); }
+.upload input[type="file"]{ position:absolute; inset:0; opacity:0; cursor:pointer; z-index:1; }
+.upload .up-ico{ color:var(--accent); margin-bottom:8px; display:flex; justify-content:center; }
+.upload .up-ico svg{ width:22px; height:22px; }
+.upload p{ font-size:14.5px; color:var(--text-2); }
+.upload small{
+  display:block; margin-top:5px; font-family:var(--font-ui); font-size:9px;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--text-3);
+}
+.previews{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+.previews figure{
+  margin:0; width:84px; position:relative;
+  border:1px solid var(--line-soft); background:var(--surface-2); padding:4px;
+}
+.previews img{ display:block; width:100%; height:64px; object-fit:cover; }
+.previews figcaption{
+  font-family:var(--font-ui); font-size:7.5px; letter-spacing:.06em;
+  color:var(--text-3); padding-top:4px; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+
+/* --- erros --- */
+.q-error{
+  display:none; align-items:center; gap:8px;
+  margin-top:10px; font-family:var(--font-ui); font-size:10px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--neg);
+}
+.q-error svg{ width:12px; height:12px; flex-shrink:0; }
+.q.is-invalid .q-error{ display:flex; }
+.q.is-invalid .q-title{ color:var(--neg); }
+.q.is-invalid .choice,
+.q.is-invalid .scale-opt,
+.q.is-invalid textarea,
+.q.is-invalid .input{ border-color:var(--neg); }
+
+.summary-card{
+  border:1px solid var(--line); background:var(--wash);
+  padding:24px 26px; margin-bottom:38px;
+  display:grid; gap:16px;
+}
+.summary-card h3{
+  font-size:15px; font-family:var(--font-ui); font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase; color:var(--accent-hi);
+  font-variation-settings:normal;
+}
+.summary-rows{ display:grid; gap:9px; }
+.summary-row{
+  display:flex; justify-content:space-between; gap:16px; align-items:baseline;
+  border-bottom:1px dotted var(--line); padding-bottom:8px;
+  font-size:14px; color:var(--text-2);
+}
+.summary-row b{ font-weight:400; color:var(--text); text-align:right; }
+.summary-row .skip-link{
+  background:none; border:0; padding:0; cursor:pointer;
+  font-family:var(--font-ui); font-size:9px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--accent);
+}
+.summary-row .skip-link:hover{ text-decoration:underline; }
+
+/* --- navegação de passos --- */
+.stepnav{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:14px; margin-top:clamp(40px,5vw,58px);
+  padding-top:26px; border-top:1px solid var(--line-soft);
+}
+.stepnav .nav-right{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:flex-end; }
+.stepnav .nav-left{ display:flex; align-items:center; gap:16px; }
+.autosave{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--font-ui); font-size:8.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.autosave i{
+  width:5px; height:5px; border-radius:50%; background:var(--pos);
+  opacity:.4; transition:opacity .4s, box-shadow .4s;
+}
+.autosave.on i{ opacity:1; box-shadow:0 0 10px var(--pos); }
+@media (max-width:560px){
+  .stepnav{ flex-direction:column-reverse; align-items:stretch; }
+  .stepnav .nav-left{ justify-content:center; order:2; }
+  .stepnav .nav-right{ justify-content:space-between; }
+  .stepnav .btn{ flex:1; }
+  .autosave{ display:none; }
+}
+
+/* ============================================================
+   7. AGradecimento
+   ============================================================ */
+.done{ display:none; padding:150px 0 100px; }
+.done.is-on{ display:block; animation:stepIn .8s var(--ease-out) both; }
+.done-inner{ max-width:660px; }
+.seal{
+  width:96px; height:96px; margin-bottom:34px; position:relative;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.16), transparent 45%),
+    radial-gradient(circle at 60% 70%, rgba(0,0,0,.25), transparent 55%),
+    linear-gradient(150deg, #8E2E22, #5C1712 60%, #43100C);
+  box-shadow:0 16px 40px rgba(0,0,0,.35), inset 0 1px 1px rgba(255,255,255,.15);
+  transform:rotate(-6deg);
+}
+.seal::before{
+  content:''; position:absolute; inset:8px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.16);
+}
+.seal span{
+  font-family:var(--font-display); font-style:italic; font-size:26px;
+  color:#F3D9C6; letter-spacing:.02em;
+}
+.done h2{
+  font-size:clamp(40px,6vw,66px); line-height:.98;
+  letter-spacing:-.035em; margin-bottom:20px;
+}
+.done h2 em{ font-style:italic; color:var(--accent-hi); }
+.done-lede{ font-size:18px; color:var(--text-2); line-height:1.65; max-width:48ch; }
+.done-next{
+  margin-top:40px; border-top:1px solid var(--line-soft);
+  padding-top:26px; display:grid; gap:18px;
+}
+.done-next li{
+  display:flex; gap:14px; align-items:flex-start;
+  font-size:15.5px; color:var(--text-2); line-height:1.55;
+}
+.done-next ul{ list-style:none; margin:0; padding:0; display:grid; gap:18px; }
+.done-next .n{
+  font-family:var(--font-display); font-style:italic; font-size:13px;
+  color:var(--accent); min-width:20px; padding-top:2px;
+}
+.done-actions{ display:flex; flex-wrap:wrap; gap:14px; margin-top:40px; }
+.done-foot{
+  margin-top:54px; padding-top:24px; border-top:1px solid var(--line-soft);
+  font-size:13px; color:var(--text-3); font-style:italic;
+}
+
+/* ============================================================
+   8. TOAST / BANNER
+   ============================================================ */
+.toast{
+  position:fixed; left:50%; bottom:26px; z-index:80;
+  transform:translate(-50%, 20px);
+  display:flex; align-items:center; gap:12px;
+  background:var(--surface-solid); border:1px solid var(--line);
+  padding:12px 18px; box-shadow:var(--shadow);
+  font-family:var(--font-ui); font-size:10px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--text-2);
+  opacity:0; pointer-events:none;
+  transition:opacity .4s var(--ease), transform .4s var(--ease);
+}
+.toast.on{ opacity:1; transform:translate(-50%,0); }
+.toast i{ width:5px; height:5px; border-radius:50%; background:var(--pos); }
+
+.banner{
+  display:none; gap:14px; align-items:flex-start;
+  border:1px solid var(--neg); background:color-mix(in srgb, var(--neg) 8%, transparent);
+  padding:16px 18px; margin:0 0 32px;
+  font-size:14.5px; color:var(--text); line-height:1.55;
+}
+.banner.is-on{ display:flex; }
+.banner svg{ width:16px; height:16px; color:var(--neg); flex-shrink:0; margin-top:2px; }
+.banner a{ color:var(--accent-hi); display:inline-block; margin-top:6px; }
+
+/* ============================================================
+   9. DETALHES / MOTION
+   ============================================================ */
+.hint{
+  font-size:13px; color:var(--text-3); font-style:italic; margin-top:10px;
+}
+.optional-note{
+  display:inline-block; margin-left:8px;
+  font-family:var(--font-ui); font-size:8px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--text-3);
+}
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+.hp{ position:absolute; left:-9999px; opacity:0; height:0; width:0; }
+[hidden]{ display:none !important; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+}
+
+@media print{
+  body{ background:#fff; color:#000; }
+  .topbar,.progress,.frame,.stepnav,.rail,.cover,.toast{ display:none !important; }
+  .survey{ display:block !important; padding:0; }
+  .step{ display:block !important; }
+  .step:not(.is-on){ opacity:1; }
+  .chapter-head{ page-break-after:avoid; }
+  .q{ page-break-inside:avoid; }
+  .choices{ gap:2px; }
+  .choice{ border-color:#ccc; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#surveyForm">Ir para a pesquisa</a>
+<div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#" id="brandHome" aria-label="Bruno Amaral — início">
+    <span class="brand-mark"><span>BA</span></span>
+    <span class="brand-txt">
+      <b>Bruno Amaral</b>
+      <small>Atelier de Pintura a Óleo</small>
+    </span>
+  </a>
+  <div class="topbar-right">
+    <div class="step-indicator" id="stepIndicator" hidden>
+      <span>Capítulo <b id="stepLabel">I</b> / VI</span>
+      <span class="ticks" id="ticks" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+      </span>
+    </div>
+    <button class="icon-btn" id="themeToggle" type="button" aria-label="Alternar entre tema escuro e claro" aria-pressed="false" title="Alternar tema">
+      <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></svg>
+      <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M20 14.4A8.6 8.6 0 1 1 9.6 4a6.9 6.9 0 0 0 10.4 10.4Z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="shell">
+
+  <!-- ================= CAPA ================= -->
+  <section class="cover" id="cover">
+    <div class="cover-inner">
+      <p class="eyebrow">Pesquisa do Colecionador · Atelier Bruno Amaral · 2026</p>
+      <h1>
+        <span class="ln">A sua voz,</span>
+        <span class="ln"><em>no atelier.</em></span>
+      </h1>
+      <p class="cover-sub">
+        Cada obra que sai daqui leva uma parte de quem a encomendou. Esta pesquisa é o caminho de volta:
+        seis capítulos, cinco minutos, e a certeza de que cada resposta muda a próxima pintura.
+      </p>
+      <div class="cover-meta">
+        <span>6 capítulos</span>
+        <span>≈ 5 minutos</span>
+        <span>Respostas confidenciais</span>
+        <span>Guardado no seu dispositivo</span>
+      </div>
+      <div class="invite-note" id="inviteNote" hidden>
+        <span class="in-label">Convite pessoal</span>
+        <p id="inviteText"></p>
+      </div>
+      <div class="cover-cta">
+        <button class="btn btn--solid" id="startBtn" type="button">
+          <span id="startLabel">Começar a pesquisa</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+        </button>
+        <a class="link-quiet" href="#surveyForm" id="whyLink">Por que pergunto isto?</a>
+      </div>
+
+      <details class="why" id="whyPanel">
+        <summary>Por que pergunto cada coisa</summary>
+        <div class="why-body">
+          <p><b>I · A descoberta</b> — para saber onde vale a pena estar presente, em vez de estar em todo o lado.</p>
+          <p><b>II · A decisão</b> — os obstáculos são a parte que ninguém me conta. São eles que mudam o processo.</p>
+          <p><b>III · A obra</b> — a pintura ao vivo é sempre diferente do tela. Quero saber se essa diferença me favorece.</p>
+          <p><b>IV · A chegada</b> — uma tela viaja frágil. Embalagem e prazo são parte da obra.</p>
+          <p><b>V · O vínculo</b> — a nota de recomendação é o teste mais honesto de tudo o que fiz até aqui.</p>
+          <p><b>VI · A palavra</b> — o espaço para dizer o que eu não perguntei.</p>
+        </div>
+      </details>
+
+      <div class="pigments" aria-hidden="true">
+        <div class="pigment" style="--c:#B8863B"><b>Ocre</b></div>
+        <div class="pigment" style="--c:#8A4B2A"><b>Terra de Siena</b></div>
+        <div class="pigment" style="--c:#9C2B1E"><b>Vermelhão</b></div>
+        <div class="pigment" style="--c:#243F63"><b>Azul da Prússia</b></div>
+        <div class="pigment" style="--c:#3E6B57"><b>Verde-cobre</b></div>
+        <div class="pigment" style="--c:#D8CDB6"><b>Branco de chumbo</b></div>
+      </div>
+    </div>
+    <div class="scroll-cue"><i></i><span>Comece quando quiser</span></div>
+  </section>
+
+  <!-- ================= QUESTIONÁRIO ================= -->
+  <section class="survey" id="survey" aria-label="Pesquisa de satisfação">
+    <div class="survey-grid">
+      <aside class="rail" aria-label="Capítulos">
+        <p class="rail-title">Capítulos</p>
+        <ol id="railList">
+          <li><button type="button" data-go="1"><span class="rn">I</span><span>A descoberta</span></button></li>
+          <li><button type="button" data-go="2"><span class="rn">II</span><span>A decisão</span></button></li>
+          <li><button type="button" data-go="3"><span class="rn">III</span><span>A obra</span></button></li>
+          <li><button type="button" data-go="4"><span class="rn">IV</span><span>A chegada</span></button></li>
+          <li><button type="button" data-go="5"><span class="rn">V</span><span>O vínculo</span></button></li>
+          <li><button type="button" data-go="6"><span class="rn">VI</span><span>A palavra</span></button></li>
+        </ol>
+        <p class="rail-note">Pode voltar e alterar qualquer resposta antes de enviar.</p>
+      </aside>
+
+      <form class="deck" id="surveyForm" novalidate autocomplete="on">
+
+        <div class="banner" id="errorBanner" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.4v.2"/></svg>
+          <div>
+            <strong id="errorTitle">Não foi possível enviar agora.</strong>
+            <span id="errorBody">As suas respostas continuam guardadas. Pode tentar de novo ou descarregar uma cópia.</span>
+            <a href="#" id="downloadFallback" style="display:none">Descarregar as minhas respostas (.json)</a>
+          </div>
+        </div>
+
+        <!-- ========== I ========== -->
+        <div class="step is-on" data-step="1">
+          <header class="chapter-head">
+            <div class="chapter-top"><span class="chapter-num">I</span><span class="chapter-kicker">Capítulo um · de seis</span></div>
+            <h2>A descoberta</h2>
+            <p class="chapter-lede">Toda obra começa antes da tela. Começa no instante em que algo o fez parar e olhar.</p>
+            <div class="chapter-rule"></div>
+          </header>
+
+          <fieldset class="q" data-q="descoberta" data-required>
+            <legend class="q-title">Onde me encontrou pela primeira vez?<span class="req" aria-hidden="true">*</span></legend>
+            <p class="q-help" id="h-descoberta" style="margin-top:6px">Pense no primeiro contato — um post, uma pessoa, uma sala.</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-labelledby="h-descoberta">
+                <label class="choice">
+                  <input type="radio" name="descoberta" value="Instagram (@brunoamaral.art)" required>
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Instagram</span><span class="choice-note">@brunoamaral.art</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="descoberta" value="Indicação de amigo ou colecionador">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Indicação de alguém</span><span class="choice-note">um amigo, um colecionador</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="descoberta" value="Site ou blog">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Site ou blog</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="descoberta" value="Exposição ou ateliê">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Exposição ou visita ao ateliê</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="descoberta" value="Pesquisa no Google">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Pesquisa na internet</span><span class="choice-note">Google, Pinterest</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="descoberta" value="Outro">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Outro lugar</span></span>
+                  <input class="inline" type="text" name="descoberta_outro" placeholder="Conte-me onde foi" aria-label="Outro lugar: especifique">
+                </label>
+              </div>
+            </div>
+            <p class="q-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>Escolha uma opção para continuar.</p>
+          </fieldset>
+
+          <fieldset class="q" data-q="tempo_conhecimento">
+            <legend class="q-title">Há quanto tempo acompanha o meu trabalho?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices choices--grid" role="radiogroup" aria-label="Tempo de acompanhamento">
+                <label class="choice"><input type="radio" name="tempo_conhecimento" value="Menos de 3 meses"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Menos de 3 meses</span></span></label>
+                <label class="choice"><input type="radio" name="tempo_conhecimento" value="3 a 12 meses"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">3 a 12 meses</span></span></label>
+                <label class="choice"><input type="radio" name="tempo_conhecimento" value="1 a 3 anos"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">1 a 3 anos</span></span></label>
+                <label class="choice"><input type="radio" name="tempo_conhecimento" value="Mais de 3 anos"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Mais de 3 anos</span></span></label>
+                <label class="choice"><input type="radio" name="tempo_conhecimento" value="Foi a primeira vez"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Foi a primeira vez</span><span class="choice-note">conheci ao comprar</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="primeira_impressao">
+            <legend class="q-title">O que o fez parar e olhar?<span class="optional-note">Opcional</span></legend>
+            <p class="q-help">A primeira coisa que o prendeu — mesmo que hoje já não saiba explicar.</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Primeira impressão">
+                <label class="choice"><input type="radio" name="primeira_impressao" value="A luz e o contraste"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">A luz e o contraste</span><span class="choice-note">o chiaroscuro, o volume</span></span></label>
+                <label class="choice"><input type="radio" name="primeira_impressao" value="O tema e a figura"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">O tema e a figura</span></span></label>
+                <label class="choice"><input type="radio" name="primeira_impressao" value="A técnica e as pinceladas"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">A técnica e as pinceladas</span><span class="choice-note">as camadas, a matéria</span></span></label>
+                <label class="choice"><input type="radio" name="primeira_impressao" value="A história por trás da obra"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">A história por trás da obra</span></span></label>
+                <label class="choice"><input type="radio" name="primeira_impressao" value="O conjunto — não sei explicar"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">O conjunto</span><span class="choice-note">não sei explicar</span></span></label>
+                <label class="choice">
+                  <input type="radio" name="primeira_impressao" value="Outro">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Outra coisa</span></span>
+                  <input class="inline" type="text" name="primeira_impressao_outro" placeholder="O que foi?" aria-label="Outra coisa: especifique">
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <nav class="stepnav">
+            <div class="nav-left">
+              <span class="autosave" id="autosave1"><i></i>Guardado</span>
+            </div>
+            <div class="nav-right">
+              <button class="btn" type="button" data-next="2"><span>Continuar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+            </div>
+          </nav>
+        </div>
+
+        <!-- ========== II ========== -->
+        <div class="step" data-step="2">
+          <header class="chapter-head">
+            <div class="chapter-top"><span class="chapter-num">II</span><span class="chapter-kicker">Capítulo dois · de seis</span></div>
+            <h2>A decisão</h2>
+            <p class="chapter-lede">Entre o desejo e a compra existe um caminho — e quase sempre um obstáculo. Quero conhecer os dois.</p>
+            <div class="chapter-rule"></div>
+          </header>
+
+          <fieldset class="q" data-q="tipo_obra" data-required>
+            <legend class="q-title">A obra foi feita para si ou escolheu uma peça já pronta?<span class="req" aria-hidden="true">*</span></legend>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Tipo de obra">
+                <label class="choice">
+                  <input type="radio" name="tipo_obra" value="Encomenda / comissão" required>
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Encomenda</span><span class="choice-note">uma obra criada a partir de uma conversa</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="tipo_obra" value="Obra já finalizada">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Obra já finalizada</span><span class="choice-note">escolhi entre as disponíveis</span></span>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="tipo_obra" value="As duas coisas">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">As duas coisas</span><span class="choice-note">já adquiri de mais de uma forma</span></span>
+                </label>
+              </div>
+            </div>
+            <p class="q-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>Escolha uma opção para continuar.</p>
+          </fieldset>
+
+          <div class="field q" data-q="obra" style="margin-bottom:34px">
+            <label class="q-title" for="obra">Qual obra tem em casa?<span class="optional-note">Opcional</span></label>
+            <p class="q-help">O título, o tema ou simplesmente "o retrato de perfil". Isto ajuda-me a ligar a sua resposta à peça certa.</p>
+            <input class="input" id="obra" type="text" name="obra" placeholder="Ex.: estudo de mãos, retrato da minha mãe…">
+          </div>
+
+          <fieldset class="q" data-q="fricao">
+            <legend class="q-title">O que quase o impediu de avançar?<span class="optional-note">Pode marcar várias</span></legend>
+            <p class="q-help">A parte mais útil desta pesquisa. Sem rodeios — o que o fez hesitar?</p>
+            <div class="q-body">
+              <div class="chips" role="group" aria-label="Obstáculos">
+                <label class="chip" data-exclusive><input type="checkbox" name="fricao" value="Nada — avancei com confiança"><span class="cm" aria-hidden="true"></span>Nada, avancei com confiança</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Dúvida sobre o preço"><span class="cm" aria-hidden="true"></span>O preço</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Não poder ver a obra ao vivo"><span class="cm" aria-hidden="true"></span>Não ver ao vivo</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Prazo de entrega"><span class="cm" aria-hidden="true"></span>O prazo</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Falta de informação sobre o processo"><span class="cm" aria-hidden="true"></span>Não saber como funciona</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Forma de pagamento"><span class="cm" aria-hidden="true"></span>O pagamento</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Incerteza sobre o resultado"><span class="cm" aria-hidden="true"></span>Incerteza sobre o resultado</label>
+                <label class="chip"><input type="checkbox" name="fricao" value="Outro"><span class="cm" aria-hidden="true"></span>Outra coisa</label>
+              </div>
+              <input class="input" type="text" name="fricao_outro" placeholder="Se quiser, conte em uma frase" aria-label="Outro obstáculo: descreva" style="margin-top:10px">
+            </div>
+          </fieldset>
+
+          <fieldset class="q q--scale" data-q="valor_percebido">
+            <legend class="q-title">E o preço, olhando para trás?<span class="optional-note">Opcional</span></legend>
+            <p class="q-help">Não é sobre ser barato. É sobre o valor que recebeu em troca.</p>
+            <div class="q-body">
+              <div class="scale" data-scale data-readout>
+                <div class="scale-track">
+                  <label class="scale-opt"><input type="radio" name="valor_percebido" value="1"><span class="n">1</span><span class="t">Muito fraca</span></label>
+                  <label class="scale-opt"><input type="radio" name="valor_percebido" value="2"><span class="n">2</span><span class="t">Fraca</span></label>
+                  <label class="scale-opt"><input type="radio" name="valor_percebido" value="3"><span class="n">3</span><span class="t">Justa</span></label>
+                  <label class="scale-opt"><input type="radio" name="valor_percebido" value="4"><span class="n">4</span><span class="t">Boa</span></label>
+                  <label class="scale-opt"><input type="radio" name="valor_percebido" value="5"><span class="n">5</span><span class="t">Excecional</span></label>
+                </div>
+                <div class="scale-ends"><span>Relação fraca</span><span>Relação excecional</span></div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q q--scale" data-q="clareza_comunicacao" data-required>
+            <legend class="q-title">Como foi conversar comigo?<span class="req" aria-hidden="true">*</span></legend>
+            <p class="q-help">Clareza, respostas, prazos explicados, disponibilidade.</p>
+            <div class="q-body">
+              <div class="scale" data-scale data-readout>
+                <div class="scale-track">
+                  <label class="scale-opt"><input type="radio" name="clareza_comunicacao" value="1" required><span class="n">1</span><span class="t">Confusa</span></label>
+                  <label class="scale-opt"><input type="radio" name="clareza_comunicacao" value="2"><span class="n">2</span><span class="t">Pouco clara</span></label>
+                  <label class="scale-opt"><input type="radio" name="clareza_comunicacao" value="3"><span class="n">3</span><span class="t">Razoável</span></label>
+                  <label class="scale-opt"><input type="radio" name="clareza_comunicacao" value="4"><span class="n">4</span><span class="t">Clara</span></label>
+                  <label class="scale-opt"><input type="radio" name="clareza_comunicacao" value="5"><span class="n">5</span><span class="t">Cristalina</span></label>
+                </div>
+                <div class="scale-ends"><span>Confusa</span><span>Cristalina</span></div>
+              </div>
+            </div>
+            <p class="q-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>Escolha uma nota para continuar.</p>
+          </fieldset>
+
+          <fieldset class="q" data-q="acompanhamento_processo" id="condAcompanhamento" hidden>
+            <legend class="q-title">E acompanhar a pintura acontecer?</legend>
+            <p class="q-help">As atualizações, os estudos, as camadas de tinta.</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Acompanhamento do processo">
+                <label class="choice"><input type="radio" name="acompanhamento_processo" value="Acompanhei e gostei muito"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Acompanhei e gostei muito</span><span class="choice-note">quero continuar a ver</span></span></label>
+                <label class="choice"><input type="radio" name="acompanhamento_processo" value="Acompanhei, mas preferia menos atualizações"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Acompanhei, mas preferia menos</span></span></label>
+                <label class="choice"><input type="radio" name="acompanhamento_processo" value="Acompanhei pouco e gostaria de ter visto mais"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Gostaria de ter visto mais</span><span class="choice-note">mais imagens, mais etapas</span></span></label>
+                <label class="choice"><input type="radio" name="acompanhamento_processo" value="Não acompanhei o processo"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não acompanhei</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <nav class="stepnav">
+            <div class="nav-left">
+              <button class="btn btn--ghost btn--sm" type="button" data-prev="1"><span>Voltar</span></button>
+              <span class="autosave" id="autosave2"><i></i>Guardado</span>
+            </div>
+            <div class="nav-right">
+              <button class="btn" type="button" data-next="3"><span>Continuar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+            </div>
+          </nav>
+        </div>
+
+        <!-- ========== III ========== -->
+        <div class="step" data-step="3">
+          <header class="chapter-head">
+            <div class="chapter-top"><span class="chapter-num">III</span><span class="chapter-kicker">Capítulo três · de seis</span></div>
+            <h2>A obra</h2>
+            <p class="chapter-lede">Agora o essencial: o que a pintura é, quando finalmente está à sua frente.</p>
+            <div class="chapter-rule"></div>
+          </header>
+
+          <fieldset class="q" data-q="fidelidade_imagem">
+            <legend class="q-title">As fotos e os vídeos corresponderam à obra ao vivo?<span class="optional-note">Opcional</span></legend>
+            <p class="q-help">Uma pintura a óleo muda de tom conforme a luz. A tela é sempre mais profunda do que o tela.</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Fidelidade das imagens">
+                <label class="choice"><input type="radio" name="fidelidade_imagem" value="Superaram as expectativas"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Superaram as expectativas</span><span class="choice-note">melhor ao vivo</span></span></label>
+                <label class="choice"><input type="radio" name="fidelidade_imagem" value="Corresponderam totalmente"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Corresponderam</span><span class="choice-note">exatamente o que esperava</span></span></label>
+                <label class="choice"><input type="radio" name="fidelidade_imagem" value="Corresponderam em parte"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Corresponderam em parte</span></span></label>
+                <label class="choice">
+                  <input type="radio" name="fidelidade_imagem" value="Não corresponderam">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Não corresponderam</span></span>
+                  <input class="inline" type="text" name="fidelidade_imagem_detalhe" placeholder="O que era diferente?" aria-label="O que não correspondeu">
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="qualidade_execucao" data-required>
+            <legend class="q-title">E a execução técnica?<span class="req" aria-hidden="true">*</span></legend>
+            <p class="q-help">Textura do óleo, profundidade das cores, desenho, detalhe.</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Qualidade de execução">
+                <label class="choice"><input type="radio" name="qualidade_execucao" value="Excepcional" required><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Excepcional</span><span class="choice-note">não encontro falha</span></span></label>
+                <label class="choice"><input type="radio" name="qualidade_execucao" value="Muito boa"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Muito boa</span></span></label>
+                <label class="choice"><input type="radio" name="qualidade_execucao" value="Boa"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Boa</span><span class="choice-note">sólida, sem deslumbrar</span></span></label>
+                <label class="choice"><input type="radio" name="qualidade_execucao" value="Razoável"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Razoável</span></span></label>
+                <label class="choice"><input type="radio" name="qualidade_execucao" value="Abaixo das expectativas"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Abaixo das expectativas</span></span></label>
+              </div>
+            </div>
+            <p class="q-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>Escolha uma opção para continuar.</p>
+          </fieldset>
+
+          <fieldset class="q" data-q="acabamento">
+            <legend class="q-title">E o acabamento?<span class="optional-note">Opcional</span></legend>
+            <p class="q-help">Bordas, verniz, assinatura, moldura — os detalhes que separam uma tela de uma obra.</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Acabamento">
+                <label class="choice"><input type="radio" name="acabamento" value="Sim, impecável"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Impecável</span><span class="choice-note">nada a apontar</span></span></label>
+                <label class="choice">
+                  <input type="radio" name="acabamento" value="Sim, com um pequeno detalhe">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Bom, com um detalhe</span></span>
+                  <input class="inline" type="text" name="acabamento_detalhe" placeholder="Qual detalhe?" aria-label="Detalhe de acabamento">
+                </label>
+                <label class="choice">
+                  <input type="radio" name="acabamento" value="Não, faltou cuidado">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Faltou cuidado</span></span>
+                  <input class="inline" type="text" name="acabamento_falta" placeholder="Em que parte?" aria-label="Onde faltou acabamento">
+                </label>
+                <label class="choice"><input type="radio" name="acabamento" value="Não se aplica"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não se aplica</span><span class="choice-note">recebi apenas a tela</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="reacao_emocional">
+            <legend class="q-title">Na parede, ela provoca o que esperava?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Reação emocional">
+                <label class="choice"><input type="radio" name="reacao_emocional" value="Sim, completamente"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, completamente</span><span class="choice-note">continua a dizer-me algo</span></span></label>
+                <label class="choice"><input type="radio" name="reacao_emocional" value="Sim, em parte"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Em parte</span></span></label>
+                <label class="choice"><input type="radio" name="reacao_emocional" value="Ainda estou descobrindo"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Ainda estou descobrindo</span></span></label>
+                <label class="choice"><input type="radio" name="reacao_emocional" value="Não"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="field q" data-q="detalhe_marcante">
+            <label class="q-title" for="detalhe_marcante">Que detalhe da obra mais o surpreendeu?<span class="optional-note">Opcional</span></label>
+            <p class="q-help">Uma mão, um reflexo, o olhar. O que ainda repara quando passa por ela?</p>
+            <textarea id="detalhe_marcante" name="detalhe_marcante" rows="3" maxlength="300" placeholder="Ex.: a transparência da pele junto ao pescoço…"></textarea>
+            <div class="field-foot"><span></span><span class="counter" data-for="detalhe_marcante"><b>0</b> / 300</span></div>
+          </div>
+
+          <nav class="stepnav">
+            <div class="nav-left">
+              <button class="btn btn--ghost btn--sm" type="button" data-prev="2"><span>Voltar</span></button>
+              <span class="autosave" id="autosave3"><i></i>Guardado</span>
+            </div>
+            <div class="nav-right">
+              <button class="btn" type="button" data-next="4"><span>Continuar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+            </div>
+          </nav>
+        </div>
+
+        <!-- ========== IV ========== -->
+        <div class="step" data-step="4">
+          <header class="chapter-head">
+            <div class="chapter-top"><span class="chapter-num">IV</span><span class="chapter-kicker">Capítulo quatro · de seis</span></div>
+            <h2>A chegada</h2>
+            <p class="chapter-lede">Uma pintura viaja frágil. Do verniz à sua parede, cada etapa importa.</p>
+            <div class="chapter-rule"></div>
+          </header>
+
+          <fieldset class="q" data-q="prazo_envio">
+            <legend class="q-title">Chegou dentro do prazo combinado?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices choices--grid" role="radiogroup" aria-label="Prazo de entrega">
+                <label class="choice"><input type="radio" name="prazo_envio" value="Sim, dentro do prazo"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, dentro do prazo</span></span></label>
+                <label class="choice"><input type="radio" name="prazo_envio" value="Sim, chegou antes"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Chegou antes</span></span></label>
+                <label class="choice">
+                  <input type="radio" name="prazo_envio" value="Não, atrasou">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Atrasou</span></span>
+                  <input class="inline" type="text" name="prazo_envio_motivo" placeholder="Quanto tempo, e por quê?" aria-label="Motivo do atraso">
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="embalagem">
+            <legend class="q-title">E a embalagem?<span class="optional-note">Opcional</span></legend>
+            <p class="q-help">Óleo sobre tela teme humidade, impacto e temperatura. Protegeu como devia?</p>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Embalagem">
+                <label class="choice"><input type="radio" name="embalagem" value="Excelente"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Excelente</span><span class="choice-note">protegida e bem apresentada</span></span></label>
+                <label class="choice">
+                  <input type="radio" name="embalagem" value="Boa, poderia melhorar">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Boa, mas pode melhorar</span></span>
+                  <input class="inline" type="text" name="embalagem_melhorar" placeholder="Em quê?" aria-label="O que melhorar na embalagem">
+                </label>
+                <label class="choice"><input type="radio" name="embalagem" value="Insuficiente"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Insuficiente</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="estado_fisico">
+            <legend class="q-title">Em que estado chegou?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Estado de chegada">
+                <label class="choice"><input type="radio" name="estado_fisico" value="Perfeita, sem qualquer dano"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Perfeita</span><span class="choice-note">sem qualquer dano</span></span></label>
+                <label class="choice"><input type="radio" name="estado_fisico" value="Caixa danificada, obra intacta"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Caixa danificada, obra intacta</span></span></label>
+                <label class="choice">
+                  <input type="radio" name="estado_fisico" value="Pequenos danos na obra">
+                  <span class="choice-mark" aria-hidden="true"></span>
+                  <span class="choice-body"><span class="choice-label">Pequenos danos na obra</span></span>
+                  <input class="inline" type="text" name="estado_fisico_descricao" placeholder="Descreva, por favor" aria-label="Descrição dos danos">
+                </label>
+                <label class="choice"><input type="radio" name="estado_fisico" value="Danos graves"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Danos graves</span><span class="choice-note">fale comigo por mensagem direta</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q q--scale" data-q="servico_transportadora">
+            <legend class="q-title">O serviço de transporte<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="scale" data-scale data-readout>
+                <div class="scale-track">
+                  <label class="scale-opt"><input type="radio" name="servico_transportadora" value="1"><span class="n">1</span><span class="t">Mau</span></label>
+                  <label class="scale-opt"><input type="radio" name="servico_transportadora" value="2"><span class="n">2</span><span class="t">Fraco</span></label>
+                  <label class="scale-opt"><input type="radio" name="servico_transportadora" value="3"><span class="n">3</span><span class="t">OK</span></label>
+                  <label class="scale-opt"><input type="radio" name="servico_transportadora" value="4"><span class="n">4</span><span class="t">Bom</span></label>
+                  <label class="scale-opt"><input type="radio" name="servico_transportadora" value="5"><span class="n">5</span><span class="t">Excelente</span></label>
+                </div>
+                <div class="scale-ends"><span>Muito mau</span><span>Excelente</span></div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="certificado">
+            <legend class="q-title">E o Certificado de Autenticidade?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices choices--grid" role="radiogroup" aria-label="Certificado">
+                <label class="choice"><input type="radio" name="certificado" value="Sim, recebi em mãos"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Recebi em mãos</span></span></label>
+                <label class="choice"><input type="radio" name="certificado" value="Sim, mas em formato digital"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Recebi em formato digital</span></span></label>
+                <label class="choice"><input type="radio" name="certificado" value="Não recebi"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não recebi</span></span></label>
+                <label class="choice"><input type="radio" name="certificado" value="Não se aplica"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não se aplica</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <nav class="stepnav">
+            <div class="nav-left">
+              <button class="btn btn--ghost btn--sm" type="button" data-prev="3"><span>Voltar</span></button>
+              <span class="autosave" id="autosave4"><i></i>Guardado</span>
+            </div>
+            <div class="nav-right">
+              <button class="btn" type="button" data-next="5"><span>Continuar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+            </div>
+          </nav>
+        </div>
+
+        <!-- ========== V ========== -->
+        <div class="step" data-step="5">
+          <header class="chapter-head">
+            <div class="chapter-top"><span class="chapter-num">V</span><span class="chapter-kicker">Capítulo cinco · de seis</span></div>
+            <h2>O vínculo</h2>
+            <p class="chapter-lede">A obra está na parede. A relação, a partir daqui, é o que me interessa manter vivo.</p>
+            <div class="chapter-rule"></div>
+          </header>
+
+          <fieldset class="q q--scale" data-q="satisfacao_geral" data-required>
+            <legend class="q-title">No conjunto, como avalia a experiência?<span class="req" aria-hidden="true">*</span></legend>
+            <p class="q-help">Do primeiro "olá" à obra pendurada em casa.</p>
+            <div class="q-body">
+              <div class="scale" data-scale data-readout>
+                <div class="scale-track">
+                  <label class="scale-opt"><input type="radio" name="satisfacao_geral" value="1" required><span class="n">1</span><span class="t">Muito insatisfeito</span></label>
+                  <label class="scale-opt"><input type="radio" name="satisfacao_geral" value="2"><span class="n">2</span><span class="t">Insatisfeito</span></label>
+                  <label class="scale-opt"><input type="radio" name="satisfacao_geral" value="3"><span class="n">3</span><span class="t">Neutro</span></label>
+                  <label class="scale-opt"><input type="radio" name="satisfacao_geral" value="4"><span class="n">4</span><span class="t">Satisfeito</span></label>
+                  <label class="scale-opt"><input type="radio" name="satisfacao_geral" value="5"><span class="n">5</span><span class="t">Muito satisfeito</span></label>
+                </div>
+                <div class="scale-ends"><span>Muito insatisfeito</span><span>Muito satisfeito</span></div>
+              </div>
+            </div>
+            <p class="q-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>Escolha uma nota para continuar.</p>
+          </fieldset>
+
+          <fieldset class="q q--scale" data-q="nps" data-required>
+            <legend class="q-title">Recomendaria o meu trabalho a outro colecionador?<span class="req" aria-hidden="true">*</span></legend>
+            <p class="q-help">De 0 a 10. Seja honesto: é esta honestidade que me faz melhorar.</p>
+            <div class="q-body">
+              <div class="scale scale--nps" data-scale data-readout>
+                <div class="scale-track">
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="0" required><span class="n">0</span></label>
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="1"><span class="n">1</span></label>
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="2"><span class="n">2</span></label>
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="3"><span class="n">3</span></label>
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="4"><span class="n">4</span></label>
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="5"><span class="n">5</span></label>
+                  <label class="scale-opt" data-band="d"><input type="radio" name="nps" value="6"><span class="n">6</span></label>
+                  <label class="scale-opt" data-band="p"><input type="radio" name="nps" value="7"><span class="n">7</span></label>
+                  <label class="scale-opt" data-band="p"><input type="radio" name="nps" value="8"><span class="n">8</span></label>
+                  <label class="scale-opt" data-band="r"><input type="radio" name="nps" value="9"><span class="n">9</span></label>
+                  <label class="scale-opt" data-band="r"><input type="radio" name="nps" value="10"><span class="n">10</span></label>
+                </div>
+                <div class="scale-ends"><span>Não recomendaria</span><span>Recomendaria sem hesitar</span></div>
+              </div>
+            </div>
+            <p class="q-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>Escolha uma nota para continuar.</p>
+          </fieldset>
+
+          <fieldset class="q" data-q="recompra">
+            <legend class="q-title">E daqui para a frente?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices choices--grid" role="radiogroup" aria-label="Intenção de nova compra">
+                <label class="choice"><input type="radio" name="recompra" value="Sim, já tenho outra em mente"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Já tenho outra em mente</span></span></label>
+                <label class="choice"><input type="radio" name="recompra" value="Sim, provavelmente"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, provavelmente</span></span></label>
+                <label class="choice"><input type="radio" name="recompra" value="Talvez"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Talvez</span></span></label>
+                <label class="choice"><input type="radio" name="recompra" value="Não"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="interesse_futuro">
+            <legend class="q-title">O que gostaria de ver no atelier?<span class="optional-note">Pode marcar várias</span></legend>
+            <p class="q-help">Ajuda-me a decidir o que pintar a seguir — e o que oferecer.</p>
+            <div class="q-body">
+              <div class="chips" role="group" aria-label="Interesses futuros">
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Retratos"><span class="cm" aria-hidden="true"></span>Retratos</label>
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Paisagens"><span class="cm" aria-hidden="true"></span>Paisagens</label>
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Natureza-morta"><span class="cm" aria-hidden="true"></span>Natureza-morta</label>
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Temas religiosos ou mitológicos"><span class="cm" aria-hidden="true"></span>Religioso / mitológico</label>
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Cenas do cotidiano"><span class="cm" aria-hidden="true"></span>Cenas do cotidiano</label>
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Estudos pequenos e acessíveis"><span class="cm" aria-hidden="true"></span>Estudos pequenos</label>
+                <label class="chip"><input type="checkbox" name="interesse_futuro" value="Nenhum em particular"><span class="cm" aria-hidden="true"></span>Nada em particular</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <nav class="stepnav">
+            <div class="nav-left">
+              <button class="btn btn--ghost btn--sm" type="button" data-prev="4"><span>Voltar</span></button>
+              <span class="autosave" id="autosave5"><i></i>Guardado</span>
+            </div>
+            <div class="nav-right">
+              <button class="btn" type="button" data-next="6"><span>Continuar</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button>
+            </div>
+          </nav>
+        </div>
+
+        <!-- ========== VI ========== -->
+        <div class="step" data-step="6">
+          <header class="chapter-head">
+            <div class="chapter-top"><span class="chapter-num">VI</span><span class="chapter-kicker">Capítulo seis · de seis</span></div>
+            <h2>A palavra</h2>
+            <p class="chapter-lede">O último capítulo é o seu. Uma sugestão, um testemunho, uma fotografia — o que quiser deixar.</p>
+            <div class="chapter-rule"></div>
+          </header>
+
+          <div class="summary-card" id="summaryCard">
+            <h3>O essencial, até agora</h3>
+            <div class="summary-rows" id="summaryRows"></div>
+          </div>
+
+          <div class="field q" data-q="sugestao">
+            <label class="q-title" for="sugestao">O que eu deveria fazer diferente?<span class="optional-note">Opcional</span></label>
+            <p class="q-help">Uma crítica honesta vale mais do que dez elogios. Pode ser direto.</p>
+            <textarea id="sugestao" name="sugestao" rows="4" maxlength="600" placeholder="Se pudesse mudar uma coisa na forma como trabalho…"></textarea>
+            <div class="field-foot"><span>Fica só entre nós.</span><span class="counter" data-for="sugestao"><b>0</b> / 600</span></div>
+          </div>
+
+          <div class="field q" data-q="testemunho">
+            <label class="q-title" for="testemunho">Gostaria de deixar um testemunho?<span class="optional-note">Opcional</span></label>
+            <p class="q-help">Duas ou três frases sobre a obra ou sobre a experiência. Com a sua autorização, posso partilhá-lo no Instagram ou no site.</p>
+            <textarea id="testemunho" name="testemunho" rows="4" maxlength="400" placeholder="Ex.: encomendei um retrato da minha avó e…"></textarea>
+            <div class="field-foot"><span>Nada será publicado sem a sua autorização abaixo.</span><span class="counter" data-for="testemunho"><b>0</b> / 400</span></div>
+          </div>
+
+          <fieldset class="q" data-q="permissao_testemunho">
+            <legend class="q-title">Posso compartilhar o seu testemunho?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices" role="radiogroup" aria-label="Permissão para compartilhar">
+                <label class="choice"><input type="radio" name="permissao_testemunho" value="Sim, com o meu nome"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, com o meu nome</span></span></label>
+                <label class="choice"><input type="radio" name="permissao_testemunho" value="Sim, mas de forma anônima"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, mas de forma anônima</span></span></label>
+                <label class="choice"><input type="radio" name="permissao_testemunho" value="Não, prefiro manter privado"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não, prefiro manter privado</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="q" data-q="foto">
+            <legend class="q-title">Mostre-me a obra na sua parede<span class="optional-note">Opcional</span></legend>
+            <p class="q-help">Uma foto do lugar onde ela vive. Adoro ver onde as minhas pinturas acabam.</p>
+            <div class="q-body">
+              <label class="upload" id="uploadBox">
+                <input type="file" id="fotoInput" name="foto" accept="image/*" multiple>
+                <span class="up-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M3 16.5l5-4.5 4 3.5 3-2.5 6 5"/></svg></span>
+                <p>Arraste uma imagem ou toque para escolher</p>
+                <small>JPG, PNG ou HEIC · até 3 fotos</small>
+              </label>
+              <div class="previews" id="previews"></div>
+            </div>
+          </fieldset>
+
+          <div class="field q" data-q="contato">
+            <label class="q-title" for="contato">Como posso agradecer-lhe?<span class="optional-note">Opcional</span></label>
+            <p class="q-help">Nome, email ou @ do Instagram. Só uso para lhe responder e enviar o making of.</p>
+            <input class="input" id="contato" type="text" name="contato" placeholder="Nome · email · @instagram" autocomplete="name">
+          </div>
+
+          <fieldset class="q" data-q="novidades">
+            <legend class="q-title">Quer receber o making of das próximas obras?<span class="optional-note">Opcional</span></legend>
+            <div class="q-body">
+              <div class="choices choices--grid" role="radiogroup" aria-label="Novidades">
+                <label class="choice"><input type="radio" name="novidades" value="Sim, por email"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, por email</span><span class="choice-note">poucas mensagens, sem ruído</span></span></label>
+                <label class="choice"><input type="radio" name="novidades" value="Sim, por WhatsApp"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Sim, por WhatsApp</span></span></label>
+                <label class="choice"><input type="radio" name="novidades" value="Não, obrigado"><span class="choice-mark" aria-hidden="true"></span><span class="choice-body"><span class="choice-label">Não, obrigado</span></span></label>
+              </div>
+            </div>
+          </fieldset>
+
+          <input type="hidden" name="_obra_id" id="metaObraId" value="">
+          <input type="hidden" name="_obra_titulo" id="metaObraTitulo" value="">
+          <input type="hidden" name="_convite" id="metaConvite" value="">
+          <input class="hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <nav class="stepnav">
+            <div class="nav-left">
+              <button class="btn btn--ghost btn--sm" type="button" data-prev="5"><span>Voltar</span></button>
+              <span class="autosave" id="autosave6"><i></i>Guardado</span>
+            </div>
+            <div class="nav-right">
+              <button class="btn btn--solid" type="submit" id="submitBtn" form="surveyForm">
+                <span>Enviar resposta</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>
+              </button>
+            </div>
+          </nav>
+          <p class="hint" style="margin-top:18px">Ao enviar, concorda em compartilhar estas respostas comigo, Bruno Amaral. Nada será publicado sem a sua autorização explícita.</p>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= OBRIGADO ================= -->
+  <section class="done" id="done" aria-live="polite">
+    <div class="done-inner">
+      <div class="seal" aria-hidden="true"><span>BA</span></div>
+      <h2>Obrigado por <em>isto.</em></h2>
+      <p class="done-lede" id="doneLede">
+        A sua resposta chegou. Vou lê-la com atenção — e não apenas arquivá-la.
+      </p>
+      <div class="done-next">
+        <ul>
+          <li><span class="n">i.</span><span id="doneStep1">Leio todas as respostas pessoalmente, uma a uma.</span></li>
+          <li><span class="n">ii.</span><span>O que apontar como falha entra na próxima obra — não numa gaveta.</span></li>
+          <li><span class="n">iii.</span><span>Se deixou o seu contato, receberá uma resposta minha. Não um robô.</span></li>
+        </ul>
+      </div>
+      <div class="done-actions">
+        <a class="btn btn--solid" href="https://instagram.com/brunoamaral.art" target="_blank" rel="noopener">
+          <span>Ver o atelier no Instagram</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+        <button class="btn btn--ghost" type="button" id="restartBtn"><span>Responder de novo</span></button>
+      </div>
+      <p class="done-foot">
+        Bruno Amaral · Pintura a óleo · Rio Bonito, RJ — <a href="mailto:brunofonsecadoamaral@gmail.com" style="color:var(--accent-hi);text-decoration:none">brunofonsecadoamaral@gmail.com</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><i></i><span id="toastText">Rascunho guardado</span></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ------------------------------------------------------------
+     Configuração
+     ------------------------------------------------------------ */
+  var ENDPOINT  = 'https://api.web3forms.com/submit';
+  var ACCESS_KEY = '1310b20e-6d2d-44c9-9e33-e6baae1a8461';
+  var DRAFT_KEY  = 'bruno_amaral_survey_v2';
+  var THEME_KEY  = 'ba.theme';
+  var TOTAL_STEPS = 6;
+  var STEP_NAMES = ['I','II','III','IV','V','VI'];
+
+  var $  = function(id){ return document.getElementById(id); };
+  var $$ = function(sel, root){ return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+  var form      = $('surveyForm');
+  var cover     = $('cover');
+  var survey    = $('survey');
+  var done      = $('done');
+  var topbar    = $('topbar');
+  var progress  = $('progressBar');
+  var banner    = $('errorBanner');
+  var submitBtn = $('submitBtn');
+  var startBtn  = $('startBtn');
+  var toastEl   = $('toast');
+  var toastTxt  = $('toastText');
+
+  var current = 1;
+  var draftRestored = false;
+  var started = false;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Convite pessoal enviado pela Área do Artista:
+     ?obra=Título&cliente=Nome&c=identificador */
+  var convite = (function(){
+    var qs = new URLSearchParams(window.location.search);
+    return {
+      obra: (qs.get('obra') || '').trim(),
+      cliente: (qs.get('cliente') || '').trim(),
+      id: (qs.get('c') || qs.get('convite') || '').trim()
+    };
+  })();
+  function temConvite(){ return !!(convite.obra || convite.cliente || convite.id); }
+  /* identificador estável: um novo envio da mesma sessão substitui o anterior
+     em vez de criar uma resposta duplicada no painel */
+  var RESPOSTA_ID = 'r-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+
+  /* ------------------------------------------------------------
+     Utilitários
+     ------------------------------------------------------------ */
+  var toastTimer;
+  function toast(msg){
+    toastTxt.textContent = msg;
+    toastEl.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove('on'); }, 2600);
+  }
+
+  function stepEl(n){ return form.querySelector('.step[data-step="' + n + '"]'); }
+
+  function scrollToSurvey(){
+    var y = survey.getBoundingClientRect().top + window.pageYOffset - 92;
+    window.scrollTo({ top: Math.max(0, y), behavior: reduced ? 'auto' : 'smooth' });
+  }
+
+  /* ------------------------------------------------------------
+     Tema
+     ------------------------------------------------------------ */
+  var themeBtn = $('themeToggle');
+  function syncThemeBtn(){
+    var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+    themeBtn.setAttribute('aria-pressed', String(!dark));
+    themeBtn.setAttribute('aria-label', dark ? 'Activar tema claro (Galeria)' : 'Activar tema escuro (Atelier)');
+  }
+  themeBtn.addEventListener('click', function(){
+    var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute('content', next === 'light' ? '#F3EEE2' : '#080706');
+    syncThemeBtn();
+  });
+  syncThemeBtn();
+
+  /* ------------------------------------------------------------
+     Navegação entre capítulos
+     ------------------------------------------------------------ */
+  function goTo(n, opts){
+    opts = opts || {};
+    n = Math.max(1, Math.min(TOTAL_STEPS, n));
+    current = n;
+
+    $$('.step', form).forEach(function(s){
+      s.classList.toggle('is-on', Number(s.getAttribute('data-step')) === n);
+    });
+
+    $$('#railList button').forEach(function(b){
+      var v = Number(b.getAttribute('data-go'));
+      b.setAttribute('aria-current', v === n ? 'step' : 'false');
+      b.classList.toggle('is-done', v < n && stepComplete(v));
+    });
+
+    $('stepLabel').textContent = STEP_NAMES[n - 1];
+    $$('#ticks i').forEach(function(t, i){
+      t.classList.toggle('on', i < n - 1);
+      t.classList.toggle('now', i === n - 1);
+    });
+
+    var pct = Math.round((n / TOTAL_STEPS) * 100);
+    progress.style.width = pct + '%';
+
+    if(n === TOTAL_STEPS && typeof buildSummary === 'function') buildSummary();
+
+    banner.classList.remove('is-on');
+    if(!opts.silent){
+      var head = stepEl(n).querySelector('.chapter-head h2');
+      if(head){
+        head.setAttribute('tabindex', '-1');
+        try{ head.focus({ preventScroll: true }); }catch(e){ head.focus(); }
+      }
+      scrollToSurvey();
+    }
+    saveDraft();
+  }
+
+  /* ------------------------------------------------------------
+     Validação
+     ------------------------------------------------------------ */
+  function isAnswered(q){
+    var radios = q.querySelectorAll('input[type="radio"]');
+    if(radios.length){
+      return Array.prototype.some.call(radios, function(r){ return r.checked; });
+    }
+    var txt = q.querySelector('textarea, input[type="text"]:not(.inline)');
+    return txt ? txt.value.trim() !== '' : true;
+  }
+
+  function validateStep(n, silent){
+    var step = stepEl(n);
+    if(!step) return true;
+    var ok = true, first = null;
+    $$('.q[data-required]', step).forEach(function(q){
+      var valid = isAnswered(q);
+      q.classList.toggle('is-invalid', !valid);
+      if(!valid){
+        ok = false;
+        if(!first) first = q;
+      }
+    });
+    if(!ok && !silent && first){
+      var head = first.querySelector('.q-title, legend');
+      if(head){
+        head.setAttribute('tabindex', '-1');
+        try{ head.focus({ preventScroll: true }); }catch(e){}
+      }
+      first.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+    }
+    return ok;
+  }
+
+  function stepComplete(n){
+    var step = stepEl(n);
+    if(!step) return false;
+    return $$('.q[data-required]', step).every(function(q){ return isAnswered(q); });
+  }
+
+  $$('[data-next]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(!validateStep(current)) return;
+      goTo(Number(b.getAttribute('data-next')));
+    });
+  });
+  $$('[data-prev]').forEach(function(b){
+    b.addEventListener('click', function(){ goTo(Number(b.getAttribute('data-prev'))); });
+  });
+  $$('#railList button').forEach(function(b){
+    b.addEventListener('click', function(){ goTo(Number(b.getAttribute('data-go'))); });
+  });
+
+  form.addEventListener('change', function(e){
+    var q = e.target.closest('.q');
+    if(q && q.classList.contains('is-invalid')) q.classList.remove('is-invalid');
+  });
+
+  /* ------------------------------------------------------------
+     Campo "Outro" inline — seleccionar automaticamente
+     ------------------------------------------------------------ */
+  $$('.choice .inline').forEach(function(inp){
+    inp.addEventListener('focus', function(){
+      var radio = inp.closest('.choice').querySelector('input[type="radio"]');
+      if(radio && !radio.checked){ radio.checked = true; radio.dispatchEvent(new Event('change', { bubbles: true })); }
+    });
+  });
+
+  /* ------------------------------------------------------------
+     Chips exclusivos ("Nada")
+     ------------------------------------------------------------ */
+  $$('.chips').forEach(function(group){
+    $$('input[type="checkbox"]', group).forEach(function(cb){
+      cb.addEventListener('change', function(){
+        if(!cb.checked) return;
+        var isExclusive = cb.closest('[data-exclusive]');
+        if(isExclusive){
+          $$('input[type="checkbox"]', group).forEach(function(other){
+            if(other !== cb) other.checked = false;
+          });
+        } else {
+          $$('[data-exclusive] input[type="checkbox"]', group).forEach(function(ex){ ex.checked = false; });
+        }
+      });
+    });
+  });
+
+  /* ------------------------------------------------------------
+     Condicional: acompanhamento do processo
+     ------------------------------------------------------------ */
+  var condBlock = $('condAcompanhamento');
+  function syncConditional(){
+    var tipo = form.querySelector('input[name="tipo_obra"]:checked');
+    var show = !!tipo && (tipo.value === 'Encomenda / comissão' || tipo.value === 'As duas coisas');
+    condBlock.hidden = !show;
+    if(!show){
+      var r = condBlock.querySelector('input[type="radio"]:checked');
+      if(r) r.checked = false;
+    }
+  }
+  $$('input[name="tipo_obra"]').forEach(function(r){ r.addEventListener('change', syncConditional); });
+  syncConditional();
+
+  /* ------------------------------------------------------------
+     Contadores de caracteres
+     ------------------------------------------------------------ */
+  $$('textarea[maxlength]').forEach(function(ta){
+    var out = document.querySelector('.counter[data-for="' + ta.id + '"] b');
+    if(!out) return;
+    function upd(){ out.textContent = ta.value.length; }
+    ta.addEventListener('input', upd);
+    upd();
+  });
+
+  /* ------------------------------------------------------------
+     Transferência de fotografias
+     ------------------------------------------------------------ */
+  var fotoInput = $('fotoInput');
+  var previews  = $('previews');
+  var uploadBox = $('uploadBox');
+
+  if(fotoInput){
+    fotoInput.addEventListener('change', function(){
+      var files = Array.prototype.slice.call(fotoInput.files);
+      var valid = [], tooBig = false;
+      files.forEach(function(f){
+        if(!/^image\//.test(f.type)) return;
+        if(f.size > 5 * 1024 * 1024){ tooBig = true; return; }
+        valid.push(f);
+      });
+
+      var trimmed = valid.length > 3 || valid.length !== files.length;
+      if(valid.length > 3){ valid = valid.slice(0, 3); trimmed = true; }
+
+      if(trimmed){
+        var dt = new DataTransfer();
+        valid.forEach(function(f){ dt.items.add(f); });
+        fotoInput.files = dt.files;
+      }
+      if(valid.length > 3) toast('Máximo de 3 fotografias');
+      else if(tooBig) toast('Cada foto deve ter menos de 5 MB');
+
+      previews.innerHTML = '';
+      valid.forEach(function(f){
+        var url = URL.createObjectURL(f);
+        var fig = document.createElement('figure');
+        var img = document.createElement('img');
+        img.src = url; img.alt = f.name;
+        var cap = document.createElement('figcaption');
+        cap.textContent = f.name;
+        fig.appendChild(img); fig.appendChild(cap);
+        previews.appendChild(fig);
+      });
+    });
+    ['dragenter','dragover'].forEach(function(ev){
+      uploadBox.addEventListener(ev, function(e){ e.preventDefault(); uploadBox.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(function(ev){
+      uploadBox.addEventListener(ev, function(e){ e.preventDefault(); uploadBox.classList.remove('dragover'); });
+    });
+  }
+
+  /* ------------------------------------------------------------
+     Rascunho local
+     ------------------------------------------------------------ */
+  var saveTimer;
+
+  function collect(){
+    var fd = new FormData(form);
+    var out = {};
+    fd.forEach(function(v, k){
+      if(k === 'botcheck') return;
+      if(typeof v === 'object' && v !== null && 'name' in v) return; /* File */
+      if(Object.prototype.hasOwnProperty.call(out, k)){
+        out[k] = [].concat(out[k], v);
+      } else {
+        out[k] = v;
+      }
+    });
+    return out;
+  }
+
+  /* personaliza a capa e pré-preenche os campos quando a pesquisa vem de um convite */
+  function aplicarConvite(){
+    if(!temConvite()) return;
+    var obraEl = $('obra');
+    var contatoEl = $('contato');
+    if(convite.obra && obraEl) obraEl.value = convite.obra;
+    if(convite.cliente && contatoEl && !contatoEl.value) contatoEl.value = convite.cliente;
+    if($('metaObraId')) $('metaObraId').value = convite.id;
+    if($('metaObraTitulo')) $('metaObraTitulo').value = convite.obra;
+    if($('metaConvite')) $('metaConvite').value = convite.id;
+
+    var note = $('inviteNote');
+    var text = $('inviteText');
+    if(note && text){
+      var nome = convite.cliente ? '<b>' + escapar(convite.cliente) + '</b>' : 'este convite';
+      var obra = convite.obra ? ' pela obra <em>' + escapar(convite.obra) + '</em>' : '';
+      text.innerHTML = 'Preparado para ' + nome + obra + '. As suas respostas chegam diretamente ao atelier.';
+      note.hidden = false;
+    }
+  }
+  function escapar(s){
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function saveDraft(){
+    if(!started) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function(){
+      try{
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          v: 2,
+          at: Date.now(),
+          step: current,
+          data: collect()
+        }));
+        var el = form.querySelector('.step[data-step="' + current + '"] .autosave');
+        if(el){
+          el.classList.add('on');
+          setTimeout(function(){ el.classList.remove('on'); }, 1800);
+        }
+      }catch(e){ /* localStorage cheio ou indisponível */ }
+    }, 450);
+  }
+
+  function restoreDraft(){
+    var raw;
+    try{ raw = localStorage.getItem(DRAFT_KEY); }catch(e){ return; }
+    if(!raw) return;
+    var obj;
+    try{ obj = JSON.parse(raw); }catch(e){ return; }
+    if(!obj || !obj.data) return;
+    /* um convite novo nunca herda respostas de outro cliente neste dispositivo */
+    if(temConvite() && String(obj.data._convite || '') !== String(convite.id || '')) return;
+
+    Object.keys(obj.data).forEach(function(key){
+      var val = obj.data[key];
+      var els = $$('[name="' + key.replace(/["\\]/g, '') + '"]', form);
+      els.forEach(function(el){
+        if(el.type === 'radio'){
+          if(el.value === val){ el.checked = true; }
+        } else if(el.type === 'checkbox'){
+          if(Array.isArray(val) ? val.indexOf(el.value) > -1 : el.value === val){ el.checked = true; }
+        } else if(el.type !== 'file'){
+          el.value = val;
+        }
+      });
+    });
+
+    $$('textarea[maxlength]').forEach(function(ta){
+      var out = document.querySelector('.counter[data-for="' + ta.id + '"] b');
+      if(out) out.textContent = ta.value.length;
+    });
+
+    syncConditional();
+    var keys = Object.keys(obj.data).filter(function(k){ return obj.data[k] !== ''; });
+    if(!keys.length) return;
+    started = true;
+    draftRestored = !!obj.step;
+    if(draftRestored && obj.step > 1){
+      current = Math.min(TOTAL_STEPS, Math.max(1, obj.step));
+      $('startLabel').textContent = 'Continuar de onde parei';
+    }
+    if(draftRestored) toast('Rascunho recuperado');
+  }
+
+  function clearDraft(){
+    try{ localStorage.removeItem(DRAFT_KEY); }catch(e){}
+  }
+
+  restoreDraft();
+  aplicarConvite();
+
+  form.addEventListener('input', saveDraft);
+  form.addEventListener('change', saveDraft);
+
+  /* ------------------------------------------------------------
+     Resumo antes de enviar
+     ------------------------------------------------------------ */
+  var SUMMARY = [
+    { key: 'descoberta',            label: 'Descoberta',   step: 1 },
+    { key: 'tipo_obra',             label: 'Tipo de obra', step: 2 },
+    { key: 'clareza_comunicacao',   label: 'Comunicação',  step: 2 },
+    { key: 'qualidade_execucao',    label: 'Execução',     step: 3 },
+    { key: 'satisfacao_geral',      label: 'Satisfação',   step: 5 },
+    { key: 'nps',                   label: 'Recomendação', step: 5 }
+  ];
+
+  function valueLabel(key, val){
+    if(val === undefined || val === null || val === '') return '—';
+    if(key === 'clareza_comunicacao' || key === 'satisfacao_geral'){
+      return val + ' / 5';
+    }
+    if(key === 'nps'){
+      return val + ' / 10';
+    }
+    return String(val);
+  }
+
+  function buildSummary(){
+    var box = $('summaryRows');
+    if(!box) return;
+    var data = collect();
+    box.innerHTML = '';
+    SUMMARY.forEach(function(item){
+      var row = document.createElement('div');
+      row.className = 'summary-row';
+      var label = document.createElement('span');
+      label.textContent = item.label;
+      var right = document.createElement('span');
+      var b = document.createElement('b');
+      b.textContent = valueLabel(item.key, data[item.key]);
+      var edit = document.createElement('button');
+      edit.type = 'button';
+      edit.className = 'skip-link';
+      edit.textContent = 'editar';
+      edit.style.marginLeft = '10px';
+      edit.addEventListener('click', function(){ goTo(item.step); });
+      right.appendChild(b);
+      right.appendChild(edit);
+      row.appendChild(label);
+      row.appendChild(right);
+      box.appendChild(row);
+    });
+  }
+
+  /* ------------------------------------------------------------
+     Abrir / reiniciar
+     ------------------------------------------------------------ */
+  function openSurvey(){
+    started = true;
+    cover.style.display = 'none';
+    done.classList.remove('is-on');
+    survey.classList.add('is-on');
+    $('stepIndicator').hidden = false;
+    goTo(current, { silent: true });
+    scrollToSurvey();
+  }
+
+  startBtn.addEventListener('click', openSurvey);
+  $('whyLink').addEventListener('click', function(e){
+    e.preventDefault();
+    var d = $('whyPanel');
+    if(d){ d.open = true; d.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' }); }
+  });
+
+  $('brandHome').addEventListener('click', function(e){
+    e.preventDefault();
+    if(survey.classList.contains('is-on') || done.classList.contains('is-on')){
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    }
+  });
+
+  $('restartBtn').addEventListener('click', function(){
+    clearDraft();
+    window.location.reload();
+  });
+
+  /* ------------------------------------------------------------
+     Envio
+     ------------------------------------------------------------ */
+  function showError(title, body, withDownload){
+    $('errorTitle').textContent = title;
+    $('errorBody').textContent = body;
+    $('downloadFallback').style.display = withDownload ? 'inline' : 'none';
+    banner.classList.add('is-on');
+    banner.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+  }
+
+  function downloadPayload(payload){
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'respostas-bruno-amaral-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+  }
+
+  /* valida todos os capítulos e salta para o primeiro inválido */
+  function validateAll(){
+    for(var i = 1; i <= TOTAL_STEPS; i++){
+      if(!validateStep(i, true)){
+        goTo(i, { silent: true });
+        validateStep(i);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /* envia uma cópia estruturada para o painel do atelier (sem fotografias).
+     O Web3Forms continua a ser o canal de e-mail e de anexos. */
+  function registrarResposta(data){
+    if(location.protocol === 'file:') return;
+    var payload = {};
+    Object.keys(data).forEach(function(k){
+      if(k !== 'botcheck') payload[k] = data[k];
+    });
+    payload._resposta_id = RESPOSTA_ID;
+    payload._enviado_em = new Date().toISOString();
+    payload._pagina = 'Pesquisa de Satisfação v2 — Bruno Amaral';
+    payload._origem = 'pesquisa';
+    try{
+      fetch('/api/pesquisa', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(function(){ /* o e-mail do Web3Forms continua como reserva */ });
+    }catch(e){}
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    banner.classList.remove('is-on');
+
+    if(!validateAll()) return;
+
+    var data = collect();
+    registrarResposta(data);
+    var photos = fotoInput && fotoInput.files ? Array.prototype.slice.call(fotoInput.files) : [];
+
+    var contato = (form.elements['contato'] ? form.elements['contato'].value : '').trim();
+    var email = contato.match(/[^\s@]+@[^\s@]+\.[^\s@]{2,}/);
+
+    function buildFD(includePhotos){
+      var fd = new FormData();
+      Object.keys(data).forEach(function(k){
+        var v = data[k];
+        if(Array.isArray(v)){ v.forEach(function(item){ if(item !== '') fd.append(k, item); }); }
+        else if(v !== '') { fd.append(k, v); }
+      });
+      if(includePhotos && photos.length){
+        photos.forEach(function(f, i){ fd.append('foto_' + (i + 1), f, f.name); });
+      }
+      fd.append('fotos', String(includePhotos ? photos.length : 0));
+      fd.append('access_key', ACCESS_KEY);
+      fd.append('subject', 'Nova resposta — Pesquisa do Colecionador · Bruno Amaral');
+      fd.append('from_name', 'Pesquisa do Colecionador');
+      fd.append('_pagina', 'Pesquisa de Satisfação v2 — Bruno Amaral');
+      fd.append('_enviado_em', new Date().toISOString());
+      if(email) fd.append('_replyto', email[0]);
+      return fd;
+    }
+
+    function send(includePhotos){
+      return fetch(ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: buildFD(includePhotos) })
+        .then(function(res){
+          return res.json().catch(function(){ return {}; }).then(function(json){
+            if(!res.ok || json.success === false) throw new Error(json.message || 'Falha no envio');
+            return json;
+          });
+        });
+    }
+
+    submitBtn.disabled = true;
+    var original = submitBtn.querySelector('span').textContent;
+    submitBtn.querySelector('span').textContent = 'A enviar…';
+
+    send(true)
+      .catch(function(err){
+        /* se a falha vier das fotografias, reenvia só o texto para não perder a resposta */
+        if(!photos.length) throw err;
+        return send(false).then(function(){ toast('Respostas enviadas — as fotografias não puderam ser anexadas.'); });
+      })
+      .then(function(){
+        clearDraft();
+        cover.style.display = 'none';
+        survey.classList.remove('is-on');
+        done.classList.add('is-on');
+        progress.style.width = '100%';
+        $('stepIndicator').hidden = true;
+
+        var nps = Number(data['nps']);
+        if(nps >= 9){
+          $('doneLede').textContent = 'A sua resposta chegou — e a nota que me deu é uma responsabilidade. Vou lê-la com atenção e continuar à altura dela.';
+        } else if(nps >= 7){
+          $('doneLede').textContent = 'A sua resposta chegou. O que falta para chegar ao dez está agora escrito à minha frente — e é por aí que começo.';
+        } else if(!isNaN(nps)){
+          $('doneLede').textContent = 'Obrigado pela franqueza. Sei que não é fácil dizer o que não funcionou — e é exatamente isso que me permite corrigir.';
+        }
+
+        window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      })
+      .catch(function(){
+        submitBtn.disabled = false;
+        submitBtn.querySelector('span').textContent = original;
+        showError('Não foi possível enviar agora.',
+          'As suas respostas continuam guardadas neste dispositivo. Tente novamente em instantes — ou descarregue uma cópia para não perder nada.', true);
+        downloadPayload(data);
+      });
+  });
+
+  $('downloadFallback').addEventListener('click', function(e){
+    e.preventDefault();
+    downloadPayload(collect());
+    toast('Cópia descarregada');
+  });
+
+  /* ------------------------------------------------------------
+     Detalhes de scroll
+     ------------------------------------------------------------ */
+  var lastY = 0;
+  window.addEventListener('scroll', function(){
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    if((y > 40 && lastY <= 40) || (y <= 40 && lastY > 40)){
+      topbar.classList.toggle('is-stuck', y > 40);
+    }
+    lastY = y;
+  }, { passive: true });
+  topbar.classList.toggle('is-stuck', window.pageYOffset > 40);
+
+  /* ------------------------------------------------------------
+     Atalhos de teclado entre capítulos
+     ------------------------------------------------------------ */
+  document.addEventListener('keydown', function(e){
+    if(!survey.classList.contains('is-on')) return;
+    if(e.target.matches('input, textarea, select')) return;
+    if(e.key === 'PageDown' && e.altKey){ e.preventDefault(); if(validateStep(current)) goTo(current + 1); }
+    if(e.key === 'PageUp' && e.altKey){ e.preventDefault(); goTo(current - 1); }
+  });
+
+  buildSummary();
+  goTo(current, { silent: true });
+  progress.style.width = '0%';
+
+})();
+</script>
+</body>
+</html>

@@ -1,6 +1,11 @@
 node_modules/
 .vercel/
-.DS_Store
-
 .vercel
+.DS_Store
 .env*
+
+# respostas reais de clientes e o painel autónomo legado ficam só no computador
+respostas.json
+respostas-fake.json
+dashboard.html
+1.0 — backup/

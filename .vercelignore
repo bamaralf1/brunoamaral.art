@@ -1,0 +1,8 @@
+# Dados de clientes e painel legado ficam fora do deploy público.
+respostas.json
+respostas-fake.json
+dashboard.html
+.vercel
+.env*
+node_modules
+1.0 — backup
