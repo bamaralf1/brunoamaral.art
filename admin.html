@@ -1232,6 +1232,7 @@
       return;
     }
     if ((el = t.closest('[data-resp-del]'))) { removerResposta(el.dataset.respDel); return; }
+    if ((el = t.closest('[data-resp-depo]'))) { usarComoDepoimento(el.dataset.respDepo); return; }
 
     var act = t.closest('[data-action]');
     if (act) {
@@ -1782,6 +1783,9 @@
     if (!ts) return '';
     return new Date(ts).toLocaleString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
   }
+  function idResposta(r) {
+    return String(r.id || (r._arquivo ? r._arquivo.replace(/^pesquisas\//, '').replace(/\.json$/, '') : ''));
+  }
   function nomeCliente(r) {
     var c = String(r.contato || '').trim();
     if (!c) return 'Colecionador';
@@ -1881,7 +1885,7 @@
   }
 
   function respostaCard(r, i) {
-    var id = String(r.id || (r._arquivo ? r._arquivo.replace(/^pesquisas\//, '').replace(/\.json$/, '') : ''));
+    var id = idResposta(r);
     var nps = numero(r.nps);
     var cls = notaClasse(nps);
     var aberto = S.pesq.open[id] ? ' open' : '';
@@ -1925,6 +1929,10 @@
       return false;
     });
 
+    /* testemunho escrito + autorização = pode ir direto para a secção de depoimentos */
+    var viraDepoimento = /^sim/i.test(String(r.permissao_testemunho || '')) &&
+      String(r.testemunho || r.detalhe_marcante || '').trim();
+
     var todos = extras.map(function (k) {
       var v = r[k];
       if (Array.isArray(v)) v = v.join(', ');
@@ -1949,6 +1957,7 @@
         '<div class="resp-foot">' +
           '<span class="pesq-note">Recebida em ' + esc(dataCurta(data) || 'data desconhecida') + '</span>' +
           '<span class="spacer"></span>' +
+          (viraDepoimento ? '<button class="btn sm gold" data-resp-depo="' + esc(id) + '">Usar como depoimento</button>' : '') +
           '<button class="btn sm danger" data-resp-del="' + esc(id) + '">Remover resposta</button>' +
         '</div>' +
       '</div>' +
@@ -2215,6 +2224,22 @@
     });
   }
 
+  function usarComoDepoimento(id) {
+    var r = (S.pesq.itens || []).filter(function (x) { return idResposta(x) === String(id); })[0];
+    if (!r) { toast('Resposta não encontrada. Atualize a lista.', 'err'); return; }
+    if (!/^sim/i.test(String(r.permissao_testemunho || ''))) {
+      toast('O colecionador não autorizou o uso do testemunho.', 'err');
+      return;
+    }
+    var texto = String(r.testemunho || r.detalhe_marcante || '').trim();
+    if (!texto) { toast('Esta resposta não tem um testemunho escrito.', 'err'); return; }
+    S.data.depoimentos = Array.isArray(S.data.depoimentos) ? S.data.depoimentos : [];
+    S.data.depoimentos.push({ texto: texto, nome: nomeCliente(r), papel: '' });
+    changed(); persistDraft();
+    toast('Depoimento adicionado. Confira o nome e a cidade antes de publicar.', 'ok');
+    go('depoimentos');
+  }
+
   function removerResposta(id) {
     if (!id) { toast('Esta resposta não pode ser removida.', 'err'); return; }
     if (!confirm('Remover esta resposta? Esta ação não pode ser desfeita.')) return;
@@ -2320,14 +2345,12 @@
         S.undo = []; S.redo = [];
         localStorage.removeItem(DRAFT_KEY);
         localStorage.removeItem(LEGACY_DRAFT_KEY);
-        root.innerHTML = '';
         updateChrome();
-        toast('Publicado! O site já está atualizado.', 'ok');
+        render();
         var perdidos = [];
         if (limpos.depoimentos) perdidos.push(limpos.depoimentos + (limpos.depoimentos > 1 ? ' depoimentos em branco' : ' depoimento em branco'));
         if (limpos.exposicoes) perdidos.push(limpos.exposicoes + (limpos.exposicoes > 1 ? ' exposições em branco' : ' exposição em branco'));
-        if (perdidos.length) toast('Ficaram de fora ' + perdidos.join(' e ') + ', que não apareceriam no site.');
-        render();
+        sucesso(perdidos);
       } catch (err) {
         goBtn.disabled = false;
         $('#pubProg').classList.remove('show');
@@ -2339,6 +2362,29 @@
           toast('Não foi possível publicar: ' + err.message, 'err');
         }
       }
+    }
+
+    /* o site usa o data.js como reserva: depois de publicar, é bom que fiquem iguais */
+    function sucesso(perdidos) {
+      root.innerHTML =
+        '<div class="overlay center" data-overlay>' +
+          '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="pubOkTitle">' +
+            '<h3 id="pubOkTitle">Publicado</h3>' +
+            '<p>O site já está atualizado com o que está aqui.</p>' +
+            (perdidos.length ? '<p class="hint">Ficaram de fora ' + esc(perdidos.join(' e ')) + ', que não apareceriam no site.</p>' : '') +
+            '<p class="hint">O <code>data.js</code> é a reserva que o site usa se a publicação falhar. Descarregue-o agora para que os dois fiquem iguais.</p>' +
+            '<div class="row">' +
+              '<button class="btn ghost" data-cancel>Fechar</button>' +
+              '<button class="btn primary" data-baixar>⬇ Baixar data.js</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      var fechar = function () { root.innerHTML = ''; };
+      $('[data-cancel]').addEventListener('click', fechar);
+      $('[data-baixar]').addEventListener('click', function () { exportData(); fechar(); });
+      $('[data-overlay]').addEventListener('mousedown', function (e) { if (e.target === e.currentTarget) fechar(); });
+      var b = $('[data-baixar]');
+      if (b) b.focus();
     }
   }
 

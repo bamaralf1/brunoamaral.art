@@ -4,14 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Atelier Bruno Amaral — pintura a óleo no espírito dos grandes mestres do Renascimento. Retratos, paisagens, obras religiosas e encomendas sob medida.">
+<link rel="canonical" href="https://brunoamaralart1.vercel.app/">
+<meta name="theme-color" content="#100D09">
 <meta property="og:title" content="Atelier Bruno Amaral · Pintor Clássico Renascentista">
-<meta property="og:description" content="Pintura a óleo no espírito dos grandes mestres do Renascimento.">
+<meta property="og:description" content="Pintura a óleo no espírito dos grandes mestres do Renascimento. Retratos, paisagens, obras religiosas e encomendas sob medida.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://brunoamaralart1.vercel.app/">
+<meta property="og:site_name" content="Atelier Bruno Amaral">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:image" content="https://brunoamaralart1.vercel.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bruno Amaral no atelier, entre as obras, com o título “Arte que transcende o tempo”.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Atelier Bruno Amaral · Pintor Clássico Renascentista">
+<meta name="twitter:description" content="Pintura a óleo no espírito dos grandes mestres do Renascimento. Retratos, paisagens e encomendas sob medida.">
+<meta name="twitter:image" content="https://brunoamaralart1.vercel.app/assets/og-image.jpg">
 <title id="pageTitle">Atelier Bruno Amaral · Pintor Clássico Renascentista</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23100D09'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='26' letter-spacing='1' fill='%23B08D45' text-anchor='middle'%3EBA%3C/text%3E%3C/svg%3E">
+<link rel="preload" as="image" href="assets/opt/bruno-amaral-perfil-900.webp" imagesrcset="assets/opt/bruno-amaral-perfil-480.webp 480w, assets/opt/bruno-amaral-perfil-900.webp 900w, assets/opt/bruno-amaral-perfil-1400.webp 1400w" imagesizes="(max-width: 820px) 100vw, 64vw" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+  {"@type":"Person","@id":"https://brunoamaralart1.vercel.app/#artista","name":"Bruno Amaral","jobTitle":"Pintor clássico renascentista","description":"Pintor a óleo de retratos, paisagens e temas religiosos no espírito dos grandes mestres do Renascimento.","url":"https://brunoamaralart1.vercel.app/","image":"https://brunoamaralart1.vercel.app/assets/og-image.jpg","worksFor":{"@id":"https://brunoamaralart1.vercel.app/#atelier"},"sameAs":["https://instagram.com/brunoamaral.art"]},
+  {"@type":"ArtGallery","@id":"https://brunoamaralart1.vercel.app/#atelier","name":"Atelier Bruno Amaral","url":"https://brunoamaralart1.vercel.app/","image":"https://brunoamaralart1.vercel.app/assets/og-image.jpg","description":"Atelier de pintura a óleo: retratos, paisagens, obras religiosas e encomendas sob medida.","founder":{"@id":"https://brunoamaralart1.vercel.app/#artista"},"email":"brunofonsecadoamaral@gmail.com","telephone":"+5521972936468","address":{"@type":"PostalAddress","addressLocality":"Rio Bonito","addressRegion":"Rio de Janeiro","addressCountry":"BR"},"sameAs":["https://instagram.com/brunoamaral.art"]},
+  {"@type":"WebSite","@id":"https://brunoamaralart1.vercel.app/#site","url":"https://brunoamaralart1.vercel.app/","name":"Atelier Bruno Amaral","inLanguage":"pt-BR","publisher":{"@id":"https://brunoamaralart1.vercel.app/#atelier"}}
+]}
+</script>
+<script src="data.js" defer></script>
+<script src="site.js" defer></script>
+<script src="ui.js" defer></script>
 <style>
   /* ==========================================================================
      ATELIER BRUNO AMARAL
@@ -28,6 +52,7 @@
     --gold-soft: #D6BC85;
     --gold-deep: #8A6B22;
     --muted: #7C7361;
+    --muted-strong: #5F5747;
     --muted-light: rgba(248,244,234,.62);
     --line: rgba(176,141,69,.28);
     --line-dark: rgba(248,244,234,.14);
@@ -85,6 +110,21 @@
   .section-head.center .section-rule { margin-left: auto; margin-right: auto; }
 
   section { position: relative; }
+
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 500;
+    background: var(--gold); color: var(--ink); padding: .8rem 1.4rem;
+    font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+  }
+  .skip-link:focus { left: 1rem; top: 1rem; }
+
+  /* faixa de encomenda quando não há obras prontas */
+  .cta-band { background: var(--ink); color: var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: clamp(3rem, 6vw, 4.6rem) 0; }
+  .cta-band .container { display: flex; align-items: center; justify-content: space-between; gap: clamp(1.5rem, 4vw, 3rem); flex-wrap: wrap; }
+  .cta-band .section-eyebrow { color: var(--gold-soft); }
+  .cta-title { font-size: clamp(1.9rem, 3.4vw, 2.7rem); line-height: 1.1; color: var(--cream); margin-top: .9rem; }
+  .cta-title em { font-style: italic; color: var(--gold-soft); }
+  .cta-text { margin-top: .9rem; max-width: 52ch; color: rgba(248,244,234,.66); font-size: 1rem; }
 
   /* ---------- botões ---------- */
   .btn-primary, .btn-ghost, .btn-submit, .btn-inquire {
@@ -173,9 +213,10 @@
   }
   .hero-media {
     position: absolute; top: 0; right: 0; bottom: 0; left: auto;
-    width: min(64%, 980px); z-index: -3;
-    background: #241E16 center 14% / cover no-repeat;
+    width: min(64%, 980px); z-index: -3; overflow: hidden;
+    background: #241E16;
   }
+  .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 14%; }
   .hero-media::before {
     content: ''; position: absolute; inset: 0;
     background:
@@ -223,7 +264,8 @@
      ========================================================================== */
   #sobre { padding: clamp(6rem, 12vw, 10rem) 0; background: var(--paper); }
   .sobre-grid { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: clamp(2.5rem, 6vw, 6rem); align-items: center; }
-  .sobre-img-inner { aspect-ratio: 4 / 5; background: #E2D6BC center top / cover no-repeat; box-shadow: 0 60px 110px -70px rgba(16,13,9,.75); }
+  .sobre-img-inner { position: relative; aspect-ratio: 4 / 5; background: #E2D6BC; overflow: hidden; box-shadow: 0 60px 110px -70px rgba(16,13,9,.75); }
+  .sobre-img-inner img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
   .sobre-caption {
     margin-top: 1.1rem; font-family: 'Cinzel', serif; font-size: .5rem; letter-spacing: .28em;
     text-transform: uppercase; color: var(--muted);
@@ -268,11 +310,12 @@
     display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: clamp(.4rem, .7vw, .7rem); grid-auto-flow: dense; margin-top: clamp(1.6rem, 3vw, 2.6rem);
   }
-  .gallery-item { position: relative; overflow: hidden; cursor: pointer; background: #17130C; aspect-ratio: 4 / 5; }
+  .gallery-item { position: relative; display: block; overflow: hidden; cursor: pointer; background: #17130C; aspect-ratio: 4 / 5; text-decoration: none; color: inherit; }
   .gallery-item.large { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
   .gallery-thumb { position: absolute; inset: 0; overflow: hidden; }
-  .gallery-thumb-bg { transition: transform 1.2s var(--ease); }
+  .gallery-thumb-bg { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
   .gallery-item:hover .gallery-thumb-bg { transform: scale(1.05); }
+  .gallery-item:focus-visible { outline: 2px solid var(--gold); outline-offset: -4px; }
   .gallery-item::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(180deg, transparent 40%, rgba(6,5,3,.85));
@@ -301,10 +344,13 @@
   .venda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(1.8rem, 3vw, 2.8rem); margin-top: clamp(2.4rem, 5vw, 3.6rem); }
   .quadro-card {
     background: transparent; border: 0; cursor: pointer; display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
     transition: transform .45s var(--ease);
   }
+  .quadro-card:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
   .quadro-card:hover { transform: translateY(-4px); }
-  .quadro-img { position: relative; aspect-ratio: 4 / 5; background-color: #E2D6BC; background-size: cover; background-position: center; overflow: hidden; }
+  .quadro-img { position: relative; aspect-ratio: 4 / 5; background-color: #E2D6BC; overflow: hidden; }
+  .quadro-img > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .quadro-badge {
     position: absolute; top: 0; left: 0; z-index: 2;
     font-family: 'Cinzel', serif; font-size: .48rem; letter-spacing: .2em; text-transform: uppercase;
@@ -356,7 +402,7 @@
   }
   .expo-item:hover { background: rgba(176,141,69,.05); padding-left: .8rem; }
   .expo-year { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; color: var(--gold-soft); }
-  .expo-info h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: var(--cream); line-height: 1.25; }
+  .expo-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; color: var(--cream); line-height: 1.25; font-weight: 400; }
   .expo-info p { font-size: .88rem; color: var(--muted-light); }
   .expo-tag {
     font-family: 'Cinzel', serif; font-size: .48rem; letter-spacing: .2em; text-transform: uppercase;
@@ -379,7 +425,7 @@
     background: var(--ink); color: var(--cream); font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .06em;
   }
   .depo-name { display: block; font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink); }
-  .depo-role { display: block; font-size: .84rem; color: var(--muted); }
+  .depo-role { display: block; font-size: .84rem; color: var(--muted-strong); }
 
   /* ==========================================================================
      ENCOMENDAS
@@ -425,7 +471,7 @@
     font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .04em; transition: .25s var(--ease);
   }
   .social-link:hover { background: var(--gold); border-color: var(--gold); color: var(--ink); }
-  .footer-col h5 { font-family: 'Cinzel', serif; font-size: .52rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 1.2rem; }
+  .footer-col h3 { font-family: 'Cinzel', serif; font-size: .52rem; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 1.2rem; }
   .footer-links { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
   .footer-links a { text-decoration: none; font-size: .95rem; color: rgba(248,244,234,.6); transition: color .2s, padding-left .2s; }
   .footer-links a:hover { color: var(--cream); padding-left: .25rem; }
@@ -436,7 +482,7 @@
     border-top: 1px solid rgba(248,244,234,.1); padding: 1.4rem clamp(1.25rem, 4vw, 3rem);
     display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; max-width: var(--container); margin: 0 auto;
   }
-  .footer-copy { font-size: .76rem; color: rgba(248,244,234,.34); }
+  .footer-copy { font-size: .76rem; color: rgba(248,244,234,.62); }
   .admin-link { color: rgba(248,244,234,.38); text-decoration: none; }
   .admin-link:hover { color: var(--gold-soft); }
 
@@ -446,9 +492,10 @@
   .modal-overlay {
     position: fixed; inset: 0; z-index: 300; background: rgba(6,5,3,.94); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center; padding: clamp(1rem, 3vw, 2.5rem);
-    opacity: 0; pointer-events: none; transition: opacity .3s var(--ease);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .3s var(--ease), visibility 0s .3s;
   }
-  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .3s var(--ease), visibility 0s; }
   .modal-content {
     display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr);
     width: min(1120px, 100%); max-height: 90vh; background: var(--paper); overflow: hidden;
@@ -456,7 +503,7 @@
   }
   .modal-overlay.open .modal-content { transform: none; }
   .modal-img { position: relative; background: #0A0806; min-height: 360px; }
-  .modal-img > div { position: absolute; inset: 0; }
+  .modal-img > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   .modal-info { padding: clamp(1.8rem, 3.4vw, 3rem); overflow-y: auto; display: flex; flex-direction: column; justify-content: safe center; }
   .modal-tag { font-family: 'Cinzel', serif; font-size: .52rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gold-deep); }
   .modal-title { font-size: clamp(2rem, 3.4vw, 2.8rem); line-height: 1.08; margin: .6rem 0 1.6rem; color: var(--ink); }
@@ -468,6 +515,10 @@
     font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.15rem;
     color: var(--gold-deep); margin-bottom: 1.8rem;
   }
+  .modal-link { display: inline-block; margin-top: 1.1rem; font-family: 'Cinzel', serif; font-size: .52rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-deep); text-decoration: none; }
+  .modal-link:hover { color: var(--ink); text-decoration: underline; }
+  .form-fallback { margin-top: 1rem; font-size: .92rem; color: var(--ink-3); }
+  .form-fallback a { color: var(--gold-deep); }
   .modal-close {
     position: absolute; top: 1.1rem; right: 1.1rem; z-index: 4; width: 2.7rem; height: 2.7rem;
     background: rgba(10,8,6,.7); border: 1px solid rgba(248,244,234,.24); color: var(--cream);
@@ -537,7 +588,8 @@
   }
   @media (max-width: 820px) {
     .hero-title { font-size: clamp(2.9rem, 11vw, 5rem); }
-    .hero-media { left: 0; width: auto; background-position: center 10%; opacity: .62; filter: saturate(.85) contrast(1.05); }
+    .hero-media { left: 0; width: auto; opacity: .62; filter: saturate(.85) contrast(1.05); }
+    .hero-media img { object-position: center 10%; }
     .hero-media::before {
       background:
         linear-gradient(180deg, rgba(9,7,5,.52) 0%, rgba(9,7,5,.26) 20%, rgba(9,7,5,.58) 38%, rgba(9,7,5,.92) 56%, rgba(9,7,5,.99) 80%, rgba(9,7,5,1) 100%),
@@ -585,6 +637,8 @@
 </head>
 <body>
 
+<a class="skip-link" href="#inicio">Ir para o conteúdo</a>
+
 <nav id="navbar">
   <div class="nav-inner">
     <a href="#inicio" class="nav-logo">
@@ -618,7 +672,12 @@
 </div>
 
 <section id="inicio">
-  <div class="hero-media" id="heroFoto"></div>
+  <div class="hero-media" id="heroFoto">
+    <img id="heroImg" src="assets/opt/bruno-amaral-perfil-900.webp"
+         srcset="assets/opt/bruno-amaral-perfil-480.webp 480w, assets/opt/bruno-amaral-perfil-900.webp 900w, assets/opt/bruno-amaral-perfil-1400.webp 1400w"
+         sizes="(max-width: 820px) 100vw, 64vw" width="1063" height="1280" fetchpriority="high" decoding="async"
+         alt="Bruno Amaral no atelier, entre as obras que pintou">
+  </div>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-inner">
     <div class="hero-content">
@@ -642,7 +701,12 @@
   <div class="container">
     <div class="sobre-grid">
       <div class="sobre-img-wrap reveal">
-        <div class="sobre-img-inner" id="sobreFoto"></div>
+        <div class="sobre-img-inner" id="sobreFoto">
+          <img id="sobreImg" src="assets/opt/bruno-amaral-perfil-900.webp"
+               srcset="assets/opt/bruno-amaral-perfil-480.webp 480w, assets/opt/bruno-amaral-perfil-900.webp 900w"
+               sizes="(max-width: 1080px) 440px, 520px" width="1063" height="1280" loading="lazy" decoding="async"
+               alt="Retrato de Bruno Amaral no seu atelier">
+        </div>
         <p class="sobre-caption">Bruno Amaral, no atelier</p>
       </div>
       <div class="sobre-text">
@@ -677,6 +741,17 @@
     <div style="text-align:center; margin-top:3.4rem;">
       <a href="#encomendas" class="btn-ghost">Encomendar uma obra sob medida</a>
     </div>
+  </div>
+</section>
+
+<section class="cta-band" id="faixa-encomenda" hidden>
+  <div class="container">
+    <div>
+      <p class="section-eyebrow">Coleção Disponível</p>
+      <h2 class="cta-title">Nenhuma obra pronta <em>neste momento</em></h2>
+      <p class="cta-text">As peças acabadas encontram colecionador depressa. Enquanto isso, é possível encomendar um retrato ou uma obra sob medida e acompanhar cada etapa da criação.</p>
+    </div>
+    <a href="#encomendas" class="btn-primary">Encomendar uma Obra</a>
   </div>
 </section>
 
@@ -795,8 +870,8 @@
             </div>
           </div>
           <div class="contact-row">
-            <p class="contact-privacy">✦ Suas informações são mantidas com absoluta discrição</p>
-            <button type="submit" class="btn-submit">Enviar pelo WhatsApp →</button>
+            <p class="contact-privacy">✦ Suas informações são mantidas com absoluta discrição. A mensagem segue por e-mail e abre também no WhatsApp.</p>
+            <button type="submit" class="btn-submit">Enviar Encomenda →</button>
           </div>
         </form>
       </div>
@@ -813,7 +888,7 @@
       <div class="footer-social" id="footerSocial"></div>
     </div>
     <div class="footer-col">
-      <h5>Navegação</h5>
+      <h3>Navegação</h3>
       <ul class="footer-links">
         <li><a href="#sobre">Sobre o Artista</a></li>
         <li><a href="#galeria">Galeria de Obras</a></li>
@@ -825,11 +900,11 @@
       </ul>
     </div>
     <div class="footer-col">
-      <h5>Categorias</h5>
+      <h3>Categorias</h3>
       <ul class="footer-links" id="footerCategorias"></ul>
     </div>
     <div class="footer-col">
-      <h5>Contacto</h5>
+      <h3>Contacto</h3>
       <div class="footer-contact">
         <p><span>✉</span> <span id="contatoEmail2"></span></p>
         <p><span>☎</span> <span id="contatoTelefone2"></span></p>
@@ -849,7 +924,7 @@
 </a>
 <a class="to-top" id="toTop" href="#inicio" aria-label="Voltar ao topo">↑</a>
 
-<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
   <button class="modal-close" onclick="closeModal()" aria-label="Fechar">✕</button>
   <button class="modal-nav prev" id="modalPrev" onclick="modalStep(-1)" aria-label="Obra anterior">‹</button>
   <button class="modal-nav next" id="modalNext" onclick="modalStep(1)" aria-label="Próxima obra">›</button>
@@ -860,46 +935,7 @@
   <div class="modal-counter" id="modalCounter"></div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="data.js"></script>
-<script src="site.js"></script>
-<script>
-/* Interface: navegação, progresso, revelações */
-(function () {
-  var nav = document.getElementById('navbar');
-  var bar = document.getElementById('navProgress');
-  var top = document.getElementById('toTop');
-
-  function onScroll() {
-    var y = window.scrollY || 0;
-    nav.classList.toggle('scrolled', y > 60);
-    var h = document.documentElement.scrollHeight - window.innerHeight;
-    if (bar) bar.style.width = (h > 0 ? Math.min(100, y / h * 100) : 0) + '%';
-    if (top) top.classList.toggle('show', y > 900);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  var els = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.06 });
-    els.forEach(function (el) { io.observe(el); });
-  } else {
-    els.forEach(function (el) { el.classList.add('in'); });
-  }
-
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-      var m = document.getElementById('mobileMenu');
-      if (m && m.classList.contains('open')) { m.classList.remove('open'); document.body.style.overflow = ''; }
-    }
-  });
-})();
-</script>
 </body>
 </html>

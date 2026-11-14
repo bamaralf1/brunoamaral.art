@@ -177,3 +177,37 @@ O painel acrescenta `_pagina` e normaliza tudo internamente. Se adicionar uma pe
 - Vídeo de 40 segundos por obra em luz natural — ataca diretamente a barreira “não ver ao vivo”.
 - Envio do certificado em PDF no próprio dia da entrega.
 - Making-of em três marcos por encomenda: esboço, primeira camada, verniz.
+
+---
+
+## 10. Site público — desempenho, partilha e páginas de obra
+
+O `index.html` continuou a ser a página única, mas passou a ser servido com:
+
+```
+assets/opt/<obra>-{480,900,1400}.webp   ← derivados WebP de cada obra
+assets/og-image.jpg                     ← imagem de partilha 1200×630
+ui.js                                   ← navegação, progresso e revelações (fora do HTML)
+robots.txt                              ← indexação: painel e API fora
+api/obra.js → /obra/:id                 ← página de cada obra, gerada no servidor
+api/sitemap.js → /sitemap.xml           ← mapa do site, lido do conteúdo publicado
+api/_dados.js                           ← leitura do blob partilhada pelas funções
+```
+
+- **Imagens**: a galeria, a vitrine e a janela da obra usam `<img loading="lazy">` com
+  `srcset`/`sizes` e `alt`; o hero traz a foto no HTML com `fetchpriority="high"` e
+  `<link rel="preload">`, por isso não espera pela resposta de `/api/data`.
+- **Derivados**: gerados com `sharp` a partir dos JPG em `assets/`. Ao trocar uma foto,
+  correr o gerador de novo (ou usar a imagem enviada pelo painel, que entra sem `srcset`).
+- **Página da obra**: `/obra/<id>` existe para o Google e para o WhatsApp/Facebook, que
+  não executam JavaScript. Tem `og:image` real, `canonical` e dados estruturados
+  `VisualArtwork`. O modal do site aponta para ela.
+- **Partilha**: `og:image` (1200×630), `og:url`, `twitter:card` e `canonical` na página
+  inicial; `sitemap.xml` e `robots.txt` para os motores de busca.
+- **Formulário de encomenda**: envia por e-mail (Web3Forms) **e** abre o WhatsApp, os dois
+  em paralelo. Se o navegador bloquear a janela, aparece um link com a mensagem pronta.
+- **Publicação**: no fim de cada publicação o painel oferece o `data.js` atualizado, para a
+  reserva local não ficar diferente do que está no ar.
+- **Depoimentos**: respostas com testemunho e autorização têm o botão *Usar como
+  depoimento*, que leva o texto para a vista Depoimentos já preenchido.
+

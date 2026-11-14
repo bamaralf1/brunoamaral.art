@@ -3,6 +3,8 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/admin/", "destination": "/admin.html" },
     { "source": "/pesquisa", "destination": "/pesquisa.html" },
-    { "source": "/pesquisa/", "destination": "/pesquisa.html" }
+    { "source": "/pesquisa/", "destination": "/pesquisa.html" },
+    { "source": "/obra/:id", "destination": "/api/obra?id=:id" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ]
 }

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Painel e API não devem aparecer nas buscas
+Disallow: /admin
+Disallow: /api/
+Disallow: /pesquisa
+
+Sitemap: https://brunoamaralart1.vercel.app/sitemap.xml

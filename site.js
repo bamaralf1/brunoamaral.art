@@ -44,11 +44,55 @@
   };
 
   function slugCat(cat) {
-    return CAT_SLUG[cat] || cat.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+    const chave = String(cat || '').trim();
+    return CAT_SLUG[chave] || chave.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
   }
 
   function esc(str) {
-    return (str || '').toString();
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // As fotos do atelier têm derivados WebP em assets/opt; o que vier do painel
+  // (blob .jpg/.png) usa o original, sem srcset.
+  const DERIVADA = /^assets\/([\w-]+)\.jpe?g$/i;
+  const LARGURAS = [480, 900, 1400];
+
+  function srcsetDe(url) {
+    const m = DERIVADA.exec(url || '');
+    if (!m) return '';
+    return LARGURAS.map(w => `assets/opt/${m[1]}-${w}.webp ${w}w`).join(', ');
+  }
+
+  function srcDe(url) {
+    const m = DERIVADA.exec(url || '');
+    return m ? `assets/opt/${m[1]}-900.webp` : (url || '');
+  }
+
+  function foto(url, o) {
+    o = o || {};
+    const set = srcsetDe(url);
+    return `<img src="${esc(srcDe(url))}"` +
+      (set ? ` srcset="${esc(set)}" sizes="${esc(o.sizes || '100vw')}"` : '') +
+      ` loading="${o.eager ? 'eager' : 'lazy'}" decoding="async"` +
+      (o.eager ? ' fetchpriority="high"' : '') +
+      (o.cls ? ` class="${esc(o.cls)}"` : '') +
+      ` alt="${esc(o.alt || '')}">`;
+  }
+
+  // Troca a foto só quando o conteúdo publicado difere da que está no HTML
+  const FOTO_PADRAO = 'assets/bruno-amaral-perfil.jpg';
+
+  function ajustarFoto(img, url, sizes) {
+    if (!img || !url || url === FOTO_PADRAO) return;
+    img.removeAttribute('srcset');
+    img.removeAttribute('sizes');
+    img.src = url;
+    if (sizes) img.sizes = sizes;
   }
 
   // ---------- TOPO / HERO ----------
@@ -59,8 +103,7 @@
   document.getElementById('heroTitulo').innerHTML = esc(D.site.heroTituloLinha1) + '<br><strong>' + esc(D.site.heroTituloForte) + '</strong><br>' + esc(D.site.heroTituloLinha2);
   document.getElementById('heroSubtitulo').textContent = D.site.heroSubtitulo;
   document.getElementById('heroDescricao').textContent = D.site.heroDescricao;
-  const heroFoto = document.getElementById('heroFoto');
-  heroFoto.style.backgroundImage = `url('${D.site.fotoPerfil}')`;
+  ajustarFoto(document.getElementById('heroImg'), D.site.fotoPerfil);
 
   // ---------- SOBRE ----------
   document.getElementById('sobreChamada').textContent = D.sobre.chamada;
@@ -74,10 +117,13 @@
   document.getElementById('statAnos').textContent = D.sobre.statAnos;
   document.getElementById('statObras').textContent = D.sobre.statObras;
   document.getElementById('statPaises').textContent = D.sobre.statPaises;
-  const sobreFoto = document.getElementById('sobreFoto');
-  sobreFoto.style.backgroundImage = `url('${D.site.fotoPerfil}')`;
-  sobreFoto.style.backgroundSize = 'cover';
-  sobreFoto.style.backgroundPosition = 'center top';
+  const sobreImg = document.getElementById('sobreImg');
+  if (sobreImg) {
+    if (D.site.fotoPerfil && D.site.fotoPerfil !== FOTO_PADRAO) {
+      sobreImg.removeAttribute('srcset');
+      sobreImg.src = D.site.fotoPerfil;
+    }
+  }
 
   // ---------- GALERIA ----------
   const categoriasUsadas = [...new Set(D.obras.map(o => o.categoria))];
@@ -97,21 +143,34 @@
   galleryEmpty.style.cssText = "display:none;text-align:center;padding:4rem 1rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:rgba(245,237,216,0.6);";
   galleryEmpty.textContent = 'Em breve, novas peças nesta categoria.';
   galleryGrid.parentNode.insertBefore(galleryEmpty, galleryGrid.nextSibling);
-  D.obras.forEach((o, i) => {
-    const div = document.createElement('div');
-    div.className = 'gallery-item' + (o.destaque ? ' large' : '');
-    div.dataset.cat = slugCat(o.categoria);
-    div.onclick = () => openModal(o.id);
-    div.innerHTML = `
+  D.obras.forEach(o => {
+    const card = document.createElement('a');
+    const grande = !!o.destaque;
+    card.className = 'gallery-item' + (grande ? ' large' : '');
+    card.href = '/obra/' + encodeURIComponent(o.id);
+    card.dataset.cat = slugCat(o.categoria);
+    // O nome acessível vem do texto visível (título, ficha, estado), igual ao que se lê na tela
+    card.addEventListener('click', ev => {
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey || ev.button !== 0) return;
+      ev.preventDefault();
+      openModal(o.id);
+    });
+    card.innerHTML = `
       <div class="gallery-thumb">
-        <div class="gallery-thumb-bg" style="background-image:url('${o.img}');background-size:cover;background-position:center;position:absolute;inset:0;"></div>
+        ${foto(o.img, {
+          sizes: grande
+            ? '(max-width: 560px) 92vw, (max-width: 820px) 92vw, (max-width: 1080px) 64vw, 760px'
+            : '(max-width: 560px) 92vw, (max-width: 820px) 46vw, (max-width: 1080px) 31vw, 24vw',
+          cls: 'gallery-thumb-bg',
+          alt: (o.titulo || 'Obra sem título') + (o.tecnica ? ' — ' + o.tecnica : '')
+        })}
       </div>
       <div class="gallery-overlay">
         <p class="gallery-title">${esc(o.titulo)}</p>
         <p class="gallery-meta">${meta(o)}</p>
         <p class="gallery-price">${precoTexto(o)}</p>
       </div>`;
-    galleryGrid.appendChild(div);
+    galleryGrid.appendChild(card);
   });
 
   function meta(o) {
@@ -139,16 +198,28 @@
   const disponiveis = D.obras.filter(o => o.status === 'disponivel' || o.status === 'reservado');
   if (disponiveis.length === 0) {
     hideSection('venda');
+    // sem peças prontas, a faixa de encomenda ocupa o lugar da vitrine
+    const faixa = document.getElementById('faixa-encomenda');
+    if (faixa) faixa.hidden = false;
   } else {
     disponiveis.forEach(o => {
-      const card = document.createElement('div');
+      const card = document.createElement('a');
       card.className = 'quadro-card';
-      card.onclick = () => openModal(o.id);
+      card.href = '/obra/' + encodeURIComponent(o.id);
+      card.addEventListener('click', ev => {
+        if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey || ev.button !== 0) return;
+        ev.preventDefault();
+        openModal(o.id);
+      });
       const badge = o.status === 'reservado' ? '<span class="quadro-badge reserved">Reservado</span>'
                   : o.status === 'vendido' ? '<span class="quadro-badge reserved">Vendido</span>'
                   : '<span class="quadro-badge">Disponível</span>';
       card.innerHTML = `
-        <div class="quadro-img" style="background-image:url('${o.img}');background-size:cover;background-position:center;">
+        <div class="quadro-img">
+          ${foto(o.img, {
+            sizes: '(max-width: 560px) 92vw, (max-width: 820px) 46vw, 30vw',
+            alt: (o.titulo || 'Obra sem título') + (o.tecnica ? ' — ' + o.tecnica : '')
+          })}
           ${badge}
         </div>
         <div class="quadro-info">
@@ -175,7 +246,7 @@
     const tagClass = (e.tag === 'Em Cartaz') ? 'atual' : 'passada';
     div.innerHTML = `
       <span class="expo-year">${esc(e.ano)}</span>
-      <div class="expo-info"><h4>${esc(e.titulo)}</h4><p>${esc(e.local)}</p></div>
+      <div class="expo-info"><h3>${esc(e.titulo)}</h3><p>${esc(e.local)}</p></div>
       <span class="expo-tag ${tagClass}">${esc(e.tag)}</span>`;
     expoList.appendChild(div);
   });
@@ -236,7 +307,48 @@
     footerCat.appendChild(li);
   });
 
+  // ---------- DADOS ESTRUTURADOS DAS OBRAS ----------
+  (function dadosEstruturados() {
+    const base = 'https://brunoamaralart1.vercel.app';
+    const itens = D.obras.slice(0, 30).map((o, i) => {
+      const url = base + '/obra/' + encodeURIComponent(o.id);
+      const obra = {
+        '@type': 'VisualArtwork',
+        '@id': url,
+        url: url,
+        name: o.titulo || 'Obra sem título',
+        artform: 'Painting',
+        artMedium: o.tecnica || 'Óleo sobre tela',
+        creator: { '@id': base + '/#artista' },
+        image: base + '/' + srcDe(o.img)
+      };
+      if (o.ano) obra.dateCreated = String(o.ano);
+      if (o.dimensoes) obra.size = String(o.dimensoes);
+      if (o.status === 'disponivel' && o.preco) {
+        obra.offers = {
+          '@type': 'Offer',
+          price: Number(o.preco),
+          priceCurrency: 'BRL',
+          availability: 'https://schema.org/InStock'
+        };
+      }
+      return { '@type': 'ListItem', position: i + 1, item: obra };
+    });
+    if (!itens.length) return;
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Obras do Atelier Bruno Amaral',
+      itemListElement: itens
+    }).replace(/</g, '\\u003c');
+    document.head.appendChild(script);
+  })();
+
   // ---------- FILTRO ----------
+  const WEB3FORMS_KEY = '1310b20e-6d2d-44c9-9e33-e6baae1a8461';
+
   window.filterGallery = function (btn, cat) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -251,6 +363,7 @@
 
   // ---------- MODAL ----------
   let modalIdx = -1;
+  let focoAnterior = null;
 
   function atualizaContador() {
     const c = document.getElementById('modalCounter');
@@ -265,11 +378,17 @@
   window.openModal = function (id) {
     const o = D.obras.find(x => x.id === id);
     if (!o) return;
+    const modal = document.getElementById('modal');
+    if (!modal.classList.contains('open')) focoAnterior = document.activeElement;
     modalIdx = D.obras.indexOf(o);
-    document.getElementById('modalImg').innerHTML = `<div style="position:absolute;inset:0;background:url('${o.img}') center/cover no-repeat;"></div>`;
+    document.getElementById('modalImg').innerHTML = foto(o.img, {
+      sizes: '(max-width: 820px) 92vw, 62vw',
+      alt: (o.titulo || 'Obra sem título') + (o.tecnica ? ' — ' + o.tecnica : ''),
+      eager: true
+    });
     document.getElementById('modalInfo').innerHTML = `
       <p class="modal-tag">${esc(o.categoria)}</p>
-      <h2 class="modal-title">${esc(o.titulo)}</h2>
+      <h2 class="modal-title" id="modalTitle">${esc(o.titulo)}</h2>
       <div class="modal-specs">
         ${o.tecnica ? `<div class="modal-spec"><span>Técnica</span><span>${esc(o.tecnica)}</span></div>` : ''}
         ${o.dimensoes ? `<div class="modal-spec"><span>Dimensões</span><span>${esc(o.dimensoes)}</span></div>` : ''}
@@ -280,10 +399,12 @@
         ? `<p class="modal-price">${precoTexto(o)}</p>`
         : `<p class="modal-note">${o.status === 'exibicao' ? 'Obra em exposição — sob consulta' : 'Valor sob consulta'}</p>`}
       <a href="#encomendas" class="btn-primary" onclick="closeModal()" style="font-size:0.65rem;letter-spacing:0.15em;">Consultar Disponibilidade</a>
+      <a href="/obra/${encodeURIComponent(o.id)}" class="modal-link">Ver a página desta obra →</a>
     `;
-    document.getElementById('modal').classList.add('open');
+    modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     atualizaContador();
+    modal.focus({ preventScroll: true });
   };
 
   window.modalStep = function (delta) {
@@ -294,10 +415,14 @@
   };
 
   window.closeModal = function () {
-    document.getElementById('modal').classList.remove('open');
+    const modal = document.getElementById('modal');
+    if (!modal.classList.contains('open')) return;
+    modal.classList.remove('open');
     document.body.style.overflow = '';
     modalIdx = -1;
     atualizaContador();
+    if (focoAnterior && typeof focoAnterior.focus === 'function') focoAnterior.focus({ preventScroll: true });
+    focoAnterior = null;
   };
 
   window.closeModalOutside = function (e) {
@@ -305,11 +430,21 @@
   };
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
-    const aberto = document.getElementById('modal')?.classList.contains('open');
+    const modal = document.getElementById('modal');
+    const aberto = modal.classList.contains('open');
+    if (e.key === 'Escape' && aberto) closeModal();
     if (!aberto) return;
     if (e.key === 'ArrowLeft') modalStep(-1);
     if (e.key === 'ArrowRight') modalStep(1);
+    if (e.key !== 'Tab') return;
+    // o foco não sai da janela da obra enquanto ela está aberta
+    const focaveis = Array.from(modal.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])'))
+      .filter(el => el.offsetParent !== null);
+    if (!focaveis.length) return;
+    const primeiro = focaveis[0];
+    const ultimo = focaveis[focaveis.length - 1];
+    if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo.focus(); }
+    else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
   });
 
   window.showToast = function (msg) {
@@ -321,18 +456,61 @@
 
   window.submitEncomenda = function (e) {
     e.preventDefault();
-    const num = (D.contato.telefone || '').replace(/\D/g, '');
-    const linhas = [];
-    e.target.querySelectorAll('.form-group').forEach(g => {
+    const form = e.target;
+    const dados = [];
+    form.querySelectorAll('.form-group').forEach(g => {
       const label = g.querySelector('label');
       const campo = g.querySelector('input, select, textarea');
       const valor = campo && campo.value.trim();
-      if (label && valor) linhas.push('*' + label.textContent.trim() + ':* ' + valor);
+      if (label && valor) dados.push([label.textContent.trim().replace(/\s+/g, ' '), valor]);
     });
-    const texto = 'Olá, Bruno! Gostaria de encomendar uma obra.\n\n' + linhas.join('\n');
-    showToast('Abrindo o WhatsApp para enviar sua mensagem...');
-    window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
-    e.target.reset();
+    if (!dados.length) return;
+
+    const num = (D.contato.telefone || '').replace(/\D/g, '');
+    const textoWhats = 'Olá, Bruno! Gostaria de encomendar uma obra.\n\n' +
+      dados.map(([k, v]) => '*' + k + ':* ' + v).join('\n');
+    const whatsUrl = 'https://wa.me/' + num + '?text=' + encodeURIComponent(textoWhats);
+
+    // A janela do WhatsApp abre primeiro e de forma síncrona, senão o navegador bloqueia-a
+    const janela = window.open(whatsUrl, '_blank', 'noopener');
+
+    const mapa = Object.fromEntries(dados);
+    const mensagem = dados.map(([k, v]) => k + ': ' + v).join('\n');
+    showToast('A enviar a sua encomenda…');
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: 'Nova encomenda pelo site — ' + (mapa['Nome Completo'] || 'sem nome'),
+        from_name: 'Atelier Bruno Amaral · site',
+        replyto: mapa['Email'] || '',
+        email: mapa['Email'] || '',
+        message: mensagem
+      })
+    })
+      .then(r => r.json())
+      .then(j => {
+        if (!j || j.success === false) throw new Error((j && j.message) || 'envio recusado');
+        showToast('Encomenda enviada por e-mail. O WhatsApp também abriu.');
+        form.reset();
+      })
+      .catch(() => {
+        showToast('O e-mail não saiu. Envie pelo WhatsApp para não perder o contacto.');
+      });
+
+    if (!janela) {
+      // bloqueador de janelas: deixa o link à mão, com a mensagem já escrita
+      let aviso = form.querySelector('.form-fallback');
+      if (!aviso) {
+        aviso = document.createElement('p');
+        aviso.className = 'form-fallback';
+        form.appendChild(aviso);
+      }
+      aviso.innerHTML = 'O navegador bloqueou a janela do WhatsApp. ' +
+        '<a href="' + esc(whatsUrl) + '" target="_blank" rel="noopener">Abrir o WhatsApp com a mensagem pronta</a>.';
+    }
   };
 
   window.toggleMobileMenu = function () {
