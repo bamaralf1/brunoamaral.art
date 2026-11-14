@@ -62,23 +62,23 @@
   const DERIVADA = /^assets\/([\w-]+)\.jpe?g$/i;
   const LARGURAS = [480, 900, 1400];
 
-  function srcsetDe(url) {
+  function srcsetDe(url, larguras) {
     const m = DERIVADA.exec(url || '');
     if (!m) return '';
-    return LARGURAS.map(w => `assets/opt/${m[1]}-${w}.webp ${w}w`).join(', ');
+    return (larguras || LARGURAS).map(w => `assets/opt/${m[1]}-${w}.webp ${w}w`).join(', ');
   }
 
-  function srcDe(url) {
+  function srcDe(url, largura) {
     const m = DERIVADA.exec(url || '');
-    return m ? `assets/opt/${m[1]}-900.webp` : (url || '');
+    return m ? `assets/opt/${m[1]}-${largura || 900}.webp` : (url || '');
   }
 
   function foto(url, o) {
     o = o || {};
-    const set = srcsetDe(url);
-    return `<img src="${esc(srcDe(url))}"` +
+    const set = srcsetDe(url, o.ampla ? [1400] : null);
+    return `<img src="${esc(srcDe(url, o.ampla ? 1400 : 900))}"` +
       (set ? ` srcset="${esc(set)}" sizes="${esc(o.sizes || '100vw')}"` : '') +
-      ` loading="${o.eager ? 'eager' : 'lazy'}" decoding="async"` +
+      ` loading="${o.eager ? 'eager' : 'lazy'}" decoding="async" draggable="false"` +
       (o.eager ? ' fetchpriority="high"' : '') +
       (o.cls ? ` class="${esc(o.cls)}"` : '') +
       ` alt="${esc(o.alt || '')}">`;
@@ -375,17 +375,240 @@
     if (next) next.style.opacity = modalIdx >= D.obras.length - 1 ? '.3' : '';
   }
 
+  // ---------- ZOOM / DESLOCAMENTO DA OBRA ----------
+  const ZOOM_MIN = 1;
+  const ZOOM_MAX = 5;
+  const zoom = { s: 1, x: 0, y: 0 };
+  const ponteiros = new Map();
+  let arrasto = null;
+  let pinca = null;
+  let dicaTimer = null;
+
+  function lim(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+  function alvoZoom() {
+    const wrap = document.getElementById('modalFoto');
+    const img = wrap && wrap.querySelector('img');
+    return img ? { wrap, img } : null;
+  }
+
+  // Área real ocupada pela imagem dentro do quadro (object-fit: contain)
+  function caixaObra(wrap, img) {
+    const r = wrap.getBoundingClientRect();
+    const nw = img.naturalWidth || r.width;
+    const nh = img.naturalHeight || r.height;
+    if (!nw || !nh || !r.width || !r.height) return { w: r.width, h: r.height, iw: r.width, ih: r.height };
+    const k = Math.min(r.width / nw, r.height / nh);
+    return { w: r.width, h: r.height, iw: nw * k, ih: nh * k };
+  }
+
+  function aplicarZoom(animar) {
+    const alvo = alvoZoom();
+    if (!alvo) return;
+    const { wrap, img } = alvo;
+    const caixa = caixaObra(wrap, img);
+    zoom.s = lim(zoom.s, ZOOM_MIN, ZOOM_MAX);
+    if (zoom.s <= ZOOM_MIN + 0.001) {
+      zoom.s = ZOOM_MIN; zoom.x = 0; zoom.y = 0;
+    } else {
+      const maxX = Math.max(0, (caixa.iw * zoom.s - caixa.w) / 2);
+      const maxY = Math.max(0, (caixa.ih * zoom.s - caixa.h) / 2);
+      zoom.x = lim(zoom.x, -maxX, maxX);
+      zoom.y = lim(zoom.y, -maxY, maxY);
+    }
+    img.style.transition = (animar && !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+      ? 'transform .24s cubic-bezier(.22,1,.36,1)'
+      : 'none';
+    img.style.transform = (zoom.s === 1 && !zoom.x && !zoom.y)
+      ? ''
+      : 'translate3d(' + zoom.x + 'px,' + zoom.y + 'px,0) scale(' + zoom.s + ')';
+    wrap.classList.toggle('pode-arrastar', zoom.s > ZOOM_MIN + 0.001);
+    const nivel = document.getElementById('zoomNivel');
+    if (nivel) nivel.textContent = Math.round(zoom.s * 100) + '%';
+    const out = document.getElementById('zoomOut');
+    const inc = document.getElementById('zoomIn');
+    if (out) out.disabled = zoom.s <= ZOOM_MIN + 0.001;
+    if (inc) inc.disabled = zoom.s >= ZOOM_MAX - 0.001;
+  }
+
+  // cx/cy são coordenadas locais ao quadro; sem elas o zoom é ao centro
+  function zoomPara(novo, cx, cy) {
+    const alvo = alvoZoom();
+    if (!alvo) return;
+    const caixa = caixaObra(alvo.wrap, alvo.img);
+    const antigo = zoom.s;
+    novo = lim(novo, ZOOM_MIN, ZOOM_MAX);
+    if (Math.abs(novo - antigo) < 0.001) return;
+    const px = (cx == null ? caixa.w / 2 : cx) - caixa.w / 2;
+    const py = (cy == null ? caixa.h / 2 : cy) - caixa.h / 2;
+    zoom.x = px - (px - zoom.x) * (novo / antigo);
+    zoom.y = py - (py - zoom.y) * (novo / antigo);
+    zoom.s = novo;
+    aplicarZoom(true);
+    esconderDica();
+  }
+
+  function esconderDica() {
+    const dica = document.getElementById('zoomHint');
+    if (dica) dica.classList.add('escondido');
+    if (dicaTimer) { clearTimeout(dicaTimer); dicaTimer = null; }
+  }
+
+  function mostrarDica() {
+    const dica = document.getElementById('zoomHint');
+    if (!dica) return;
+    dica.classList.remove('escondido');
+    if (dicaTimer) clearTimeout(dicaTimer);
+    dicaTimer = setTimeout(esconderDica, 4200);
+  }
+
+  window.zoomObra = function (dir) {
+    zoomPara(zoom.s * (dir > 0 ? 1.5 : 1 / 1.5));
+  };
+
+  window.resetZoomObra = function () {
+    ponteiros.clear();
+    arrasto = null;
+    pinca = null;
+    const wrap = document.getElementById('modalFoto');
+    if (wrap) wrap.classList.remove('a-arrastar', 'a-rolar');
+    zoom.s = 1; zoom.x = 0; zoom.y = 0;
+    aplicarZoom(false);
+  };
+
+  (function ligarZoom() {
+    const wrap = document.getElementById('modalFoto');
+    if (!wrap) return;
+
+    function ponto(e) {
+      const r = wrap.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+
+    wrap.addEventListener('wheel', e => {
+      if (!alvoZoom() || e.target.closest('.zoom-controls')) return;
+      // no tamanho original, rodar para baixo deixa a janela do modal rolar
+      if (zoom.s <= ZOOM_MIN + 0.001 && e.deltaY > 0) return;
+      e.preventDefault();
+      const p = ponto(e);
+      // passo exponencial: previsível com rato e com trackpad
+      zoomPara(zoom.s * Math.exp(-e.deltaY * 0.0016), p.x, p.y);
+    }, { passive: false });
+
+    wrap.addEventListener('dblclick', e => {
+      if (!alvoZoom()) return;
+      e.preventDefault();
+      if (zoom.s > 1.05) { window.resetZoomObra(); return; }
+      const p = ponto(e);
+      zoomPara(2.5, p.x, p.y);
+    });
+
+    wrap.addEventListener('pointerdown', e => {
+      if (!alvoZoom()) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      ponteiros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      try { wrap.setPointerCapture(e.pointerId); } catch (_) { /* sem captura */ }
+
+      if (ponteiros.size === 1) {
+        arrasto = { x: e.clientX, y: e.clientY, ox: zoom.x, oy: zoom.y, ativo: zoom.s > ZOOM_MIN + 0.001 };
+        if (arrasto.ativo) {
+          wrap.classList.add('a-arrastar');
+          e.preventDefault();
+        } else {
+          wrap.classList.add('a-rolar');
+        }
+      } else if (ponteiros.size === 2) {
+        const [a, b] = [...ponteiros.values()];
+        const r = wrap.getBoundingClientRect();
+        const mx = (a.x + b.x) / 2 - r.left - r.width / 2;
+        const my = (a.y + b.y) / 2 - r.top - r.height / 2;
+        pinca = {
+          dist: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)),
+          s: zoom.s,
+          qx: (mx - zoom.x) / zoom.s,
+          qy: (my - zoom.y) / zoom.s
+        };
+        arrasto = null;
+        wrap.classList.remove('a-rolar');
+        wrap.classList.add('a-arrastar');
+      }
+    });
+
+    wrap.addEventListener('pointermove', e => {
+      if (!ponteiros.has(e.pointerId)) return;
+      ponteiros.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (ponteiros.size >= 2 && pinca) {
+        const [a, b] = [...ponteiros.values()];
+        const dist = Math.max(1, Math.hypot(a.x - b.x, a.y - b.y));
+        const r = wrap.getBoundingClientRect();
+        const mx = (a.x + b.x) / 2 - r.left - r.width / 2;
+        const my = (a.y + b.y) / 2 - r.top - r.height / 2;
+        const s = lim(pinca.s * (dist / pinca.dist), ZOOM_MIN, ZOOM_MAX);
+        zoom.s = s;
+        zoom.x = mx - s * pinca.qx;
+        zoom.y = my - s * pinca.qy;
+        aplicarZoom(false);
+        esconderDica();
+        return;
+      }
+
+      if (!arrasto) return;
+      if (!arrasto.ativo) {
+        // sem zoom, arrastar sobre a obra rola a janela do modal como uma página
+        const conteudo = document.getElementById('modalContent');
+        const dy = e.clientY - arrasto.y;
+        if (conteudo && dy) {
+          conteudo.scrollTop -= dy;
+          arrasto.y = e.clientY;
+        }
+        return;
+      }
+      zoom.x = arrasto.ox + (e.clientX - arrasto.x);
+      zoom.y = arrasto.oy + (e.clientY - arrasto.y);
+      aplicarZoom(false);
+      esconderDica();
+    });
+
+    function soltar(e) {
+      ponteiros.delete(e.pointerId);
+      if (ponteiros.size < 2) pinca = null;
+      if (ponteiros.size === 1 && zoom.s > ZOOM_MIN + 0.001) {
+        const [p] = [...ponteiros.values()];
+        arrasto = { x: p.x, y: p.y, ox: zoom.x, oy: zoom.y, ativo: true };
+      } else if (ponteiros.size === 0) {
+        arrasto = null;
+        wrap.classList.remove('a-arrastar');
+        wrap.classList.remove('a-rolar');
+      }
+    }
+
+    wrap.addEventListener('pointerup', soltar);
+    wrap.addEventListener('pointercancel', soltar);
+    wrap.addEventListener('lostpointercapture', e => ponteiros.delete(e.pointerId));
+  })();
+
+  window.addEventListener('resize', () => {
+    const modal = document.getElementById('modal');
+    if (modal && modal.classList.contains('open')) aplicarZoom(false);
+  });
+
   window.openModal = function (id) {
     const o = D.obras.find(x => x.id === id);
     if (!o) return;
     const modal = document.getElementById('modal');
     if (!modal.classList.contains('open')) focoAnterior = document.activeElement;
     modalIdx = D.obras.indexOf(o);
-    document.getElementById('modalImg').innerHTML = foto(o.img, {
+    document.getElementById('modalFoto').innerHTML = foto(o.img, {
       sizes: '(max-width: 820px) 92vw, 62vw',
       alt: (o.titulo || 'Obra sem título') + (o.tecnica ? ' — ' + o.tecnica : ''),
-      eager: true
+      eager: true,
+      ampla: true
     });
+    const novaImg = document.querySelector('#modalFoto img');
+    if (novaImg && !novaImg.complete) {
+      novaImg.addEventListener('load', () => aplicarZoom(false), { once: true });
+    }
     document.getElementById('modalInfo').innerHTML = `
       <p class="modal-tag">${esc(o.categoria)}</p>
       <h2 class="modal-title" id="modalTitle">${esc(o.titulo)}</h2>
@@ -404,6 +627,8 @@
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     atualizaContador();
+    window.resetZoomObra();
+    mostrarDica();
     modal.focus({ preventScroll: true });
   };
 
@@ -421,6 +646,8 @@
     document.body.style.overflow = '';
     modalIdx = -1;
     atualizaContador();
+    esconderDica();
+    window.resetZoomObra();
     if (focoAnterior && typeof focoAnterior.focus === 'function') focoAnterior.focus({ preventScroll: true });
     focoAnterior = null;
   };
@@ -436,6 +663,9 @@
     if (!aberto) return;
     if (e.key === 'ArrowLeft') modalStep(-1);
     if (e.key === 'ArrowRight') modalStep(1);
+    if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomObra(1); }
+    if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomObra(-1); }
+    if (e.key === '0') { e.preventDefault(); window.resetZoomObra(); }
     if (e.key !== 'Tab') return;
     // o foco não sai da janela da obra enquanto ela está aberta
     const focaveis = Array.from(modal.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])'))

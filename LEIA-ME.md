@@ -202,6 +202,9 @@ api/_dados.js                           ← leitura do blob partilhada pelas fun
 - **Página da obra**: `/obra/<id>` existe para o Google e para o WhatsApp/Facebook, que
   não executam JavaScript. Tem `og:image` real, `canonical` e dados estruturados
   `VisualArtwork`. O modal do site aponta para ela.
+- **Janela da obra**: a imagem abre em 1400 px e pode ser ampliada até 500% com a roda,
+  a pinça, os botões `+`/`−` ou as teclas `+`/`-`; arrastar move a obra e `0` (ou duplo
+  clique) repõe o tamanho original. Sem zoom, arrastar rola a própria janela.
 - **Partilha**: `og:image` (1200×630), `og:url`, `twitter:card` e `canonical` na página
   inicial; `sitemap.xml` e `robots.txt` para os motores de busca.
 - **Formulário de encomenda**: envia por e-mail (Web3Forms) **e** abre o WhatsApp, os dois
